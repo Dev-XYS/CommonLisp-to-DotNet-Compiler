@@ -7,8 +7,8 @@ namespace Compiler
     class IL
     {
         /* 
-         * OPERATION: $RSP unchanged
-         * CONTROL: may change $RSP
+         * OPERATION: $RIP unchanged
+         * CONTROL: may change $RIP
          */
         public enum Type { OPERATION, CONTROL };
         /*
@@ -24,9 +24,9 @@ namespace Compiler
          * OR:  dst = sr1 bitor sr2
          * XOR: dst = sr1 bitxor sr2
          * MOV: dst = sr1
-         * CMOV:dst = (constant)sr1
+         * TAG: add tag dst here
          */
-        public enum Operator { ADD, SUB, MUL, DIV, SHL, SAR, SHR, AND, OR, XOR, MOV, CMOV };
+        public enum Operator { ADD, SUB, MUL, DIV, MOD, SHL, SAR, SHR, AND, OR, XOR, MOV, TAG };
         /*
          * JMP: goto dst
          * JLE: if sr1 <= sr2 goto dst
@@ -36,7 +36,7 @@ namespace Compiler
          * JE:  if sr1 == sr2 goto dst
          * JNE: if sr1 != sr2 goto dst
          */
-        public enum Control { JMP, JLE, JGE, JL, JG, JE, JNE}
+        public enum Control { JMP, JLE, JGE, JL, JG, JE, JNE }
         public Type type;
         public int op;
         public ulong? sr1, sr2, dst;
