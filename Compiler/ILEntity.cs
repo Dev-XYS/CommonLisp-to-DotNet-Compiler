@@ -4,12 +4,7 @@ using System.Text;
 
 namespace Compiler
 {
-    interface IILType
-    {
-
-    }
-
-    class ILInt32Type : IILType
+    interface IILEntity
     {
     }
 }

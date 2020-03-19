@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Compiler
 {
-    class ILFunction
+    class ILFunction : IILEntity
     {
         public string Name;
         public List<IILInstruction> InstructionList;

@@ -6,12 +6,13 @@ namespace Compiler
 {
     class ILOperationInstruction : IILInstruction
     {
-        public string Operand1 { get; }
-        public string Operand2 { get; }
-        public string Destination { get; }
-    }
+        public IILEntity Operand1 { get; }
+        public IILEntity Operand2 { get; }
+        public ILVariable Destination { get; }
 
-    class ILMoveInstruction : ILOperationInstruction
-    {
+        public bool IsTwoImm()
+        {
+            return Operand1 is ILImmediateNumber && Operand2 is ILImmediateNumber;
+        }
     }
 }

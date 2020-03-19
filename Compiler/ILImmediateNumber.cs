@@ -4,9 +4,8 @@ using System.Text;
 
 namespace Compiler
 {
-    class ILVariable : IILEntity
+    class ILImmediateNumber : IILEntity
     {
-        public string Name { get; }
-
+        public Runtime.IType Imm { get; set; }
     }
 }
