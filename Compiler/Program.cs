@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Compiler
 {
@@ -12,6 +14,8 @@ namespace Compiler
             entity = imm;
             Console.WriteLine(entity is ILImmediateNumber);
             Console.WriteLine(entity is ILVariable);
+            var m = Regex.Match("asdf", @"asd(?<name>t)?f");
+            Console.WriteLine(m.Groups["name"].Success);
         }
     }
 }
