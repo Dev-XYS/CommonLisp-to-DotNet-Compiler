@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Compiler
+namespace Compiler.IL
 {
-    class ILImmediateNumber : IILEntity
+    class ImmediateNumber : IEntity
     {
         public Runtime.IType Imm { get; set; }
     }

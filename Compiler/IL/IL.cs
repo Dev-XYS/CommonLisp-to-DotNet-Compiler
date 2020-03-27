@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Compiler
+namespace Compiler.IL
 {
     class IL
     {

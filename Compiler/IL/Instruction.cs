@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Compiler
 {
-    interface IILEntity
+    interface IInstruction
     {
+
     }
 }
