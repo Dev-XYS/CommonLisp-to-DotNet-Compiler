@@ -4,14 +4,15 @@ using System.Text;
 
 namespace Compiler.IL
 {
-    class MoveInstruction : IInstruction
+    class FunctionInstruction : IInstruction
     {
-        public IEntity Source { get; set; }
+        public Function Function { get; set; }
+
         public Variable Destination { get; set; }
 
-        public MoveInstruction(IEntity source, Variable destination)
+        public FunctionInstruction(Function function, Variable destination)
         {
-            Source = source;
+            Function = function;
             Destination = destination;
         }
     }

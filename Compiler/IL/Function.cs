@@ -4,21 +4,27 @@ using System.Text;
 
 namespace Compiler.IL
 {
-    class Function : IEntity
+    abstract class Function
     {
-        public string Name;
-        public List<IInstruction> InstructionList;
+        public string Name { get; set; }
 
-        public Function(string name)
+        public List<Environment> EnvList { get; }
+
+        public List<Variable> Parameters { get; }
+
+        public List<IInstruction> InstructionList { get; }
+
+        public Function()
         {
-            Name = name;
+            EnvList = new List<Environment>();
+            Parameters = new List<Variable>();
             InstructionList = new List<IInstruction>();
         }
     }
 
     class ParametersFunction : Function
     {
-        public ParametersFunction(string name) : base(name)
+        public ParametersFunction() : base()
         {
 
         }
@@ -26,7 +32,7 @@ namespace Compiler.IL
 
     class ListFunction : Function
     {
-        public ListFunction(string name) : base(name)
+        public ListFunction() : base()
         {
         }
     }

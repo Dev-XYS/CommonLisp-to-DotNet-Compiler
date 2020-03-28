@@ -8,5 +8,11 @@ namespace Compiler.IL
     {
         public string Name { get; }
 
+        public Environment Env { get; set; }
+
+        public Variable(Environment env)
+        {
+            Env = env;
+        }
     }
 }
