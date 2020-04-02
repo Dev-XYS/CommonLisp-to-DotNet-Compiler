@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Compiler
+namespace Compiler.Backend
 {
-    class Backend
+    class Main
     {
     }
 }
