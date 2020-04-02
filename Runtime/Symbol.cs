@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    class Symbol : IType
+    public class Symbol : IType
     {
         string Value;
         public Symbol(string iv)

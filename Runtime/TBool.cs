@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    class TBool : IType
+    public class TBool : IType
     {
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    class Cons : IType
+    public class Cons : IType
     {
         public IType car, cdr;
         public Cons(IType ia, IType id)

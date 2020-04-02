@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    class TString : IType
+    public class TString : IType
     {
         public string Value { get; set; }
     }
