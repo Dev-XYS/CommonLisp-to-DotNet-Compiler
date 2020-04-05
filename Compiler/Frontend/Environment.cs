@@ -5,34 +5,31 @@ using System.Text;
 
 namespace Compiler.Frontend
 {
-    class Environment
+    class Environment : IL.Environment
     {
-        public IL.Environment ilenv;
         public Dictionary<Symbol, int> pos;
         public Environment outer;
-        public Environment()
+        public Environment() : base()
         {
-            ilenv = new IL.Environment();
             pos = new Dictionary<Symbol, int>();
             outer = this;
         }
-        public Environment(Environment o, int _)
+        public Environment(Environment o, int _) : base()
         {
-            ilenv = new IL.Environment();
             pos = new Dictionary<Symbol, int>();
             outer = o;
         }
         public void AddVariable(Symbol s)
         {
-            pos.Add(s, ilenv.VariableList.Count);
-            ilenv.VariableList.Add(new IL.Variable(ilenv));
+            pos.Add(s, VariableList.Count);
+            VariableList.Add(new IL.Variable(this));
         }
         public IL.Variable Find(Symbol s)
         {
             int p;
             if (pos.TryGetValue(s, out p))
             {
-                return ilenv.VariableList[p];
+                return VariableList[p];
             }
             else if (outer != this)
             {

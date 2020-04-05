@@ -12,7 +12,7 @@ namespace Compiler.IL
     /// 对每个函数分别编译为一个Function对象，储存在FunctionLisp中。
     /// 将主程序编译后储存在Main中。
     /// </summary>
-    class Program
+    class Program : IProcedure
     {
         /// <summary>
         /// 全体函数列表
@@ -34,6 +34,10 @@ namespace Compiler.IL
             Main.AddRange(p.Main);
             FunctionList.AddRange(p.FunctionList);
             return this;
+        }
+        public void Add(IInstruction i)
+        {
+            Main.Add(i);
         }
     }
 }

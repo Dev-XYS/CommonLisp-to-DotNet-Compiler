@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Compiler.IL
 {
-    abstract class Function
+    abstract class Function : IProcedure
     {
         public string Name { get; set; }
 
@@ -19,6 +19,10 @@ namespace Compiler.IL
             EnvList = new List<Environment>();
             Parameters = new List<Variable>();
             InstructionList = new List<IInstruction>();
+        }
+        public void Add(IInstruction i)
+        {
+            InstructionList.Add(i);
         }
     }
 

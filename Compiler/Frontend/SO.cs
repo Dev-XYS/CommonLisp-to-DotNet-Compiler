@@ -20,7 +20,7 @@ namespace Compiler.Frontend
             }
             else throw new Exception(string.Format("Unknown special operator {0}", s));
         }
-        public static void Dispatch(Cons form, Environment e, IL.Program prog)
+        public static void Dispatch(Cons form, Environment e, IL.IProcedure proc)
         {
             switch(GetType((Symbol)form.car))
             {
