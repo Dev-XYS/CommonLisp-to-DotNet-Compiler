@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    class TInteger : IType
+    public class TInteger : IType
     {
         public int Value { get; set; }
         public TInteger(int x)

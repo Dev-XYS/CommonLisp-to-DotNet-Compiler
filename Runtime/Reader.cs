@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Runtime
 {
-    static class Reader
+    public static class Reader
     {
         public class ReaderError: Exception
         {
@@ -56,7 +56,26 @@ namespace Runtime
         }
         private static TString ReadString(IInputStream input)
         {
-            return new TString();
+            char cur;
+            List<char> ret = new List<char>();
+            while (true)
+            {
+                cur = ReadNextChar(input);
+                if (cur == '\\')
+                {
+                    cur = ReadNextChar(input);
+                    ret.Add(cur);
+                }
+                else if (cur == '"')
+                {
+                    break;
+                }
+                else
+                {
+                    ret.Add(cur);
+                }
+            }
+            return new TString(string.Join("", ret));
         }
         private static IType ReadList(IInputStream input) // todo: support ( car . cdr ) notation
         {

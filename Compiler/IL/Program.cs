@@ -29,5 +29,11 @@ namespace Compiler.IL
             FunctionList = new List<Function>();
             Main = new List<IInstruction>();
         }
+        public Program Join(Program p)
+        {
+            Main.AddRange(p.Main);
+            FunctionList.AddRange(p.FunctionList);
+            return this;
+        }
     }
 }

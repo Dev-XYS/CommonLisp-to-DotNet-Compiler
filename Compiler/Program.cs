@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using Runtime;
+using System;
 
 namespace Compiler
 {
@@ -8,8 +7,19 @@ namespace Compiler
     {
         static void Main(string[] args)
         {
-            var m = Regex.Match("asdf", @"asd(?<name>t)?f");
-            Console.WriteLine(m.Groups["name"].Success);
+            Lisp.Init();
+            IType t;
+            while (true)
+            {
+                try
+                {
+                    t = Reader.Read(Lisp.stdin);
+                    Console.WriteLine(t);
+                }catch(Reader.EOFError)
+                {
+                    break;
+                }
+            }
         }
     }
 }

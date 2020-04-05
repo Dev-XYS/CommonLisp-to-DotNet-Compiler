@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    class Cons : IType
+    public class Cons : IType
     {
         public IType car, cdr;
         public Cons(IType ia, IType id)
@@ -13,5 +13,9 @@ namespace Runtime
             cdr = id;
         }
         public Cons() { }
+        public override string ToString()
+        {
+            return " ( " + car.ToString() + " . " + cdr.ToString() + " ) ";
+        }
     }
 }

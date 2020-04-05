@@ -4,25 +4,49 @@ using System.Text;
 
 namespace Runtime
 {
-    class Symbol : IType
+    public class Symbol : IType
     {
-        string Value;
-        public Symbol(string iv)
+        private static Dictionary<string, Symbol> gsl;
+        private static int gid;
+        private string Name;
+        private int sid;
+        private Symbol(string iv, int id)
         {
-            Value = iv;
+            Name = iv;
+            sid = id;
         }
         public static Symbol Find(string symbol)
         {
-            //todo:find from symbol list
-            return new Symbol(symbol); //todo: fixme
+            Symbol ret;
+            if (gsl.TryGetValue(symbol, out ret))
+            {
+                return ret;
+            }
+            else throw new Exception(string.Format("Symbol not found: {0}", symbol));
         }
+
         public static Symbol FindOrCreate(string symbol)
         {
-            return new Symbol(symbol);//todo : fixme
+            Symbol ret;
+            if(!gsl.TryGetValue(symbol, out ret))
+            {
+                ret = new Symbol(symbol, ++gid);
+                gsl.Add(symbol, ret);
+            }
+            return ret;
         }
         public override string ToString()
         {
-            return "Symbol(" + Value + ")";
+            return "Symbol(" + Name + ")";
+        }
+        public override int GetHashCode()
+        {
+            return sid;
+        }
+        public static void Init()
+        {
+            gsl = new Dictionary<string, Symbol>();
+            gid = 1;
         }
     }
 }

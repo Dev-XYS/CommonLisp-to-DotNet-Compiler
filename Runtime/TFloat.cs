@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    class TFloat : IType 
+    public class TFloat : IType 
     {
         public double Value { get; set; }
         public TFloat(double x)
