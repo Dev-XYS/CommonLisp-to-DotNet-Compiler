@@ -115,10 +115,27 @@ namespace Compiler.Frontend
             CompileProgn(tbody, cure, f);
             p.Add(new IL.FunctionInstruction(f, Global.rax));
         }
+        public static void CompileSetq(IType body, Environment e, IL.IProcedure p)
+        {
+            while(body is Cons c)
+            {
+                var t1 = c.car;
+                if (!(t1 is Symbol s)) throw new SyntaxError("SETQ: illegal name");
+                t1 = c.cdr;
+                if (!(t1 is Cons t2)) throw new SyntaxError("SETQ: insufficient arguments");
+                body = t2.cdr;
+                t1 = t2.car;
+                Core.CompileSingleExpr(t1, e, p);
+                p.Add(new IL.MoveInstruction(Global.rax, e.Find(s)));
+            }
+        }
         public static void Dispatch(Cons form, Environment e, IL.IProcedure p)
         {
             switch (GetType((Symbol)form.car))
             {
+                case Type.SETQ:
+                    CompileSetq(form.cdr, e, p);
+                    break;
                 case Type.PROGN:
                     CompileProgn(form.cdr, e, p);
                     break;
