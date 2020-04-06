@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    public class TInteger : IType
+    public class TInteger : INumber
     {
         public int Value { get; set; }
         public TInteger(int x)
@@ -19,6 +19,14 @@ namespace Runtime
         public IType Invoke(IType[] args)
         {
             throw new RuntimeException(this.ToString() + " cannot be invoked.");
+        }
+        public TInteger ToInt()
+        {
+            return this;
+        }
+        public TFloat ToFloat()
+        {
+            return new TFloat(Convert.ToDouble(Value));
         }
     }
 }
