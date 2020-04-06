@@ -4,29 +4,62 @@ using System.Text;
 
 namespace Runtime
 {
-    public class TFloat : INumber
+    public class TFloat : Number
     {
         public double Value { get; set; }
         public TFloat(double x)
         {
             Value = x;
         }
+        public TFloat(Number src, int _)
+        {
+            if (src is TFloat f)
+                Value = f.Value;
+            else if (src is TInteger i)
+                Value = i.Value;
+            else throw new NotImplementedException(string.Format("Not implemented conversion: {0} to TFloat", src));
+        }
         public override string ToString()
         {
             return Value.ToString();
         }
 
-        public IType Invoke(IType[] args)
+        public override Number Add(Number rhs)
         {
-            throw new RuntimeException(this.ToString() + " cannot be invoked.");
+            if (!(rhs is TFloat r))
+                throw new RuntimeException("Invalid call: Add(TFloat)");
+            return new TFloat(Value + r.Value);
         }
-        public TFloat ToFloat()
+
+        public override Number Subtract(Number rhs)
         {
-            return this;
+            if (!(rhs is TFloat r))
+                throw new RuntimeException("Invalid call: Subtract(TFloat)");
+            return new TFloat(Value - r.Value);
         }
-        public TInteger ToInt()
+
+        public override Number Multiply(Number rhs)
         {
-            return new TInteger(Convert.ToInt32(Value));
+            if (!(rhs is TFloat r))
+                throw new RuntimeException("Invalid call: Multiply(TFloat)");
+            return new TFloat(Value * r.Value);
+        }
+
+        public override Number Divide(Number rhs)
+        {
+            if (!(rhs is TFloat r))
+                throw new RuntimeException("Invalid call: Divide(TFloat)");
+            return new TFloat(Value / r.Value);
+        }
+
+        public override Number Negate()
+        {
+            return new TFloat(-Value);
+        }
+
+        public override Number Reciprocal()
+        {
+            return new TFloat(1.0 / Value);
         }
     }
 }

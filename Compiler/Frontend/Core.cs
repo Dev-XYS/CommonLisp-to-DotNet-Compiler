@@ -8,6 +8,8 @@ namespace Compiler.Frontend
 {
     static class Core
     {
+        private static IL.Program prog = new IL.Program();
+        private static bool inited = false;
         static void CompileFunctionCall(IL.Variable function, IType parameters, Environment e, IL.Function p)
         {
             Environment inner = new Environment(e, 0);
@@ -82,12 +84,21 @@ namespace Compiler.Frontend
                 CompileConstant(expr, e, p);
             }
         }
+        public static void Init()
+        {
+            if(!inited)
+            {
+                inited = true;
+                prog.Main = new IL.ParametersFunction();
+                Lisp.Init();
+                LibraryFunctions.AddAll(Global.env, prog.Main);
+                prog.Main.EnvList.Add(Global.env);
+                Global.Init();
+            }
+        }
         public static IL.Program CompileFromStdin()
         {
-            Global.Init();
-            IL.Program prog = new IL.Program();
-            prog.Main = new IL.ParametersFunction();
-            prog.Main.EnvList.Add(Global.env);
+            Init();
             IType expr;
             while(true)
             {

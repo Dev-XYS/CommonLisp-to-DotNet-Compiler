@@ -25,16 +25,14 @@ namespace Compiler.Frontend
         }
         public static void CompileProgn(IType list, Environment e, IL.Function p)
         {
+            if (list as TBool == Lisp.nil)
+                p.Add(new IL.MoveInstruction(Global.nil, Global.rax));
             while (list is Cons forms)
             {
                 var cur = forms.car;
                 list = forms.cdr;
                 Core.CompileSingleExpr(cur, e, p);
             }
-        }
-        private static IL.IInstruction MakeConditionalJump(IL.Variable v, IL.Label l)
-        {
-            throw new NotImplementedException("Conditional Jump Not Implemented");//todo
         }
         public static void CompileIf(IType body, Environment e, IL.Function p)
         {
@@ -43,7 +41,7 @@ namespace Compiler.Frontend
             Core.CompileSingleExpr(cond, e, p);
             var lBadGood = new IL.Label("if:cond bad|good");
             var lGood = new IL.Label("if:cond bad good|");
-            p.Add(MakeConditionalJump(Global.rax, lBadGood));//todo
+            p.Add(new IL.ConditionalJumpInstruction(lBadGood, Global.rax, true));
             Core.CompileSingleExpr(bad, e, p);
             p.Add(new IL.UnconditionalJumpInstruction(lGood));
             p.Add(lBadGood);
@@ -131,6 +129,7 @@ namespace Compiler.Frontend
                 Core.CompileSingleExpr(t1, e, p);
                 p.Add(new IL.MoveInstruction(Global.rax, e.Find(s)));
             }
+            p.Add(new IL.MoveInstruction(Global.nil, Global.rax));
         }
         public static void Dispatch(Cons form, Environment e, IL.Function p)
         {
