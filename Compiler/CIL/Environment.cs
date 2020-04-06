@@ -12,12 +12,12 @@ namespace Compiler.CIL
 
         public Environment(IL.Environment env)
         {
-            Name = env.Name;
+            Name = "env" + env.GetHashCode().ToString();
             VarMap = new Dictionary<IL.Variable, ITypeMember>();
 
             foreach (IL.Variable var in env.VariableList)
             {
-                VarMap[var] = new ITypeMember(this,var);
+                VarMap[var] = new ITypeMember(this, var);
             }
         }
 

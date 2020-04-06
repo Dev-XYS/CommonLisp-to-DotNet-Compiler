@@ -6,7 +6,7 @@ class Program
 {
     static void Main(string[] args)
     {
-
+        (new main0()).Invoke(new IType[0]);
     }
 }
 
@@ -69,5 +69,19 @@ class create_account : IType
         @E1.temp = new anonymous(@E0, @E1);
 
         return @E1.temp;
+    }
+}
+
+class main0 : IType
+{
+    private E0 @E0;
+
+    public main0()
+    {
+    }
+
+    public IType Invoke(IType[] args)
+    {
+        return null;
     }
 }

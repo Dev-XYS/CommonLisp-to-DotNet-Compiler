@@ -69,6 +69,7 @@ namespace Compiler.Test.IL
             anonymous.EnvList.Add(E0);
             anonymous.EnvList.Add(E1);
             anonymous.EnvList.Add(E2);
+            anonymous.Parameters.Add(x);
 
             CallInstruction i1 = new CallInstruction(minus/*-*/, E1.VariableList[0]/*balance*/);
             i1.Parameters.Add(E1.VariableList[0]/*balance*/);
@@ -82,6 +83,7 @@ namespace Compiler.Test.IL
             create_account.Name = "create_account";
             create_account.EnvList.Add(E0);
             create_account.EnvList.Add(E1);
+            create_account.Parameters.Add(balance);
 
             var temp = new Variable("temp", E1);
             temp.Name = "temp";
@@ -93,6 +95,12 @@ namespace Compiler.Test.IL
 
             p.FunctionList.Add(anonymous);
             p.FunctionList.Add(create_account);
+
+            var main0 = new ParametersFunction();
+            main0.EnvList.Add(E0);
+            //main.InstructionList.Add(new ReturnInstruction());
+            p.Main = main0;
+            p.FunctionList.Add(main0);
 
             return p;
         }

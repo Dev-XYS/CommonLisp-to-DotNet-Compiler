@@ -17,5 +17,10 @@ namespace Runtime
         {
             return " ( " + car.ToString() + " . " + cdr.ToString() + " ) ";
         }
+
+        public IType Invoke(IType[] args)
+        {
+            throw new RuntimeException(this.ToString() + " cannot be invoked.");
+        }
     }
 }

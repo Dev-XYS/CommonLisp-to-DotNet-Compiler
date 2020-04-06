@@ -6,11 +6,9 @@ namespace Compiler.CIL.Instructions
 {
     class LoadElement : Instruction
     {
-        public int Loc { get; set; }
-
         public override void Emit()
         {
-            Emitter.Emit("ldelem");
+            Emitter.Emit("ldelem.ref");
         }
     }
 }

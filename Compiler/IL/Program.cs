@@ -32,6 +32,8 @@ namespace Compiler.IL
 
         public Program()
         {
+            FunctionList = new List<Function>();
+            EnvList = new List<Environment>();
         }
     }
 }

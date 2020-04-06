@@ -19,5 +19,10 @@ namespace Runtime
         {
             Value = s;
         }
+
+        public IType Invoke(IType[] args)
+        {
+            throw new RuntimeException(this.ToString() + " cannot be invoked.");
+        }
     }
 }

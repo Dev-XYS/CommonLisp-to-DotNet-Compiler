@@ -12,6 +12,8 @@ namespace Compiler.CIL
         private List<Function> FuncList { get; }
         public Dictionary<IL.Function, Function> FuncMap { get; }
 
+        private Function Main { get; }
+
         public Program(IL.Program prog)
         {
             EnvList = new List<Environment>();
@@ -32,10 +34,14 @@ namespace Compiler.CIL
                 FuncList.Add(f);
                 FuncMap[func] = f;
             }
+
+            Main = FuncMap[prog.Main];
         }
 
         public void Emit()
         {
+            EmitHeader();
+
             foreach (Environment env in EnvList)
             {
                 env.Emit();
@@ -44,6 +50,19 @@ namespace Compiler.CIL
             {
                 func.Emit();
             }
+
+            EmitMain();
+        }
+
+        private void EmitHeader()
+        {
+            Emitter.EmitRaw(global::Compiler.Properties.Resources.CILHeader);
+        }
+
+        private void EmitMain()
+        {
+            Emitter.Emit("");
+            Emitter.Emit(global::Compiler.Properties.Resources.CILMain, Main.Name);
         }
     }
 }

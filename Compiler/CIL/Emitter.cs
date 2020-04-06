@@ -12,6 +12,10 @@ namespace Compiler.CIL
         {
             Console.WriteLine(Tab + format, values);
         }
+        public static void EmitRaw(string str)
+        {
+            Console.WriteLine(str);
+        }
 
         public static void BeginBlock()
         {

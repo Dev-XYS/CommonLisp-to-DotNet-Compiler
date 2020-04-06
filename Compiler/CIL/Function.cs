@@ -23,7 +23,7 @@ namespace Compiler.CIL
 
         public Function(Program prog, IL.Function func)
         {
-            Name = func.Name;
+            Name = "func" + func.GetHashCode().ToString();
             Program = prog;
 
             CtorInstructionList = new List<Instruction>();
@@ -65,12 +65,21 @@ namespace Compiler.CIL
 
         private void GenBody(IL.Function func)
         {
-            foreach (ITypeMember m in EnvList[EnvList.Count - 1].Environment.VarMap.Values)
+            // create current environment
+            Gen(new I.LoadArgument { ArgNo = 0 });
+            Gen(new I.NewObject { Type = EnvList[EnvList.Count - 1].Environment });
+            Gen(new I.StoreField { Field = EnvList[EnvList.Count - 1] });
+
+            // copy parameters to the environment
+            int no = 0;
+            foreach (IL.Variable var in func.Parameters)
             {
                 Gen(new I.LoadArgument { ArgNo = 0 });
                 Gen(new I.LoadField { Field = EnvList[EnvList.Count - 1] });
-                Gen(new I.LoadNull { });
-                Gen(new I.StoreField { Field = m });
+                Gen(new I.LoadArgument { ArgNo = 1 });
+                Gen(new I.LoadInt { Value = no++ });
+                Gen(new I.LoadElement { });
+                Gen(new I.StoreField { Field = EnvList[EnvList.Count - 1].Environment.VarMap[var] });
             }
 
             foreach (IL.IInstruction instr in func.InstructionList)
@@ -81,7 +90,11 @@ namespace Compiler.CIL
 
         private string GetCtorArgumentList()
         {
-            string r = string.Format("class {0} @{1}", EnvList[0].Type, EnvList[0].Name);
+            string r = "";
+            if (EnvList.Count > 1)
+            {
+                r = string.Format("class {0} @{1}", EnvList[0].Type, EnvList[0].Name);
+            }
             for (int i = 1; i < EnvList.Count - 1; i++)
             {
                 r += string.Format(", class {0} @{1}", EnvList[i].Type, EnvList[i].Name);
@@ -91,7 +104,7 @@ namespace Compiler.CIL
 
         public void Emit()
         {
-            Emitter.Emit(".class private auto ansi beforeinit {0} extends [System.Runtime]System.Object implements [Runtime]Runtime.IType", Name);
+            Emitter.Emit(".class private auto ansi beforefieldinit {0} extends [System.Runtime]System.Object implements [Runtime]Runtime.IType", Name);
             Emitter.BeginBlock();
 
             foreach (EnvironmentMember m in EnvList)

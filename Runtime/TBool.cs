@@ -26,5 +26,10 @@ namespace Runtime
         {
             return new TBool(Bool.NIL);
         }
+
+        public IType Invoke(IType[] args)
+        {
+            throw new RuntimeException(this.ToString() + " cannot be invoked.");
+        }
     }
 }

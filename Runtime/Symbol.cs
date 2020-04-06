@@ -48,5 +48,10 @@ namespace Runtime
             gsl = new Dictionary<string, Symbol>();
             gid = 1;
         }
+
+        public IType Invoke(IType[] args)
+        {
+            throw new RuntimeException(this.ToString() + " cannot be invoked.");
+        }
     }
 }

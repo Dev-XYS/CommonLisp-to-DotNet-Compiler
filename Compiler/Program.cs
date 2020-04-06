@@ -7,9 +7,9 @@ namespace Compiler
     {
         static void Main(string[] args)
         {
-            var il = Frontend.Core.CompileFromStdin();
-            //do sth with il
-            Console.WriteLine(il);
+            // var il = Frontend.Core.CompileFromStdin();
+            CIL.Program prog = new CIL.Program(Test.IL.Closure.GenerateCode());
+            prog.Emit();
         }
     }
 }

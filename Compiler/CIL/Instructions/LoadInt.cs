@@ -10,7 +10,7 @@ namespace Compiler.CIL.Instructions
 
         public override void Emit()
         {
-            Emitter.Emit("ldc.i32 {0}", Value);
+            Emitter.Emit("ldc.i4 {0}", Value);
         }
     }
 }

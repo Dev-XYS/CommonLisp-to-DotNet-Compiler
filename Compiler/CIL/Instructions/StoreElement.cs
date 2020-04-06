@@ -8,7 +8,7 @@ namespace Compiler.CIL.Instructions
     {
         public override void Emit()
         {
-            Emitter.Emit("stelem");
+            Emitter.Emit("stelem.ref");
         }
     }
 }

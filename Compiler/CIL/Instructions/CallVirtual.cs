@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Compiler.CIL.Instructions
 {
-    class Call : Instruction
+    class CallVirtual : Instruction
     {
         public override void Emit()
         {
-            Emitter.Emit("call: no emit");
+            Emitter.Emit("callvirt instance class [Runtime]Runtime.IType [Runtime]Runtime.IType::Invoke(class [Runtime]Runtime.IType[])");
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Compiler.CIL.Instructions
 
         public override void Emit()
         {
-            Emitter.Emit("newobj {0}", Type.Name);
+            Emitter.Emit("newobj instance void {0}::.ctor()", Type.Name);
         }
     }
 }

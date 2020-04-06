@@ -22,7 +22,7 @@ namespace Compiler.CIL
 
         public EnvironmentMember(Function func, IL.Environment env)
         {
-            Name = env.Name;
+            Name = "env" + env.GetHashCode().ToString();
             Function = func;
             Environment = Function.Program.EnvMap[env];
         }

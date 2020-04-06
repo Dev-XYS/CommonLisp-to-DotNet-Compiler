@@ -78,7 +78,7 @@ namespace Compiler.CIL
         private void GenCall(IL.CallInstruction instr)
         {
             GenLoadVariable(instr.Function);
-            Gen(new I.NewArray { Type = "Runtime.IType" });
+            Gen(new I.NewArray { Type = "[Runtime]Runtime.IType" });
             Gen(new I.Store { Loc = 0 });
             int no = 0;
             foreach (IL.IEntity e in instr.Parameters)
@@ -88,6 +88,7 @@ namespace Compiler.CIL
                 GenLoadEntity(e);
                 Gen(new I.StoreElement { });
             }
+            Gen(new I.CallVirtual { });
             Gen(new I.Store { Loc = 0 });
             GenStoreTemp(instr.Destination);
         }
