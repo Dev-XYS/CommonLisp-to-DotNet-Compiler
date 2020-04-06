@@ -67,7 +67,7 @@ namespace Compiler.Frontend
         }
         public static void CompileConstant(IType value, Environment e, IL.IProcedure p)
         {
-            p.Add(new IL.MoveInstruction(Constant.New(value), Global.rax));
+            p.Add(new IL.MoveInstruction(new IL.ImmediateNumber(value), Global.rax));
         }
         public static void CompileSingleExpr(IType expr, Environment e, IL.IProcedure p)
         {
