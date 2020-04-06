@@ -42,22 +42,30 @@ namespace Compiler.Test.IL
             Program p = new Program();
 
             // environment E0
-            Environment E0 = new Environment();
+            Environment E0 = new Environment("E0");
             var minus = new Variable(E0);
+            minus.Name = "minus";
             E0.VariableList.Add(minus);
 
             // environment E1
-            Environment E1 = new Environment();
+            Environment E1 = new Environment("E1");
             var balance = new Variable(E1);
+            balance.Name = "balance";
             E1.VariableList.Add(balance);
 
             // environment E2
-            Environment E2 = new Environment();
+            Environment E2 = new Environment("E2");
             var x = new Variable(E2);
+            x.Name = "x";
             E2.VariableList.Add(x);
+
+            p.EnvList.Add(E0);
+            p.EnvList.Add(E1);
+            p.EnvList.Add(E2);
 
             // function anonymous (x) (environment: [E0, E1, E2])
             Function anonymous = new ParametersFunction();
+            anonymous.Name = "anonymous";
             anonymous.EnvList.Add(E0);
             anonymous.EnvList.Add(E1);
             anonymous.EnvList.Add(E2);
@@ -71,14 +79,20 @@ namespace Compiler.Test.IL
 
             // function create-account (balance) (environment: [E0, E1])
             Function create_account = new ParametersFunction();
+            create_account.Name = "create_account";
             create_account.EnvList.Add(E0);
             create_account.EnvList.Add(E1);
 
             var temp = new Variable(E1);
+            temp.Name = "temp";
+            E1.VariableList.Add(temp);
             FunctionInstruction i3 = new FunctionInstruction(anonymous, temp);
             ReturnInstruction i4 = new ReturnInstruction(temp);
             create_account.InstructionList.Add(i3);
             create_account.InstructionList.Add(i4);
+
+            p.FunctionList.Add(anonymous);
+            p.FunctionList.Add(create_account);
 
             return p;
         }

@@ -6,7 +6,7 @@ namespace Compiler.IL
 {
     class Variable : IEntity
     {
-        public string Name { get; }
+        public string Name { get; set; }
 
         public Environment Env { get; set; }
 

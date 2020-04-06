@@ -6,9 +6,10 @@ namespace Compiler.IL
 {
     /// <summary>
     /// 表示一个完整的中间代码程序。
-    /// 一个程序由一下两部分构成：
+    /// 一个程序由一下三部分构成：
     /// (1) 全体函数集合；
-    /// (2) 主程序代码。
+    /// (2) 全体环境列表；
+    /// (3) 主程序代码。
     /// 对每个函数分别编译为一个Function对象，储存在FunctionLisp中。
     /// 将主程序编译后储存在Main中。
     /// </summary>
@@ -20,6 +21,11 @@ namespace Compiler.IL
         public List<Function> FunctionList { get; }
 
         /// <summary>
+        /// 全体环境列表
+        /// </summary>
+        public List<Environment> EnvList { get; }
+
+        /// <summary>
         /// 主程序
         /// </summary>
         public List<IInstruction> Main { get; }
@@ -27,6 +33,7 @@ namespace Compiler.IL
         public Program()
         {
             FunctionList = new List<Function>();
+            EnvList = new List<Environment>();
             Main = new List<IInstruction>();
         }
     }

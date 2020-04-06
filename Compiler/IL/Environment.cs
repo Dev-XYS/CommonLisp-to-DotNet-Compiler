@@ -9,13 +9,16 @@ namespace Compiler.IL
     /// </summary>
     class Environment
     {
+        public string Name { get; set; }
+
         /// <summary>
         /// 变量列表
         /// </summary>
         public List<Variable> VariableList { get; }
 
-        public Environment()
+        public Environment(string name)
         {
+            Name = name;
             VariableList = new List<Variable>();
         }
     }
