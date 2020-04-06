@@ -10,7 +10,7 @@ namespace Compiler.Frontend
         public static IL.Variable New(IType value)
         {
             //todo: create a new constant with value
-            var ret = new IL.Variable(Global.env);
+            var ret = new IL.Variable("constant", Global.env);
             return ret;
         }
     }

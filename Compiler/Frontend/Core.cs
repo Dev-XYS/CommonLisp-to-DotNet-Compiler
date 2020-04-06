@@ -18,7 +18,7 @@ namespace Compiler.Frontend
                 if(cur is Cons c)
                 {
                     CompileSingleForm(c, e, p);
-                    IL.Variable variable = new IL.Variable(inner);
+                    IL.Variable variable = new IL.Variable("temp", inner);
                     p.Add(new IL.MoveInstruction(Global.rax, variable));
                     callInstruction.Parameters.Add(variable);
                 }else if(cur is Symbol s)
@@ -27,7 +27,7 @@ namespace Compiler.Frontend
                 }else
                 {
                     CompileConstant(cur, e, p);
-                    IL.Variable variable = new IL.Variable(inner);
+                    IL.Variable variable = new IL.Variable("temp", inner);
                     p.Add(new IL.MoveInstruction(Global.rax, variable));
                     callInstruction.Parameters.Add(variable);
                 }

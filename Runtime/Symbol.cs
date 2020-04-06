@@ -8,7 +8,7 @@ namespace Runtime
     {
         private static Dictionary<string, Symbol> gsl;
         private static int gid;
-        private string Name;
+        public string Name { get; set; }
         private int sid;
         private Symbol(string iv, int id)
         {

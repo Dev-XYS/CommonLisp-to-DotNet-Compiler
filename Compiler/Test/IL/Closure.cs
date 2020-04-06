@@ -43,19 +43,19 @@ namespace Compiler.Test.IL
 
             // environment E0
             Environment E0 = new Environment();
-            var minus = new Variable(E0);
+            var minus = new Variable("minus", E0);
             minus.Name = "minus";
             E0.VariableList.Add(minus);
 
             // environment E1
             Environment E1 = new Environment();
-            var balance = new Variable(E1);
+            var balance = new Variable("balance", E1);
             balance.Name = "balance";
             E1.VariableList.Add(balance);
 
             // environment E2
             Environment E2 = new Environment();
-            var x = new Variable(E2);
+            var x = new Variable("x", E2);
             x.Name = "x";
             E2.VariableList.Add(x);
 
@@ -83,7 +83,7 @@ namespace Compiler.Test.IL
             create_account.EnvList.Add(E0);
             create_account.EnvList.Add(E1);
 
-            var temp = new Variable(E1);
+            var temp = new Variable("temp", E1);
             temp.Name = "temp";
             E1.VariableList.Add(temp);
             FunctionInstruction i3 = new FunctionInstruction(anonymous, temp);
