@@ -17,7 +17,7 @@ namespace Compiler.Frontend
                 Lisp.Init();
                 SO.Init();
                 env = new Environment();
-                rax = new IL.Variable(env.ilenv);
+                rax = new IL.Variable(env);
             }
             inited = true;
         }

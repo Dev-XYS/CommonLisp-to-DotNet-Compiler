@@ -7,19 +7,9 @@ namespace Compiler
     {
         static void Main(string[] args)
         {
-            Lisp.Init();
-            IType t;
-            while (true)
-            {
-                try
-                {
-                    t = Reader.Read(Lisp.stdin);
-                    Console.WriteLine(t);
-                }catch(Reader.EOFError)
-                {
-                    break;
-                }
-            }
+            var il = Frontend.Core.CompileFromStdin();
+            //do sth with il
+            Console.WriteLine(il);
         }
     }
 }

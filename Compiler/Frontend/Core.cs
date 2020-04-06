@@ -1,5 +1,7 @@
 ﻿using Runtime;
+using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Compiler.Frontend
@@ -58,22 +60,31 @@ namespace Compiler.Frontend
             }else 
             throw new SyntaxError(string.Format("Object is not a function, macro or special operator: {0}", car));
         }
-        static void CompileConstant(IType value, Environment e, IL.IProcedure p)
+        static void CompileAtom(Symbol s, Environment e, IL.IProcedure p)
+        {
+            //currently treat it as variable
+            p.Add(new IL.MoveInstruction(e.Find(s), Global.rax));
+        }
+        public static void CompileConstant(IType value, Environment e, IL.IProcedure p)
         {
             p.Add(new IL.MoveInstruction(Constant.New(value), Global.rax));
         }
-        static void CompileSingleExpr(IType expr, Environment e, IL.IProcedure p)
+        public static void CompileSingleExpr(IType expr, Environment e, IL.IProcedure p)
         {
             if (expr is Cons form)
             {
                 CompileSingleForm(form, e, p);
-            }else
+            }else if(expr is Symbol s)
+            {
+                CompileAtom(s, e, p);
+            }else 
             {
                 CompileConstant(expr, e, p);
             }
         }
         public static IL.Program CompileFromStdin()
         {
+            Global.Init();
             IL.Program ret = new IL.Program();
             IType expr;
             while(true)

@@ -19,10 +19,13 @@ namespace Compiler.Frontend
             pos = new Dictionary<Symbol, int>();
             outer = o;
         }
-        public void AddVariable(Symbol s)
+        public IL.Variable AddVariable(Symbol s)
         {
+            if (pos.ContainsKey(s))
+                throw new SyntaxError(string.Format("Env: Redefined name {0}", s));
             pos.Add(s, VariableList.Count);
             VariableList.Add(new IL.Variable(this));
+            return VariableList[VariableList.Count - 1];
         }
         public IL.Variable Find(Symbol s)
         {
