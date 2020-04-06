@@ -9,6 +9,7 @@ namespace Compiler.IL
     /// </summary>
     class Environment
     {
+        public static List<Environment> gel = new List<Environment>();
         public string Name { get; set; }
 
         /// <summary>
@@ -19,6 +20,7 @@ namespace Compiler.IL
         public Environment()
         {
             VariableList = new List<Variable>();
+            gel.Add(this);
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Compiler.IL
 {
-    abstract class Function : IProcedure
+    abstract class Function
     {
         public string Name { get; set; }
 
@@ -28,9 +28,10 @@ namespace Compiler.IL
 
     class ParametersFunction : Function
     {
+        public static List<Function> gfl = new List<Function>();
         public ParametersFunction() : base()
         {
-
+            gfl.Add(this);
         }
     }
 

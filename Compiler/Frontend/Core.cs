@@ -8,7 +8,7 @@ namespace Compiler.Frontend
 {
     static class Core
     {
-        static void CompileFunctionCall(IL.Variable function, IType parameters, Environment e, IL.IProcedure p)
+        static void CompileFunctionCall(IL.Variable function, IType parameters, Environment e, IL.Function p)
         {
             Environment inner = new Environment(e, 0);
             IL.CallInstruction callInstruction = new IL.CallInstruction(function, Global.rax);
@@ -35,7 +35,7 @@ namespace Compiler.Frontend
             }
             p.Add(callInstruction);
         }
-        static void CompileSingleForm(Cons form, Environment e, IL.IProcedure p)
+        static void CompileSingleForm(Cons form, Environment e, IL.Function p)
         {
             var car = form.car;
             if (car is Symbol s)
@@ -60,16 +60,16 @@ namespace Compiler.Frontend
             }else 
             throw new SyntaxError(string.Format("Object is not a function, macro or special operator: {0}", car));
         }
-        static void CompileAtom(Symbol s, Environment e, IL.IProcedure p)
+        static void CompileAtom(Symbol s, Environment e, IL.Function p)
         {
             //currently treat it as variable
             p.Add(new IL.MoveInstruction(e.Find(s), Global.rax));
         }
-        public static void CompileConstant(IType value, Environment e, IL.IProcedure p)
+        public static void CompileConstant(IType value, Environment e, IL.Function p)
         {
             p.Add(new IL.MoveInstruction(new IL.ImmediateNumber(value), Global.rax));
         }
-        public static void CompileSingleExpr(IType expr, Environment e, IL.IProcedure p)
+        public static void CompileSingleExpr(IType expr, Environment e, IL.Function p)
         {
             if (expr is Cons form)
             {
@@ -85,19 +85,24 @@ namespace Compiler.Frontend
         public static IL.Program CompileFromStdin()
         {
             Global.Init();
-            IL.Program ret = new IL.Program();
+            IL.Program prog = new IL.Program();
+            prog.Main = new IL.ParametersFunction();
+            prog.Main.EnvList.Add(Global.env);
             IType expr;
             while(true)
             {
                 try
                 {
                     expr = Reader.Read(Lisp.stdin);
-                    CompileSingleExpr(expr, Global.env, ret);
+                    CompileSingleExpr(expr, Global.env, prog.Main);
                 }catch(Reader.EOFError)
                 {
-                    return ret;
+                    break;
                 }
             }
+            prog.EnvList = IL.Environment.gel;
+            prog.FunctionList = IL.ParametersFunction.gfl;
+            return prog;
         }
     }
 }

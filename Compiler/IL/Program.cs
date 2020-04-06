@@ -18,32 +18,20 @@ namespace Compiler.IL
         /// <summary>
         /// 全体函数列表
         /// </summary>
-        public List<Function> FunctionList { get; }
+        public List<Function> FunctionList { get; set; }
 
         /// <summary>
         /// 全体环境列表
         /// </summary>
-        public List<Environment> EnvList { get; }
+        public List<Environment> EnvList { get; set; }
 
         /// <summary>
         /// 主函数（无参数）
         /// </summary>
-        public Function Main { get; }
+        public Function Main { get; set; }
 
         public Program()
         {
-            FunctionList = new List<Function>();
-            EnvList = new List<Environment>();
-        }
-        public Program Join(Program p)
-        {
-            Main.AddRange(p.Main);
-            FunctionList.AddRange(p.FunctionList);
-            return this;
-        }
-        public void Add(IInstruction i)
-        {
-            Main.Add(i);
         }
     }
 }

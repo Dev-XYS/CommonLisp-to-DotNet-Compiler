@@ -23,7 +23,7 @@ namespace Compiler.Frontend
             }
             else throw new Exception(string.Format("Unknown special operator {0}", s));
         }
-        public static void CompileProgn(IType list, Environment e, IL.IProcedure p)
+        public static void CompileProgn(IType list, Environment e, IL.Function p)
         {
             while (list is Cons forms)
             {
@@ -36,7 +36,7 @@ namespace Compiler.Frontend
         {
             throw new NotImplementedException("Conditional Jump Not Implemented");//todo
         }
-        public static void CompileIf(IType body, Environment e, IL.IProcedure p)
+        public static void CompileIf(IType body, Environment e, IL.Function p)
         {
             var param = Util.RequireExactly(body, 3, "IF");
             IType cond = param[0], good = param[1], bad = param[2];
@@ -50,12 +50,12 @@ namespace Compiler.Frontend
             Core.CompileSingleExpr(good, e, p);
             p.Add(lGood);
         }
-        public static void CompileQuote(IType body, Environment e, IL.IProcedure p)
+        public static void CompileQuote(IType body, Environment e, IL.Function p)
         {
             var quoted = Util.RequireExactly(body, 1, "QUOTE")[0];
             Core.CompileConstant(quoted, e, p);
         }
-        public static void CompileLet(IType body, Environment e, IL.IProcedure p)
+        public static void CompileLet(IType body, Environment e, IL.Function p)
         {
             if (!(body is Cons b))
                 throw new SyntaxError("LET: insufficient argument");
@@ -82,7 +82,7 @@ namespace Compiler.Frontend
             }
             CompileProgn(b.cdr, cure, p);
         }
-        public static void CompileLetStar(IType body, Environment e, IL.IProcedure p)
+        public static void CompileLetStar(IType body, Environment e, IL.Function p)
         {
             var (t1, tbody) = Util.RequireAtLeast(body, 1, "LET*");
             var bindings = t1[0];
@@ -108,7 +108,7 @@ namespace Compiler.Frontend
             }
             CompileProgn(tbody, cure, p);
         }
-        public static void CompileLambda(IType body, Environment e, IL.IProcedure p)
+        public static void CompileLambda(IType body, Environment e, IL.Function p)
         {
             var (t1, tbody) = Util.RequireAtLeast(body, 1, "LAMBDA");
             Environment cure = new Environment(e, 0);
@@ -118,7 +118,7 @@ namespace Compiler.Frontend
             CompileProgn(tbody, cure, f);
             p.Add(new IL.FunctionInstruction(f, Global.rax));
         }
-        public static void CompileSetq(IType body, Environment e, IL.IProcedure p)
+        public static void CompileSetq(IType body, Environment e, IL.Function p)
         {
             while (body is Cons c)
             {
@@ -132,7 +132,7 @@ namespace Compiler.Frontend
                 p.Add(new IL.MoveInstruction(Global.rax, e.Find(s)));
             }
         }
-        public static void Dispatch(Cons form, Environment e, IL.IProcedure p)
+        public static void Dispatch(Cons form, Environment e, IL.Function p)
         {
             switch (GetType((Symbol)form.car))
             {
