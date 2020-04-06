@@ -13,7 +13,7 @@ namespace Compiler.IL
     /// 对每个函数分别编译为一个Function对象，储存在FunctionLisp中。
     /// 将主程序编译后储存在Main中。
     /// </summary>
-    class Program : IProcedure
+    class Program
     {
         /// <summary>
         /// 全体函数列表
@@ -26,15 +26,14 @@ namespace Compiler.IL
         public List<Environment> EnvList { get; }
 
         /// <summary>
-        /// 主程序
+        /// 主函数（无参数）
         /// </summary>
-        public List<IInstruction> Main { get; }
+        public Function Main { get; }
 
         public Program()
         {
             FunctionList = new List<Function>();
             EnvList = new List<Environment>();
-            Main = new List<IInstruction>();
         }
         public Program Join(Program p)
         {
