@@ -25,8 +25,11 @@ namespace Compiler.IL
     {
         public bool Condition { get; }
 
-        public ConditionalJumpInstruction(Label target, bool condition) : base(target)
+        public Variable TestVariable { get; }
+
+        public ConditionalJumpInstruction(Label target, Variable test, bool condition) : base(target)
         {
+            TestVariable = test;
             Condition = condition;
         }
     }

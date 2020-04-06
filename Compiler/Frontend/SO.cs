@@ -7,8 +7,11 @@ namespace Compiler.Frontend
 {
     static class SO
     {
-        public enum Type { BLOCK, CATCH, EVAL_WHEN, FLET, FUNCTION, GO, IF, LABELS, LET, LET_STAR, LOAD_TIME_VALUE, LOCALLY, MACROLET, LAMBDA,
-        MULTIPLE_VALUE_CALL, MULTIPLE_VALUE_PROG1, PROGN, PROGY, QUOTE, RETURN_FROM, SETQ, SYMBOL_MACROLET, TAGBODY, THE, THROW, UNWIND_PROTECT };
+        public enum Type
+        {
+            BLOCK, CATCH, EVAL_WHEN, FLET, FUNCTION, GO, IF, LABELS, LET, LET_STAR, LOAD_TIME_VALUE, LOCALLY, MACROLET, LAMBDA,
+            MULTIPLE_VALUE_CALL, MULTIPLE_VALUE_PROG1, PROGN, PROGY, QUOTE, RETURN_FROM, SETQ, SYMBOL_MACROLET, TAGBODY, THE, THROW, UNWIND_PROTECT
+        };
         private static Dictionary<Symbol, Type> types;
         private static bool inited = false;
         private static Type GetType(Symbol s)
@@ -22,14 +25,14 @@ namespace Compiler.Frontend
         }
         public static void CompileProgn(IType list, Environment e, IL.IProcedure p)
         {
-            while(list is Cons forms)
+            while (list is Cons forms)
             {
                 var cur = forms.car;
                 list = forms.cdr;
                 Core.CompileSingleExpr(cur, e, p);
             }
         }
-        private static IInstruction MakeConditionalJump(IL.Variable v, IL.Label l)
+        private static IL.IInstruction MakeConditionalJump(IL.Variable v, IL.Label l)
         {
             throw new NotImplementedException("Conditional Jump Not Implemented");//todo
         }
@@ -58,7 +61,7 @@ namespace Compiler.Frontend
                 throw new SyntaxError("LET: insufficient argument");
             var bindings = b.car;
             Environment cure = new Environment(e, 0);
-            while(bindings is Cons l)
+            while (bindings is Cons l)
             {
                 var cur = l.car;
                 bindings = l.cdr;
@@ -84,7 +87,7 @@ namespace Compiler.Frontend
             var (t1, tbody) = Util.RequireAtLeast(body, 1, "LET*");
             var bindings = t1[0];
             Environment cure = new Environment(e, 0);
-            while(bindings is Cons c)
+            while (bindings is Cons c)
             {
                 var cur = c.car;
                 bindings = c.cdr;
@@ -117,7 +120,7 @@ namespace Compiler.Frontend
         }
         public static void CompileSetq(IType body, Environment e, IL.IProcedure p)
         {
-            while(body is Cons c)
+            while (body is Cons c)
             {
                 var t1 = c.car;
                 if (!(t1 is Symbol s)) throw new SyntaxError("SETQ: illegal name");
@@ -164,7 +167,7 @@ namespace Compiler.Frontend
         }
         public static void Init()
         {
-            if(!inited)
+            if (!inited)
             {
                 Lisp.Init();
                 types = new Dictionary<Symbol, Type>(){

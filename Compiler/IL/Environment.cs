@@ -16,9 +16,8 @@ namespace Compiler.IL
         /// </summary>
         public List<Variable> VariableList { get; }
 
-        public Environment(string name)
+        public Environment()
         {
-            Name = name;
             VariableList = new List<Variable>();
         }
     }

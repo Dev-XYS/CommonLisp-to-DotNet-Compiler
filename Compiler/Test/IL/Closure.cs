@@ -42,19 +42,19 @@ namespace Compiler.Test.IL
             Program p = new Program();
 
             // environment E0
-            Environment E0 = new Environment("E0");
+            Environment E0 = new Environment();
             var minus = new Variable(E0);
             minus.Name = "minus";
             E0.VariableList.Add(minus);
 
             // environment E1
-            Environment E1 = new Environment("E1");
+            Environment E1 = new Environment();
             var balance = new Variable(E1);
             balance.Name = "balance";
             E1.VariableList.Add(balance);
 
             // environment E2
-            Environment E2 = new Environment("E2");
+            Environment E2 = new Environment();
             var x = new Variable(E2);
             x.Name = "x";
             E2.VariableList.Add(x);
