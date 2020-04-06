@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    interface IInputStream
+    public interface IInputStream
     {
         public int ReadChar();
         public void UnReadChar();

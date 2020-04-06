@@ -13,5 +13,9 @@ namespace Runtime
             cdr = id;
         }
         public Cons() { }
+        public override string ToString()
+        {
+            return " ( " + car.ToString() + " . " + cdr.ToString() + " ) ";
+        }
     }
 }
