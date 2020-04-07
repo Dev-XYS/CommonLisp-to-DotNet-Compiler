@@ -19,6 +19,7 @@ namespace Compiler.Frontend
                 Lisp.Init();
                 SO.Init();
                 rax = new IL.Variable("%rax", env);
+                env.VariableList.Add(rax);
                 nil = env.Find(Symbol.Find("NIL"));
             }
         }
