@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Compiler.CIL
@@ -8,13 +9,17 @@ namespace Compiler.CIL
     {
         private static string Tab = "";
 
+        public static TextWriter Writer { get; set; }
+
         public static void Emit(string format, params object[] values)
         {
-            Console.WriteLine(Tab + format, values);
+            // Console.WriteLine(Tab + format, values);
+            Writer.WriteLine(Tab + format, values);
         }
         public static void EmitRaw(string str)
         {
-            Console.WriteLine(str);
+            // Console.WriteLine(str);
+            Writer.WriteLine(str);
         }
 
         public static void BeginBlock()

@@ -9,7 +9,10 @@ namespace Compiler
         {
             var program = Frontend.Core.CompileFromStdin();
             var prog = new CIL.Program(program);
-            prog.Emit();
+            var sw = new System.IO.StreamWriter("temp.il");
+            prog.Emit(sw);
+            sw.Close();
+            Assembler.Assembler.Invoke("temp.il");
         }
     }
 }

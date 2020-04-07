@@ -38,8 +38,10 @@ namespace Compiler.CIL
             Main = FuncMap[prog.Main];
         }
 
-        public void Emit()
+        public void Emit(System.IO.TextWriter writer)
         {
+            Emitter.Writer = writer;
+
             EmitHeader();
 
             foreach (Environment env in EnvList)
