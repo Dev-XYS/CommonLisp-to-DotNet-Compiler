@@ -98,7 +98,7 @@ namespace Compiler.Test.IL
 
             var main0 = new ParametersFunction();
             main0.EnvList.Add(E0);
-            //main.InstructionList.Add(new ReturnInstruction());
+            main0.InstructionList.Add(new ReturnInstruction(null));
             p.Main = main0;
             p.FunctionList.Add(main0);
 

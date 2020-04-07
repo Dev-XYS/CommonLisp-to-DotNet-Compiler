@@ -50,7 +50,11 @@ namespace Compiler.CIL
 
         private void GenLoadEntity(IL.IEntity e)
         {
-            if (e is IL.Variable)
+            if (e == null)
+            {
+                Gen(new I.LoadNull { });
+            }
+            else if (e is IL.Variable)
             {
                 GenLoadVariable(e as IL.Variable);
             }
