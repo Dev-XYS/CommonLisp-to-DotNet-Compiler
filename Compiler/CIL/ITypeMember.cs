@@ -21,7 +21,7 @@ namespace Compiler.CIL
         public ITypeMember(Environment env, IL.Variable var)
         {
             Environment = env;
-            Name = var.Name;
+            Name = "'" + var.Name + "'";
         }
     }
 }

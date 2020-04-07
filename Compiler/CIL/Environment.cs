@@ -8,6 +8,11 @@ namespace Compiler.CIL
     {
         public override string Name { get; }
 
+        public override string CtorArgumentList
+        {
+            get => "";
+        }
+
         public Dictionary<IL.Variable, ITypeMember> VarMap { get; }
 
         public Environment(IL.Environment env)

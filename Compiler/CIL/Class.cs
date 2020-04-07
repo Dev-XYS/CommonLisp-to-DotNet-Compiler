@@ -7,5 +7,7 @@ namespace Compiler.CIL
     abstract class Class
     {
         public abstract string Name { get; }
+
+        public abstract string CtorArgumentList { get; }
     }
 }

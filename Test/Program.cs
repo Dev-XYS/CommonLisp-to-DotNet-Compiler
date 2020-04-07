@@ -82,6 +82,7 @@ class main0 : IType
 
     public IType Invoke(IType[] args)
     {
+        IType t = new TInteger(1);
         return null;
     }
 }

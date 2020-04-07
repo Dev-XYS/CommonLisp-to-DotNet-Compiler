@@ -7,8 +7,8 @@ namespace Compiler
     {
         static void Main(string[] args)
         {
-            //var program = Frontend.Core.CompileFromStdin();
-            var prog = new CIL.Program(Test.IL.Closure.GenerateCode());
+            var program = Frontend.Core.CompileFromStdin();
+            var prog = new CIL.Program(program);
             prog.Emit();
         }
     }

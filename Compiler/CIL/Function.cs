@@ -10,6 +10,11 @@ namespace Compiler.CIL
     {
         public override string Name { get; }
 
+        public override string CtorArgumentList
+        {
+            get => GetCtorArgumentList();
+        }
+
         public Program Program { get; }
 
         public List<Instruction> CtorInstructionList { get; }
@@ -122,6 +127,7 @@ namespace Compiler.CIL
 
             Emitter.Emit(".method public hidebysig newslot virtual final instance class [Runtime]Runtime.IType Invoke(class [Runtime]Runtime.IType[] args) cil managed");
             Emitter.BeginBlock();
+            Emitter.Emit(".locals init (class [Runtime]Runtime.IType Temp, class [Runtime]Runtime.IType[] Args)");
             foreach (Instruction instr in InstructionList)
             {
                 instr.Emit();

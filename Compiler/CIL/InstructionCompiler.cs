@@ -48,6 +48,24 @@ namespace Compiler.CIL
             }
         }
 
+        private void GenLoadConst(Runtime.IType c)
+        {
+            if (c is Runtime.TInteger)
+            {
+                Runtime.TInteger i = c as Runtime.TInteger;
+                Gen(new I.LoadInt { Value = i.Value });
+                Gen(new I.NewObject { Type = new RuntimeObject { Type = typeof(Runtime.TInteger) } });
+            }
+            else if (c is Runtime.Function.WriteLn)
+            {
+                Gen(new I.NewObject { Type = new RuntimeObject { Type = typeof(Runtime.Function.WriteLn) } });
+            }
+            else
+            {
+                Gen(new I.LoadNull { });
+            }
+        }
+
         private void GenLoadEntity(IL.IEntity e)
         {
             if (e == null)
@@ -60,7 +78,8 @@ namespace Compiler.CIL
             }
             else
             {
-                throw new NotImplementedException();
+                IL.ImmediateNumber imm = e as IL.ImmediateNumber;
+                GenLoadConst(imm.Imm);
             }
         }
 
@@ -82,16 +101,18 @@ namespace Compiler.CIL
         private void GenCall(IL.CallInstruction instr)
         {
             GenLoadVariable(instr.Function);
+            Gen(new I.LoadInt { Value = instr.Parameters.Count });
             Gen(new I.NewArray { Type = "[Runtime]Runtime.IType" });
-            Gen(new I.Store { Loc = 0 });
+            Gen(new I.Store { Loc = 1 });
             int no = 0;
             foreach (IL.IEntity e in instr.Parameters)
             {
-                Gen(new I.Load { Loc = 0 });
+                Gen(new I.Load { Loc = 1 });
                 Gen(new I.LoadInt { Value = no++ });
                 GenLoadEntity(e);
                 Gen(new I.StoreElement { });
             }
+            Gen(new I.Load { Loc = 1 });
             Gen(new I.CallVirtual { });
             Gen(new I.Store { Loc = 0 });
             GenStoreTemp(instr.Destination);
