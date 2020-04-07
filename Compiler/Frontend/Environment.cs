@@ -24,8 +24,15 @@ namespace Compiler.Frontend
             if (pos.ContainsKey(s))
                 throw new SyntaxError(string.Format("Env: Redefined name {0}", s));
             pos.Add(s, VariableList.Count);
-            VariableList.Add(new IL.Variable(s.Name, this));
-            return VariableList[VariableList.Count - 1];
+            var ret = new IL.Variable(s.Name, this);
+            VariableList.Add(ret);
+            return ret;
+        }
+        public IL.Variable AddUnnamedVariable(string name)
+        {
+            var ret = new IL.Variable(name, this);
+            VariableList.Add(ret);
+            return ret;
         }
         public IL.Variable Find(Symbol s)
         {

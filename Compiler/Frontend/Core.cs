@@ -12,7 +12,6 @@ namespace Compiler.Frontend
         private static bool inited = false;
         static void CompileFunctionCall(IL.Variable function, IType parameters, Environment e, IL.Function p)
         {
-            Environment inner = new Environment(e, 0);
             IL.CallInstruction callInstruction = new IL.CallInstruction(function, Global.rax);
             while(parameters is Cons para)
             {
@@ -20,7 +19,7 @@ namespace Compiler.Frontend
                 if(cur is Cons c)
                 {
                     CompileSingleForm(c, e, p);
-                    IL.Variable variable = new IL.Variable("temp", inner);
+                    IL.Variable variable = Global.env.AddUnnamedVariable("temp");
                     p.Add(new IL.MoveInstruction(Global.rax, variable));
                     callInstruction.Parameters.Add(variable);
                 }else if(cur is Symbol s)
@@ -29,7 +28,7 @@ namespace Compiler.Frontend
                 }else
                 {
                     CompileConstant(cur, e, p);
-                    IL.Variable variable = new IL.Variable("temp", inner);
+                    IL.Variable variable = Global.env.AddUnnamedVariable("temp");
                     p.Add(new IL.MoveInstruction(Global.rax, variable));
                     callInstruction.Parameters.Add(variable);
                 }
