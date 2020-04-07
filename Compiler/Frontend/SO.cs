@@ -114,6 +114,7 @@ namespace Compiler.Frontend
                 Util.ParseLambdaList(c, cure);
             Function f = new Function(cure);
             CompileProgn(tbody, cure, f);
+            f.Add(new IL.ReturnInstruction(Global.rax));
             p.Add(new IL.FunctionInstruction(f, Global.rax));
         }
         public static void CompileSetq(IType body, Environment e, IL.Function p)

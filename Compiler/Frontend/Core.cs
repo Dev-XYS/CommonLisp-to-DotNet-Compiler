@@ -112,6 +112,7 @@ namespace Compiler.Frontend
             }
             prog.EnvList = IL.Environment.gel;
             prog.FunctionList = IL.ParametersFunction.gfl;
+            prog.Main.Add(new IL.ReturnInstruction(Global.rax));
             return prog;
         }
     }
