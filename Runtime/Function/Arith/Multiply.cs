@@ -10,8 +10,7 @@ namespace Runtime.Function.Arith
         {
             if (args.Length == 0)
                 return new TInteger(1);
-            if (!(args is Number[] nums))
-                throw new RuntimeException("*: Invalid argument type");
+            var nums = Util.AllNumbers(args);
             Util.Contagion(nums);
             var ret = nums[0];
             for (int i = 1; i < nums.Length; ++i)
