@@ -10,8 +10,7 @@ namespace Runtime.Function.Arith
         {
             if (args.Length == 0)
                 throw new RuntimeException("/: insufficient arguments");
-            if (!(args is Number[] nums))
-                throw new RuntimeException("/: Invalid argument type");
+            var nums = Util.AllNumbers(args);
             Util.Contagion(nums);
             if (nums.Length == 1)
                 return nums[0].Reciprocal();

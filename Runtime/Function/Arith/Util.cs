@@ -22,5 +22,10 @@ namespace Runtime.Function.Arith
                     if (!(args[i] is TFloat))
                         args[i] = new TFloat(args[i], 0);
         }
+        public static Number[] AllNumbers(IType[] args)
+        {
+            if (!Array.TrueForAll(args, (IType x) => x is Number)) throw new RuntimeException("Inconsistent type: numbers required");
+            return Array.ConvertAll(args, (IType x) => x as Number);
+        }
     }
 }
