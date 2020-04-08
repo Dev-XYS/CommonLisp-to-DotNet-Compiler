@@ -6,18 +6,13 @@ namespace Runtime
 {
     public class T : IType
     {
-        private static T t = new T();
-        private T()
+        public T()
         {
             //do nothing
         }
         public override string ToString()
         {
             return "T";
-        }
-        public static T GetT()
-        {
-            return t;
         }
         public IType Invoke(IType[] args)
         {

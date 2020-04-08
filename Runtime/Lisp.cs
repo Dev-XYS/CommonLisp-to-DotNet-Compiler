@@ -11,7 +11,7 @@ namespace Runtime
         {
             if (!inited)
             {
-                t = T.GetT();
+                t = new T();
                 nil = null;
                 stdin = new StandardInput();
                 Symbol.Init();
