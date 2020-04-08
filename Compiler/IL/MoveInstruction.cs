@@ -14,5 +14,10 @@ namespace Compiler.IL
             Source = source;
             Destination = destination;
         }
+
+        public override string ToString()
+        {
+            return string.Format("[MOVE] {0} -> {1}", Source.ToString(), Destination.Name);
+        }
     }
 }

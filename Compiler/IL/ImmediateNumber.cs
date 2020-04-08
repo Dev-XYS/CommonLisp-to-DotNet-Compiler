@@ -11,5 +11,10 @@ namespace Compiler.IL
         {
             Imm = i;
         }
+
+        public override string ToString()
+        {
+            return Imm == null ? "null" : Imm.ToString();
+        }
     }
 }

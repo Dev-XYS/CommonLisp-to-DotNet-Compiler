@@ -16,5 +16,15 @@ namespace Compiler.IL
             Destination = destination;
             Parameters = new List<IEntity>();
         }
+
+        public override string ToString()
+        {
+            return string.Format("[CALL] {0} ({1}) -> {2}", Function.Name, GetParameterList(), Destination.Name);
+        }
+
+        private string GetParameterList()
+        {
+            return string.Join(", ", Parameters.ConvertAll((IEntity e) => e.ToString()));
+        }
     }
 }

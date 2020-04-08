@@ -12,5 +12,10 @@ namespace Compiler.IL
         {
             Name = name;
         }
+
+        public override string ToString()
+        {
+            return string.Format("[LABEL] {0}", this.GetHashCode());
+        }
     }
 }
