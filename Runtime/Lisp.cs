@@ -4,14 +4,14 @@ namespace Runtime
 {
     public static class Lisp
     {
-        public static TBool t, nil;
+        public static T t, nil;
         public static StandardInput stdin;
         private static bool inited = false;
         public static void Init()
         {
             if (!inited)
             {
-                t = TBool.T();
+                t = T.GetT();
                 nil = null;
                 stdin = new StandardInput();
                 Symbol.Init();
