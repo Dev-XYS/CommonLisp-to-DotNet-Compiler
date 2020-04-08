@@ -19,7 +19,7 @@ namespace Compiler.Frontend
                 if(cur is Cons c)
                 {
                     CompileSingleForm(c, e, p);
-                    IL.Variable variable = Global.env.AddUnnamedVariable("temp");
+                    IL.Variable variable = Global.env.AddUnnamedVariable();
                     p.Add(new IL.MoveInstruction(Global.rax, variable));
                     callInstruction.Parameters.Add(variable);
                 }else if(cur is Symbol s)
@@ -28,7 +28,7 @@ namespace Compiler.Frontend
                 }else
                 {
                     CompileConstant(cur, e, p);
-                    IL.Variable variable = Global.env.AddUnnamedVariable("temp");
+                    IL.Variable variable = Global.env.AddUnnamedVariable();
                     p.Add(new IL.MoveInstruction(Global.rax, variable));
                     callInstruction.Parameters.Add(variable);
                 }
@@ -57,7 +57,9 @@ namespace Compiler.Frontend
             else if (car is Cons c)
             {
                 CompileSingleForm(c, e, p);
-                CompileFunctionCall(Global.rax, form.cdr, e, p);
+                IL.Variable func = Global.env.AddUnnamedVariable();
+                p.Add(new IL.MoveInstruction(Global.rax, func));
+                CompileFunctionCall(func, form.cdr, e, p);
             }else 
             throw new SyntaxError(string.Format("Object is not a function, macro or special operator: {0}", car));
         }
