@@ -42,7 +42,7 @@ namespace Compiler.Frontend
             }
             return ret.ToArray();
         }
-        public static void ParseLambdaList(Cons llist, Environment env)
+        public static void ParseLambdaList(Cons llist, Environment env, IL.Function f)
         {
             //currently only support fixnum parameters, todo: add &rest &optional ... support
             var list = ListToArray(llist);
@@ -50,7 +50,7 @@ namespace Compiler.Frontend
             {
                 if (!(i is Symbol s))
                     throw new SyntaxError("Illegal parameter list");
-                env.AddVariable(s);
+                f.Parameters.Add(env.AddVariable(s));
             }
         }
     }

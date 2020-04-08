@@ -110,9 +110,9 @@ namespace Compiler.Frontend
         {
             var (t1, tbody) = Util.RequireAtLeast(body, 1, "LAMBDA");
             Environment cure = new Environment(e, 0);
-            if (t1[0] is Cons c)
-                Util.ParseLambdaList(c, cure);
             Function f = new Function(cure);
+            if (t1[0] is Cons c)
+                Util.ParseLambdaList(c, cure, f);
             CompileProgn(tbody, cure, f);
             f.Add(new IL.ReturnInstruction(Global.rax));
             p.Add(new IL.FunctionInstruction(f, Global.rax));
