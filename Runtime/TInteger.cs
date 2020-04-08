@@ -65,6 +65,13 @@ namespace Runtime
             return new TInteger(-Value);
         }
 
+        public override T LessThan(Number rhs)
+        {
+            if (!(rhs is TInteger r))
+                throw new RuntimeException("Invalid call: LessThan(TInteger)");
+            return Value < r.Value ? new T() : null;
+        }
+
         public override Number Reciprocal()
         {
             if (Value == 0)

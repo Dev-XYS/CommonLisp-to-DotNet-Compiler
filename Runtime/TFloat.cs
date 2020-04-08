@@ -57,6 +57,13 @@ namespace Runtime
             return new TFloat(-Value);
         }
 
+        public override T LessThan(Number rhs)
+        {
+            if (!(rhs is TFloat r))
+                throw new RuntimeException("Invalid call: LessThan(TFloat)");
+            return Value < r.Value ? new T() : null;
+        }
+
         public override Number Reciprocal()
         {
             return new TFloat(1.0 / Value);

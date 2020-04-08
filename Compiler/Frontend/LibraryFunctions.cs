@@ -21,6 +21,7 @@ namespace Compiler.Frontend
             AddOne("-", new Minus());
             AddOne("*", new Multiply());
             AddOne("/", new Divide());
+            AddOne("<", new Less());
             AddOne("WRITE", new Write());
             AddOne("WRITELN", new WriteLn());
         }

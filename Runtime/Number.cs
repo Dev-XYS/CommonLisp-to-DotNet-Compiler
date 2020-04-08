@@ -11,6 +11,7 @@ namespace Runtime
         public abstract Number Multiply(Number _);
         public abstract Number Divide(Number _);
         public abstract Number Negate();
+        public abstract T LessThan(Number _);
         public abstract Number Reciprocal();
         public IType Invoke(IType[] _)
         {
