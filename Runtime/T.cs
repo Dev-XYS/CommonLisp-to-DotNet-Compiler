@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    public class T : IType
+    public class T : IDataType
     {
         public T()
         {

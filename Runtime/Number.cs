@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    public abstract class Number : IType
+    public abstract class Number : IDataType
     {
         public abstract Number Add(Number _);
         public abstract Number Subtract(Number _);

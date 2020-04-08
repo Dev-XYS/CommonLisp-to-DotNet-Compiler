@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    public class Symbol : IType
+    public class Symbol : IDataType
     {
         private static Dictionary<string, Symbol> gsl;
         private static int gid;

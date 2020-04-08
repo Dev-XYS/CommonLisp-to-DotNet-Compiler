@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Runtime
 {
-    public class TString : IType
+    public class TString : IDataType
     {
         public string Value { get; set; }
         public override string ToString()

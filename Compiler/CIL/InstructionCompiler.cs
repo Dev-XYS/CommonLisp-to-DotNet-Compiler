@@ -26,9 +26,21 @@ namespace Compiler.CIL
             {
                 GenReturn(instr as IL.ReturnInstruction);
             }
+            else if (instr is IL.Label)
+            {
+                GenLabel(instr as IL.Label);
+            }
+            else if (instr is IL.UnconditionalJumpInstruction)
+            {
+                GenUnconditionalJump(instr as IL.UnconditionalJumpInstruction);
+            }
+            else if (instr is IL.ConditionalJumpInstruction)
+            {
+                GenConditionalJump(instr as IL.ConditionalJumpInstruction);
+            }
             else
             {
-                Gen(new I.NotImplemented());
+                throw new NotImplementedException();
             }
         }
 
@@ -50,11 +62,26 @@ namespace Compiler.CIL
 
         private void GenLoadConst(Runtime.IType c)
         {
-            if (c is Runtime.TInteger)
+            if (c == null)
             {
-                Runtime.TInteger i = c as Runtime.TInteger;
-                Gen(new I.LoadInt { Value = i.Value });
-                Gen(new I.NewObject { Type = new RuntimeObject { Type = typeof(Runtime.TInteger) } });
+                Gen(new I.LoadNull { });
+            }
+            else if (c is Runtime.IDataType)
+            {
+                if (c is Runtime.TInteger)
+                {
+                    Runtime.TInteger i = c as Runtime.TInteger;
+                    Gen(new I.LoadInt { Value = i.Value });
+                    Gen(new I.NewObject { Type = new RuntimeObject { Type = typeof(Runtime.TInteger) } });
+                }
+                else if (c is Runtime.T)
+                {
+                    Gen(new I.NewObject { Type = new RuntimeObject { Type = typeof(Runtime.T) } });
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
             }
             else if (c.GetType().Namespace.StartsWith("Runtime.Function"))
             {
@@ -62,7 +89,7 @@ namespace Compiler.CIL
             }
             else
             {
-                Gen(new I.LoadNull { });
+                throw new NotImplementedException();
             }
         }
 
@@ -70,6 +97,7 @@ namespace Compiler.CIL
         {
             if (e == null)
             {
+                throw new NotImplementedException();
                 Gen(new I.LoadNull { });
             }
             else if (e is IL.Variable)
@@ -141,6 +169,29 @@ namespace Compiler.CIL
         {
             GenLoadEntity(instr.Value);
             Gen(new I.Return { });
+        }
+
+        private void GenLabel(IL.Label label)
+        {
+            Gen(new I.Label { ILLabel = label });
+        }
+
+        private void GenUnconditionalJump(IL.UnconditionalJumpInstruction instr)
+        {
+            Gen(new I.Branch { Target = instr.Target });
+        }
+
+        private void GenConditionalJump(IL.ConditionalJumpInstruction instr)
+        {
+            GenLoadVariable(instr.TestVariable);
+            if (instr.Condition)
+            {
+                Gen(new I.BranchTrue { Target = instr.Target });
+            }
+            else
+            {
+                Gen(new I.BranchNull { Target = instr.Target });
+            }
         }
     }
 }
