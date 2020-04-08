@@ -28,9 +28,9 @@ namespace Compiler.Frontend
             VariableList.Add(ret);
             return ret;
         }
-        public IL.Variable AddUnnamedVariable(string name)
+        public IL.Variable AddUnnamedVariable()
         {
-            var ret = new IL.Variable(name, this);
+            var ret = new IL.Variable(this);
             VariableList.Add(ret);
             return ret;
         }
