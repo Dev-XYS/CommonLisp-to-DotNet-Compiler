@@ -19,7 +19,7 @@ namespace Compiler.Frontend
                 if(cur is Cons c)
                 {
                     CompileSingleForm(c, e, p);
-                    IL.Variable variable = Global.env.AddUnnamedVariable();
+                    IL.Variable variable = e.AddUnnamedVariable();
                     p.Add(new IL.MoveInstruction(Global.rax, variable));
                     callInstruction.Parameters.Add(variable);
                 }else if(cur is Symbol s)
@@ -28,7 +28,7 @@ namespace Compiler.Frontend
                 }else
                 {
                     CompileConstant(cur, e, p);
-                    IL.Variable variable = Global.env.AddUnnamedVariable();
+                    IL.Variable variable = e.AddUnnamedVariable();
                     p.Add(new IL.MoveInstruction(Global.rax, variable));
                     callInstruction.Parameters.Add(variable);
                 }
