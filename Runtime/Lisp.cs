@@ -12,7 +12,7 @@ namespace Runtime
             if (!inited)
             {
                 t = TBool.T();
-                nil = TBool.NIL();
+                nil = null;
                 stdin = new StandardInput();
                 Symbol.Init();
             }

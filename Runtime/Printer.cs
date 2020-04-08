@@ -19,7 +19,7 @@ namespace Runtime
                         c = d;
                         Console.Write(" ");
                     }
-                    else if (c.cdr as TBool == Lisp.nil)
+                    else if (c.cdr is null)
                     {
                         Console.Write(")");
                         break;
@@ -33,6 +33,8 @@ namespace Runtime
                     }
                 }
             }
+            else if (obj is null)
+                Console.Write("NIL");
             else Console.Write(obj);
         }
         public static void WriteLine(IType obj)

@@ -25,7 +25,7 @@ namespace Compiler.Frontend
         }
         public static void CompileProgn(IType list, Environment e, IL.Function p)
         {
-            if (list as TBool == Lisp.nil)
+            if (list is null)
                 p.Add(new IL.MoveInstruction(Global.nil, Global.rax));
             while (list is Cons forms)
             {
