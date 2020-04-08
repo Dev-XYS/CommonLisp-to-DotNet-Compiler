@@ -16,6 +16,7 @@ namespace Compiler.CIL
         }
 
         public Program Program { get; }
+        private IL.Function ILFunction { get; }
 
         public List<Instruction> CtorInstructionList { get; }
         public List<Instruction> InstructionList { get; }
@@ -30,6 +31,7 @@ namespace Compiler.CIL
         {
             Name = "func" + func.GetHashCode().ToString();
             Program = prog;
+            ILFunction = func;
 
             CtorInstructionList = new List<Instruction>();
             InstructionList = new List<Instruction>();
@@ -43,9 +45,12 @@ namespace Compiler.CIL
                 EnvList.Add(m);
                 EnvMap[env] = m;
             }
+        }
 
+        public void Generate()
+        {
             GenCtor();
-            GenBody(func);
+            GenBody(ILFunction);
         }
 
         private void CtorGen(Instruction instr)

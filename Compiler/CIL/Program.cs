@@ -34,6 +34,10 @@ namespace Compiler.CIL
                 FuncList.Add(f);
                 FuncMap[func] = f;
             }
+            foreach (Function f in FuncList)
+            {
+                f.Generate();
+            }
 
             Main = FuncMap[prog.Main];
         }
