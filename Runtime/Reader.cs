@@ -23,6 +23,10 @@ namespace Runtime
            // public EndOfListError(string? message) : base(message) { }
 #nullable disable
         }
+        private class NothingReadError : ReaderError
+        {
+            //Nothing!
+        }
         private static HashSet<char> MACROTERM = new HashSet<char>(";'`\",()");
         private static HashSet<char> MACRONONTERM = new HashSet<char>("#");
 
@@ -171,7 +175,7 @@ namespace Runtime
             {
                 case ';':
                     ReadComment(input);
-                    return null;
+                    throw new NothingReadError();
                 case '\'':
                     return ReadWith(Symbol.Find("QUOTE"), input);
                 case '`':
@@ -200,10 +204,14 @@ namespace Runtime
                 if (char.IsWhiteSpace(cur)) continue;
                 if (MACROTERM.Contains(cur) || MACRONONTERM.Contains(cur))
                 {
-                    var ret = ReadMacro(input, cur);
-                    if (ret is null)
+                    try
+                    {
+                        var ret = ReadMacro(input, cur);
+                        return ret;
+                    }catch(NothingReadError)
+                    {
                         continue;
-                    else return ret;
+                    }
                 }
                 bool couldBeNumber = true;
                 input.UnReadChar();
