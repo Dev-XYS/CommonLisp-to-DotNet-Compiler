@@ -56,9 +56,9 @@ namespace Compiler.CIL
                 Gen(new I.LoadInt { Value = i.Value });
                 Gen(new I.NewObject { Type = new RuntimeObject { Type = typeof(Runtime.TInteger) } });
             }
-            else if (c is Runtime.Function.WriteLn)
+            else if (c.GetType().Namespace.StartsWith("Runtime.Function"))
             {
-                Gen(new I.NewObject { Type = new RuntimeObject { Type = typeof(Runtime.Function.WriteLn) } });
+                Gen(new I.NewObject { Type = new RuntimeObject { Type = c.GetType() } });
             }
             else
             {
