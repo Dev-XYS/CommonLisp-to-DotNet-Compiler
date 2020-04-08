@@ -168,6 +168,9 @@ namespace Compiler.CIL
         private void GenReturn(IL.ReturnInstruction instr)
         {
             GenLoadEntity(instr.Value);
+            Gen(new I.LoadArgument { ArgNo = 0 });
+            Gen(new I.Load { Loc = 2 });
+            Gen(new I.StoreField { Field = EnvList[0] });
             Gen(new I.Return { });
         }
 
