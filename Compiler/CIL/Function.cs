@@ -63,10 +63,10 @@ namespace Compiler.CIL
             CtorGen(new I.LoadArgument { ArgNo = 0 });
             CtorGen(new I.CallObjectCtor { });
 
-            for (int i = 0; i < EnvList.Count - 1; i++)
+            for (int i = 1; i < EnvList.Count; i++)
             {
                 CtorGen(new I.LoadArgument { ArgNo = 0 });
-                CtorGen(new I.LoadArgument { ArgNo = i + 1 });
+                CtorGen(new I.LoadArgument { ArgNo = i });
                 CtorGen(new I.StoreField { Field = EnvList[i] });
             }
 
@@ -77,19 +77,19 @@ namespace Compiler.CIL
         {
             // create current environment
             Gen(new I.LoadArgument { ArgNo = 0 });
-            Gen(new I.NewObject { Type = EnvList[EnvList.Count - 1].Environment });
-            Gen(new I.StoreField { Field = EnvList[EnvList.Count - 1] });
+            Gen(new I.NewObject { Type = EnvList[0].Environment });
+            Gen(new I.StoreField { Field = EnvList[0] });
 
             // copy parameters to the environment
             int no = 0;
             foreach (IL.Variable var in func.Parameters)
             {
                 Gen(new I.LoadArgument { ArgNo = 0 });
-                Gen(new I.LoadField { Field = EnvList[EnvList.Count - 1] });
+                Gen(new I.LoadField { Field = EnvList[0] });
                 Gen(new I.LoadArgument { ArgNo = 1 });
                 Gen(new I.LoadInt { Value = no++ });
                 Gen(new I.LoadElement { });
-                Gen(new I.StoreField { Field = EnvList[EnvList.Count - 1].Environment.VarMap[var] });
+                Gen(new I.StoreField { Field = EnvList[0].Environment.VarMap[var] });
             }
 
             foreach (IL.IInstruction instr in func.InstructionList)
@@ -103,9 +103,9 @@ namespace Compiler.CIL
             string r = "";
             if (EnvList.Count > 1)
             {
-                r = string.Format("class {0} @{1}", EnvList[0].Type, EnvList[0].Name);
+                r = string.Format("class {0} @{1}", EnvList[1].Type, EnvList[1].Name);
             }
-            for (int i = 1; i < EnvList.Count - 1; i++)
+            for (int i = 2; i < EnvList.Count; i++)
             {
                 r += string.Format(", class {0} @{1}", EnvList[i].Type, EnvList[i].Name);
             }
