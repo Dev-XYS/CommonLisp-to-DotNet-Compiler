@@ -22,6 +22,12 @@ namespace Compiler.Frontend
             AddOne("*", new Multiply());
             AddOne("/", new Divide());
             AddOne("<", new Less());
+            AddOne(">", new Greater());
+            AddOne("<=", new LessEqual());
+            AddOne(">=", new GreaterEqual());
+            AddOne("=", new NumberEqual());
+            AddOne("/=", new NumberNotEqual());
+            AddOne("NOT", new LogicNot());
             AddOne("WRITE", new Write());
             AddOne("WRITELN", new WriteLn());
         }
