@@ -15,7 +15,7 @@ namespace Runtime.Function.Arith
             for (int i = 1; i < args.Length; ++i)
                 if (!nums[i - 1].LessThan(nums[i]))
                     return Lisp.nil;
-            return new T();
+            return Lisp.t;
         }
     }
     public class Greater : IType

@@ -6,8 +6,8 @@ namespace Runtime
 {
     public class Symbol : IDataType
     {
-        private static Dictionary<string, Symbol> gsl;
-        private static int gid;
+        private static Dictionary<string, Symbol> gsl = new Dictionary<string, Symbol>();
+        private static int gid = 1;
         public string Name { get; set; }
         private int sid;
         private Symbol(string iv, int id)
@@ -42,11 +42,6 @@ namespace Runtime
         public override int GetHashCode()
         {
             return sid;
-        }
-        public static void Init()
-        {
-            gsl = new Dictionary<string, Symbol>();
-            gid = 1;
         }
 
         public IType Invoke(IType[] args)

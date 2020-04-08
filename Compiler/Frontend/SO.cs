@@ -169,7 +169,6 @@ namespace Compiler.Frontend
         {
             if (!inited)
             {
-                Lisp.Init();
                 types = new Dictionary<Symbol, Type>(){
                     {Symbol.FindOrCreate("BLOCK"), Type.BLOCK },
                     {Symbol.FindOrCreate("LAMBDA"), Type.LAMBDA },

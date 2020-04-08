@@ -91,7 +91,6 @@ namespace Compiler.Frontend
             {
                 inited = true;
                 prog.Main = new IL.ParametersFunction();
-                Lisp.Init();
                 LibraryFunctions.AddAll(Global.env, prog.Main);
                 prog.Main.EnvList.Add(Global.env);
                 Global.Init();

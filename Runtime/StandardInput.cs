@@ -10,8 +10,8 @@ namespace Runtime
         private bool readed;
         public StandardInput()
         {
-            buf = Console.Read();
-            readed = false;
+            buf = 1;
+            readed = true;
         }
         public int ReadChar()
         {

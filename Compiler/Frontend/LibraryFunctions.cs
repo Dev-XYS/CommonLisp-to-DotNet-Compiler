@@ -28,6 +28,7 @@ namespace Compiler.Frontend
             AddOne("=", new NumberEqual());
             AddOne("/=", new NumberNotEqual());
             AddOne("NOT", new LogicNot());
+            AddOne("READ", new Read());
             AddOne("WRITE", new Write());
             AddOne("WRITELN", new WriteLn());
         }

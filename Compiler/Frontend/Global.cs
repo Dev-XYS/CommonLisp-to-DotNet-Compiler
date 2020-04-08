@@ -16,7 +16,6 @@ namespace Compiler.Frontend
             {
                 inited = true;
                 Core.Init();
-                Lisp.Init();
                 SO.Init();
                 rax = env.AddUnnamedVariable();
                 nil = env.Find(Symbol.Find("NIL"));
