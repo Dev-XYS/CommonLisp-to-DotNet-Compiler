@@ -10,6 +10,12 @@ namespace Compiler.IL
 
         public Environment Env { get; set; }
 
+        public Variable(Environment env)
+        {
+            Name = "temp" + this.GetHashCode().ToString();
+            Env = env;
+        }
+
         public Variable(string name, Environment env)
         {
             Name = name;
