@@ -18,12 +18,12 @@ namespace Compiler.IL
         /// <summary>
         /// 全体函数列表
         /// </summary>
-        public List<Function> FunctionList { get; set; }
+        public IEnumerable<Function> FunctionList { get; set; }
 
         /// <summary>
         /// 全体环境列表
         /// </summary>
-        public List<Environment> EnvList { get; set; }
+        public IEnumerable<Environment> EnvList { get; set; }
 
         /// <summary>
         /// 主函数（无参数）
@@ -32,8 +32,6 @@ namespace Compiler.IL
 
         public Program()
         {
-            FunctionList = new List<Function>();
-            EnvList = new List<Environment>();
         }
     }
 }

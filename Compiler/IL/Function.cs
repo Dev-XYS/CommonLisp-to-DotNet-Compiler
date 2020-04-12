@@ -28,10 +28,8 @@ namespace Compiler.IL
 
     class ParametersFunction : Function
     {
-        public static List<Function> gfl = new List<Function>();
         public ParametersFunction() : base()
         {
-            gfl.Add(this);
         }
     }
 
