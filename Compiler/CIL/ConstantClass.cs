@@ -11,13 +11,13 @@ namespace Compiler.CIL
     /// </summary>
     class ConstantClass
     {
-        private List<Runtime.IDataType> Constants { get; }
+        private HashSet<Runtime.IDataType> Constants { get; }
 
         private List<Instruction> CtorInstructionList { get; }
 
         public ConstantClass()
         {
-            Constants = new List<Runtime.IDataType>();
+            Constants = new HashSet<Runtime.IDataType>();
             CtorInstructionList = new List<Instruction>();
         }
 
@@ -57,6 +57,11 @@ namespace Compiler.CIL
             {
                 CtorGen(new I.LoadInt { Value = integer.Value });
                 CtorGen(new I.NewObject { Type = new RuntimeObject { Type = typeof(Runtime.TInteger) } });
+            }
+            else if (data is Runtime.Symbol sym)
+            {
+                CtorGen(new I.LoadString { Value = sym.Name });
+                CtorGen(new I.Call { FullName = "[Runtime]Runtime.Symbol [Runtime]Runtime.Symbol::FindOrCreate(string)" });
             }
             else
             {

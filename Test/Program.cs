@@ -7,12 +7,18 @@ static class Program
     static void Main(string[] args)
     {
         IType temp = Constants.const1;
+        Constants.Get();
     }
 }
 
 static class Constants
 {
     public static readonly IType const1 = new TInteger(8);
+
+    public static E0 Get()
+    {
+        return new E0();
+    }
 }
 
 class E0
