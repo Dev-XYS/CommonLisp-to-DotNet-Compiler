@@ -21,5 +21,10 @@ namespace Compiler.IL
             Name = name;
             Env = env;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

@@ -14,12 +14,16 @@ namespace Compiler.CIL
 
         private Function Main { get; }
 
+        public ConstantClass Const { get; }
+
         public Program(IL.Program prog)
         {
             EnvList = new List<Environment>();
             EnvMap = new Dictionary<IL.Environment, Environment>();
             FuncList = new List<Function>();
             FuncMap = new Dictionary<IL.Function, Function>();
+
+            Const = new ConstantClass();
 
             foreach (IL.Environment env in prog.EnvList)
             {
@@ -40,6 +44,8 @@ namespace Compiler.CIL
             }
 
             Main = FuncMap[prog.Main];
+
+            Const.Generate();
         }
 
         public void Emit(System.IO.TextWriter writer)
@@ -47,6 +53,10 @@ namespace Compiler.CIL
             Emitter.Writer = writer;
 
             EmitHeader();
+
+            EmitMain();
+
+            Const.Emit();
 
             foreach (Environment env in EnvList)
             {
@@ -56,8 +66,6 @@ namespace Compiler.CIL
             {
                 func.Emit();
             }
-
-            EmitMain();
         }
 
         private void EmitHeader()

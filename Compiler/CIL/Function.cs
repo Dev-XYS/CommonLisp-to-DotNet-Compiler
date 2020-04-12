@@ -94,6 +94,7 @@ namespace Compiler.CIL
 
             foreach (IL.IInstruction instr in func.InstructionList)
             {
+                Gen(new I.Comment { Content = instr.ToString() });
                 GenInstruction(instr);
             }
         }

@@ -15,5 +15,10 @@ namespace Compiler.IL
             Function = function;
             Destination = destination;
         }
+
+        public override string ToString()
+        {
+            return string.Format("[FUNC] {0} -> {1}", Function.Name, Destination.Name);
+        }
     }
 }

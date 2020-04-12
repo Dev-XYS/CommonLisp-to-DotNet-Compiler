@@ -19,6 +19,11 @@ namespace Compiler.IL
         public UnconditionalJumpInstruction(Label target) : base(target)
         {
         }
+
+        public override string ToString()
+        {
+            return string.Format("[JUMP] {0}", Target.GetHashCode());
+        }
     }
 
     class ConditionalJumpInstruction : JumpInstruction
@@ -31,6 +36,11 @@ namespace Compiler.IL
         {
             TestVariable = test;
             Condition = condition;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[JUMP] {0} if {1} {2}", Target.GetHashCode(), TestVariable.ToString(), Condition);
         }
     }
 }
