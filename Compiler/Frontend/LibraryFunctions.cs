@@ -28,6 +28,8 @@ namespace Compiler.Frontend
             AddOne("=", new NumberEqual());
             AddOne("/=", new NumberNotEqual());
             AddOne("NOT", new LogicNot());
+            AddOne("EQ", new Eq());
+            AddOne("EQL", new Eql());
             AddOne("LIST", new List());
             AddOne("CAR", new Car());
             AddOne("CDR", new Cdr());
