@@ -6,5 +6,6 @@ namespace Runtime
     {
         public static T t = new T(), nil;
         public static StandardInput stdin = new StandardInput();
+        public static StandardOutput stdout = new StandardOutput();
     }
 }

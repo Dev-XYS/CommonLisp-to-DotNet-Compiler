@@ -6,17 +6,17 @@ namespace Runtime
 {
     public class TFloat : Number
     {
-        public double Value { get; set; }
+        public double Value { get; }
         public TFloat(double x)
         {
             Value = x;
         }
-        public TFloat(Number src, int _)
+        public static TFloat From(Number src)
         {
             if (src is TFloat f)
-                Value = f.Value;
+                return f;
             else if (src is TInteger i)
-                Value = i.Value;
+                return new TFloat(i.Value);
             else throw new NotImplementedException(string.Format("Not implemented conversion: {0} to TFloat", src));
         }
         public override string ToString()

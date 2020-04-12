@@ -8,7 +8,7 @@ namespace Runtime
     {
         private static Dictionary<string, Symbol> gsl = new Dictionary<string, Symbol>();
         private static int gid = 1;
-        public string Name { get; set; }
+        public string Name { get; }
         private int sid;
         private Symbol(string iv, int id)
         {
@@ -37,7 +37,7 @@ namespace Runtime
         }
         public override string ToString()
         {
-            return "Symbol(" + Name + ")";
+            return Name;
         }
         public override int GetHashCode()
         {
