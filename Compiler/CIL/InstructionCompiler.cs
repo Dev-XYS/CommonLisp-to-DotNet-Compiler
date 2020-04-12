@@ -62,33 +62,27 @@ namespace Compiler.CIL
 
         private void GenLoadConst(Runtime.IType c)
         {
+            // Every constant can be null.
             if (c == null)
             {
                 Gen(new I.LoadNull { });
             }
+            // The constant is data.
             else if (c is Runtime.IDataType)
             {
-                if (c is Runtime.TInteger)
-                {
-                    Runtime.TInteger i = c as Runtime.TInteger;
-                    Gen(new I.LoadInt { Value = i.Value });
-                    Gen(new I.NewObject { Type = new RuntimeObject { Type = typeof(Runtime.TInteger) } });
-                }
-                else if (c is Runtime.T)
-                {
-                    Gen(new I.NewObject { Type = new RuntimeObject { Type = typeof(Runtime.T) } });
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
+                Program.Const.Register(c as Runtime.IDataType);
+                Gen(new I.LoadStaticField { Name = "const" + c.GetHashCode() });
             }
+            // The constant is a function.
+            // -> Need a better way to determine if a constant is a function.
             else if (c.GetType().Namespace.StartsWith("Runtime.Function"))
             {
                 Gen(new I.NewObject { Type = new RuntimeObject { Type = c.GetType() } });
             }
+            // It seems that there aren't other types of constant.
             else
             {
+                // This should not happen.
                 throw new NotImplementedException();
             }
         }
@@ -97,8 +91,8 @@ namespace Compiler.CIL
         {
             if (e == null)
             {
+                // This should not happen.
                 throw new NotImplementedException();
-                Gen(new I.LoadNull { });
             }
             else if (e is IL.Variable)
             {

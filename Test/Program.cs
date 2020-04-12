@@ -6,8 +6,13 @@ static class Program
 {
     static void Main(string[] args)
     {
-        (new main0()).Invoke(new IType[0]);
+        IType temp = Constants.const1;
     }
+}
+
+static class Constants
+{
+    public static readonly IType const1 = new TInteger(8);
 }
 
 class E0
