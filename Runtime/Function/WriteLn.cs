@@ -13,7 +13,7 @@ namespace Runtime.Function
             {
                 if (first) first = false;
                 else Console.Write(" ");
-                Printer.Write(i);
+                Printer.Write(i, Lisp.stdout);
             }
             Console.WriteLine();
             return Lisp.nil;

@@ -55,10 +55,13 @@ namespace Compiler.Frontend
         }
         public static void CompileLet(IType body, Environment e, IL.Function p)
         {
+            throw new NotImplementedException();
+            /*
             if (!(body is Cons b))
                 throw new SyntaxError("LET: insufficient argument");
             var bindings = b.car;
-            Environment cure = new Environment(e, 0);
+            List<Symbol> names = new List<Symbol>();
+            List<IType> values = new List<IType>();
             while (bindings is Cons l)
             {
                 var cur = l.car;
@@ -78,7 +81,7 @@ namespace Compiler.Frontend
                 }
                 else throw new SyntaxError("LET: illegal binding");
             }
-            CompileProgn(b.cdr, cure, p);
+            CompileProgn(b.cdr, cure, p);*/
         }
         public static void CompileLetStar(IType body, Environment e, IL.Function p)
         {

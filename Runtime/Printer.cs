@@ -6,41 +6,41 @@ namespace Runtime
 {
     public static class Printer
     {
-        public static void Write(IType obj)
+        public static void Write(IType obj, IOutputStream output)
         {
             if (obj is Cons c)
             {
-                Console.Write("(");
+                output.PutS("(");
                 while (true)
                 {
-                    Write(c.car);
+                    Write(c.car, output);
                     if (c.cdr is Cons d)
                     {
                         c = d;
-                        Console.Write(" ");
+                        output.PutChar(' ');
                     }
                     else if (c.cdr is null)
                     {
-                        Console.Write(")");
+                        output.PutChar(')');
                         break;
                     }
                     else
                     {
-                        Console.Write(" . ");
-                        Write(c.cdr);
-                        Console.Write(")");
+                        output.PutS(" . ");
+                        Write(c.cdr, output);
+                        output.PutChar(')');
                         break;
                     }
                 }
             }
             else if (obj is null)
-                Console.Write("NIL");
-            else Console.Write(obj);
+                output.PutS("NIL");
+            else output.PutS(obj.ToString());
         }
-        public static void WriteLine(IType obj)
+        public static void WriteLine(IType obj, IOutputStream output)
         {
-            Write(obj);
-            Console.WriteLine();
+            Write(obj, output);
+            output.PutChar('\n');
         }
     }
 }
