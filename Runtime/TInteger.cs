@@ -6,17 +6,17 @@ namespace Runtime
 {
     public class TInteger : Number
     {
-        public int Value { get; set; }
+        public int Value { get; }
         public TInteger(int x)
         {
             Value = x;
         }
-        public TInteger(Number src, int _)
+        public static TInteger From(Number src)
         {
             if (src is TFloat f)
-                Value = Convert.ToInt32(f.Value);
+                return new TInteger(Convert.ToInt32(f.Value));
             else if (src is TInteger i)
-                Value = i.Value;
+                return i;
             else throw new NotImplementedException(string.Format("Not implemented conversion: {0} to TInteger", src));
         }
         public override string ToString()

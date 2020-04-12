@@ -20,7 +20,7 @@ namespace Runtime.Function.Arith
             if (minType > 0)
                 for (int i = 0; i < args.Length; ++i)
                     if (!(args[i] is TFloat))
-                        args[i] = new TFloat(args[i], 0);
+                        args[i] = TFloat.From(args[i]);
         }
         public static Number[] AllNumbers(IType[] args)
         {
