@@ -62,9 +62,13 @@ namespace Runtime.Function
                 return Lisp.nil;
             if (!Array.TrueForAll(args, (IType x) => x is Cons || x is null))
                 throw new RuntimeException("NCONC: Invalid argument type");
-            Cons[] c = Array.ConvertAll(args, (IType x) => x as Cons);
+            List<Cons> c = new List<Cons>();
+            foreach (var i in args)
+                if (i is Cons co)
+                    c.Add(co);
+            if (c.Count == 0) return Lisp.nil;
             Cons ret = c[0];
-            for(int i = 0; i < c.Length-1; ++i)
+            for(int i = 0; i < c.Count-1; ++i)
             {
                 while (c[i].cdr is Cons d)
                     c[i] = d;
