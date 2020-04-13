@@ -24,11 +24,11 @@ namespace Compiler.Frontend
             var (t1, tbody) = Util.RequireAtLeast(form, 2, "DEFUN");
             if (!(t1[0] is Symbol name))
                 throw new SyntaxError("DEFUN: Invalid name");
-            if (!(t1[1] is Cons pars))
+            if (!(t1[1] is Cons || t1[1] is null))
                 throw new SyntaxError("DEFUN: Invalid parameter list");
             return new Cons(Symbol.Find("PROGN"), new Cons(
                 new Cons(Symbol.Find("SPECIAL"), new Cons(name, Lisp.nil)), new Cons(
-                    new Cons(Symbol.Find("SETQ"), new Cons(name, new Cons(new Cons(Symbol.Find("LAMBDA"), new Cons(pars, tbody)), Lisp.nil))), Lisp.nil)));
+                    new Cons(Symbol.Find("SETQ"), new Cons(name, new Cons(new Cons(Symbol.Find("LAMBDA"), new Cons(t1[1], tbody)), Lisp.nil))), Lisp.nil)));
         }
         public static Cons DefparameterExpand(IType form)
         {
