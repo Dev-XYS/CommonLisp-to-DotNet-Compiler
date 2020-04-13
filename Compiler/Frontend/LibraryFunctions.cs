@@ -33,6 +33,8 @@ namespace Compiler.Frontend
             AddOne("LIST", new List());
             AddOne("CAR", new Car());
             AddOne("CDR", new Cdr());
+            AddOne("LDIFF", new Ldiff());
+            AddOne("NCONC", new Nconc());
             AddOne("READ", new Read());
             AddOne("WRITE", new Write());
             AddOne("WRITELN", new WriteLn());
