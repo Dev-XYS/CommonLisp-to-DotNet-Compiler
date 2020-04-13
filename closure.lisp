@@ -10,4 +10,4 @@
   (c1 'set 5)
   (c2 'set 7)
   (writeln (c1 'get 0))
-  (writeln (c2 'het 0)))
+  (writeln (c2 'get 0)))
