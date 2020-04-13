@@ -17,7 +17,7 @@ namespace Compiler.IL
 
         public override string ToString()
         {
-            return string.Format("[MOVE] {0} -> {1}", Source.ToString(), Destination.Name);
+            return string.Format("[MOVE] {0} -> {1}", Source.ToString(), Destination.ToString());
         }
     }
 }

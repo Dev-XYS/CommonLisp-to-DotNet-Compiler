@@ -17,7 +17,7 @@ namespace Compiler.CIL
 
         public Environment(IL.Environment env)
         {
-            Name = "env" + env.GetHashCode().ToString();
+            Name = env.Name;
             VarMap = new Dictionary<IL.Variable, ITypeMember>();
 
             foreach (IL.Variable var in env.VariableList)

@@ -6,6 +6,9 @@ namespace Compiler.IL
 {
     abstract class Function
     {
+        private static int gfid;
+        private int fid;
+
         public string Name { get; set; }
 
         public List<Environment> EnvList { get; }
@@ -16,6 +19,9 @@ namespace Compiler.IL
 
         public Function()
         {
+            fid = gfid++;
+            Name = "func" + fid;
+
             EnvList = new List<Environment>();
             Parameters = new List<Variable>();
             InstructionList = new List<IInstruction>();
@@ -23,6 +29,11 @@ namespace Compiler.IL
         public void Add(IInstruction i)
         {
             InstructionList.Add(i);
+        }
+
+        public override int GetHashCode()
+        {
+            return fid;
         }
     }
 

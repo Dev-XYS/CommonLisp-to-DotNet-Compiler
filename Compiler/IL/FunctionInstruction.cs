@@ -18,7 +18,7 @@ namespace Compiler.IL
 
         public override string ToString()
         {
-            return string.Format("[FUNC] {0} -> {1}", Function.Name, Destination.Name);
+            return string.Format("[FUNC] {0} -> {1}", Function.Name, Destination.ToString());
         }
     }
 }

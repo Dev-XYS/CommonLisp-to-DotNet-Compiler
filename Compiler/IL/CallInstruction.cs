@@ -19,7 +19,7 @@ namespace Compiler.IL
 
         public override string ToString()
         {
-            return string.Format("[CALL] {0} ({1}) -> {2}", Function.Name, GetParameterList(), Destination.Name);
+            return string.Format("[CALL] {0} ({1}) -> {2}", Function.ToString(), GetParameterList(), Destination.ToString());
         }
 
         private string GetParameterList()

@@ -40,7 +40,7 @@ namespace Compiler.IL
 
         public override string ToString()
         {
-            return string.Format("[JUMP] {0} if {1} {2}", Target.GetHashCode(), TestVariable.ToString(), Condition);
+            return string.Format("[JUMP] {0} if {1} {2}", Target.Name, TestVariable.ToString(), Condition);
         }
     }
 }

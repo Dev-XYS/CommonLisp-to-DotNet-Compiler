@@ -6,12 +6,16 @@ namespace Compiler.IL
 {
     class Variable : IEntity
     {
+        private static int gvid;
+        private int vid;
+
         public string Name { get; set; }
 
         public Environment Env { get; set; }
 
         public Variable(Environment env)
         {
+            vid = gvid++;
             Name = "temp" + this.GetHashCode().ToString();
             Env = env;
         }
@@ -24,7 +28,12 @@ namespace Compiler.IL
 
         public override string ToString()
         {
-            return Name;
+            return Env.Name + "::" + Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return vid;
         }
     }
 }

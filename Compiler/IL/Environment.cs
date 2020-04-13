@@ -9,7 +9,10 @@ namespace Compiler.IL
     /// </summary>
     class Environment
     {
-        public string Name { get; set; }
+        private static int geid;
+        private int eid;
+
+        public string Name { get; }
 
         /// <summary>
         /// 变量列表
@@ -18,7 +21,15 @@ namespace Compiler.IL
 
         public Environment()
         {
+            eid = geid++;
+            Name = "env" + eid;
+
             VariableList = new List<Variable>();
+        }
+
+        public override int GetHashCode()
+        {
+            return eid;
         }
     }
 }
