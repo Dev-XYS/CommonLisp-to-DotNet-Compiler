@@ -75,6 +75,11 @@ namespace Compiler.CIL
 
         private void GenBody(IL.Function func)
         {
+            // store previous environment (for recursive call)
+            Gen(new I.LoadArgument { ArgNo = 0 });
+            Gen(new I.LoadField { Field = EnvList[0] });
+            Gen(new I.Store { Loc = 2 });
+
             // create current environment
             Gen(new I.LoadArgument { ArgNo = 0 });
             Gen(new I.NewObject { Type = EnvList[0].Environment });
@@ -133,7 +138,7 @@ namespace Compiler.CIL
 
             Emitter.Emit(".method public hidebysig newslot virtual final instance class [Runtime]Runtime.IType Invoke(class [Runtime]Runtime.IType[] args) cil managed");
             Emitter.BeginBlock();
-            Emitter.Emit(".locals init (class [Runtime]Runtime.IType Temp, class [Runtime]Runtime.IType[] Args)");
+            Emitter.Emit(".locals init (class [Runtime]Runtime.IType Temp, class [Runtime]Runtime.IType[] Args, class {0})", EnvList[0].Name);
             foreach (Instruction instr in InstructionList)
             {
                 instr.Emit();
