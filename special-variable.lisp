@@ -1,12 +1,12 @@
-(special *global*)
-(special *f*)
-(setq *global* 5 *f* (lambda () (writeln *global*)))
-(*f*)
+(defparameter *global* 5)
+(defun f ()
+  (writeln *global*))
+(f)
 (let ((*global* 7))
-	(*f*)
+	(f)
 	(setq *global* (+ 1 *global*))
-	(*f*))
-(*f*)
+	(f))
+(f)
 ;;output should be:
 ;;5
 ;;7
