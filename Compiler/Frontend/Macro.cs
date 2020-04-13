@@ -12,6 +12,8 @@ namespace Compiler.Frontend
         {
             gml.Add(Symbol.FindOrCreate("DEFUN"), 1);
             gml.Add(Symbol.FindOrCreate("DEFPARAMETER"), 2);
+            gml.Add(Symbol.FindOrCreate("AND"), 3);
+            gml.Add(Symbol.FindOrCreate("OR"), 4);
         }
         public static bool IsMacro(Symbol s)
         {
@@ -41,7 +43,19 @@ namespace Compiler.Frontend
             }
             return ret;
         }
-        public static Cons FullExpand(Cons form)
+        public static IType AndExpand(IType form)
+        {
+            if (!(form is Cons c))
+                return Symbol.Find("T");
+            return new Cons(Symbol.Find("IF"), new Cons(c.car, new Cons(AndExpand(c.cdr), new Cons(Symbol.Find("NIL"), Lisp.nil))));
+        }
+        public static IType OrExpand(IType form)
+        {
+            if (!(form is Cons c))
+                return Symbol.Find("NIL");
+            return new Cons(Symbol.Find("IF"), new Cons(c.car, new Cons(Symbol.Find("T"), new Cons(OrExpand(c.cdr), Lisp.nil))));
+        }
+        public static IType FullExpand(Cons form)
         {
             switch(gml[form.car as Symbol])
             {
@@ -49,6 +63,10 @@ namespace Compiler.Frontend
                     return DefunExpand(form.cdr);
                 case 2:
                     return DefparameterExpand(form.cdr);
+                case 3:
+                    return AndExpand(form.cdr);
+                case 4:
+                    return OrExpand(form.cdr);
                 default:
                     throw new NotImplementedException("Macros are not implemented yet");
             }

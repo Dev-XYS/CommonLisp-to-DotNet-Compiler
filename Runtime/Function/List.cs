@@ -54,4 +54,45 @@ namespace Runtime.Function
             else throw new RuntimeException("CDR: Invalid argument type");
         }
     }
+    public class Nconc: IType
+    {
+        public IType Invoke(IType[] args)
+        {
+            if (args.Length == 0)
+                return Lisp.nil;
+            if (!Array.TrueForAll(args, (IType x) => x is Cons || x is null))
+                throw new RuntimeException("NCONC: Invalid argument type");
+            Cons[] c = Array.ConvertAll(args, (IType x) => x as Cons);
+            Cons ret = c[0];
+            for(int i = 0; i < c.Length-1; ++i)
+            {
+                while (c[i].cdr is Cons d)
+                    c[i] = d;
+                c[i].cdr = c[i + 1];
+            }
+            return ret;
+        }
+    }
+    public class Ldiff: IType
+    {
+        public IType Invoke(IType[] args)
+        {
+            if (args.Length != 2)
+                throw new RuntimeException("LDIFF: Exactly 2 arguments required");
+            if (!Array.TrueForAll(args, (IType x) => x is null || x is Cons)) throw new RuntimeException("LDIFF: Invalid Argument type");
+            if (args[0] is null)
+                return null;
+            Cons c = args[0] as Cons;
+            if (c.Equals(args[1])) return null;
+            Cons ret = new Cons(c.car, Lisp.nil);
+            Cons cur = ret;
+            while(c.cdr is Cons d && !d.Equals(args[1]))
+            {
+                cur.cdr = new Cons(d.car, Lisp.nil);
+                cur = cur.cdr as Cons;
+                c = d;
+            }
+            return ret;
+        }
+    }
 }
