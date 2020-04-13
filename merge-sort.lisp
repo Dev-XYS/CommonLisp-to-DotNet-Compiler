@@ -28,4 +28,4 @@
 			       ret)))
 	(msort-impl))
       l))
-(msort (read))
+(writeln (msort (read)))
