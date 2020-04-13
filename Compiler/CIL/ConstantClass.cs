@@ -43,7 +43,11 @@ namespace Compiler.CIL
 
         private void GenLoadConstant(Runtime.IDataType data)
         {
-            if (data is Runtime.Cons cons)
+            if (data == null)
+            {
+                CtorGen(new I.LoadNull { });
+            }
+            else if (data is Runtime.Cons cons)
             {
                 GenLoadConstant(cons.car as Runtime.IDataType);
                 GenLoadConstant(cons.cdr as Runtime.IDataType);
@@ -62,6 +66,11 @@ namespace Compiler.CIL
             {
                 CtorGen(new I.LoadString { Value = sym.Name });
                 CtorGen(new I.Call { FullName = "[Runtime]Runtime.Symbol [Runtime]Runtime.Symbol::FindOrCreate(string)" });
+            }
+            else if (data is Runtime.TString str)
+            {
+                CtorGen(new I.LoadString { Value = str.Value });
+                CtorGen(new I.NewObject { Type = new RuntimeObject { Type = typeof(Runtime.TString) } });
             }
             else
             {

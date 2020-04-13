@@ -11,10 +11,7 @@ namespace Runtime
         {
             return "\"" + Value.ToString() + "\"";
         }
-        public TString()
-        {
-            Value = "";
-        }
+
         public TString(string s)
         {
             Value = s;

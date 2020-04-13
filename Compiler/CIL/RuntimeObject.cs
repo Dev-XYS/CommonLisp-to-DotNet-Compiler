@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Compiler.CIL
@@ -12,18 +13,25 @@ namespace Compiler.CIL
         {
             get
             {
-                string r = "";
                 var ctorList = Type.GetConstructors();
-                var args = ctorList[0].GetParameters();
-                if (args.Length > 0)
+                ParameterInfo[] args = ctorList[0].GetParameters();
+                return string.Join(", ", Array.ConvertAll(args, (ParameterInfo x) =>
                 {
-                    r = args[0].ParameterType.Name.ToLower();
-                }
-                for (int i = 1; i < args.Length; i++)
-                {
-                    r += string.Format(", {0}", args[i].ParameterType.Name.ToLower());
-                }
-                return r;
+                    // For builtin types.
+                    if (x.ParameterType == typeof(int))
+                    {
+                        return "int32";
+                    }
+                    else if (x.ParameterType == typeof(string))
+                    {
+                        return "string";
+                    }
+                    // Assume other types are contained in the namespace `Runtime`.
+                    else
+                    {
+                        return string.Format("class [Runtime]{0}", x.ParameterType.FullName);
+                    }
+                }));
             }
         }
 

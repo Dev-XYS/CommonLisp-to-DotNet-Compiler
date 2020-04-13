@@ -6,8 +6,9 @@ static class Program
 {
     static void Main(string[] args)
     {
-        IType temp = Constants.const1;
-        Constants.Get();
+        Runtime.Function.List list = new Runtime.Function.List();
+        IType l = list.Invoke(new IType[] { new TInteger(1), new TInteger(2) });
+        Console.WriteLine(l);
     }
 }
 

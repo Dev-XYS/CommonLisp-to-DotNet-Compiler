@@ -15,7 +15,7 @@ namespace Runtime
         public Cons() { }
         public override string ToString()
         {
-            return " ( " + car.ToString() + " . " + cdr.ToString() + " ) ";
+            return " ( " + (car == null ? "" : car.ToString()) + " . " + (cdr == null ? "" : cdr.ToString()) + " ) ";
         }
 
         public IType Invoke(IType[] args)
