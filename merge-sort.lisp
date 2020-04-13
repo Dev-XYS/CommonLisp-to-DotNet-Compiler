@@ -1,31 +1,31 @@
 (defun len (l)
-	(if l
-		(+ 1 (len (cdr l)))
-		0))
+  (if l
+      (+ 1 (len (cdr l)))
+      0))
 (defun split-at (l p)
-	(if (< p 1)
-		l
-		(split-at (cdr l) (- p 1))))
+  (if (< p 1)
+      l
+      (split-at (cdr l) (- p 1))))
 (defun split-mid (l)
-	(split-at l (/ (len l) 2)))
-		
+  (split-at l (/ (len l) 2)))
+
 (defun msort (l)
-	(if (cdr l)
-		(let ((r (split-mid l)) ret msort-impl)
-			(setq l (msort (ldiff l r)))
-			(setq r (msort r))
-			(setq msort-impl (lambda ()
-				(if (or l r)
-					(let ((li (car l)) (ri (car r)))
-						(if (or (not ri) (and li (< li ri)))
-							(progn
-								(setq ret (nconc ret (list li)))
-								(setq l (cdr l)))
-							(progn
-								(setq ret (nconc ret (list ri)))
-								(setq r (cdr r))))
-						(msort-impl))
-					ret)))
-			(msort-impl))
-		l))
+  (if (cdr l)
+      (let ((r (split-mid l)) ret msort-impl)
+	(setq l (msort (ldiff l r)))
+	(setq r (msort r))
+	(setq msort-impl (lambda ()
+			   (if (or l r)
+			       (let ((li (car l)) (ri (car r)))
+				 (if (or (not ri) (and li (< li ri)))
+				     (progn
+				       (setq ret (nconc ret (list li)))
+				       (setq l (cdr l)))
+				     (progn
+				       (setq ret (nconc ret (list ri)))
+				       (setq r (cdr r))))
+				 (msort-impl))
+			       ret)))
+	(msort-impl))
+      l))
 (msort (read))
