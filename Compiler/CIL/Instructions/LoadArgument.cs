@@ -10,7 +10,7 @@ namespace Compiler.CIL.Instructions
 
         public override void Emit()
         {
-            Emitter.Emit("ldarg.{0}", ArgNo);
+            Emitter.Emit("ldarg {0}", ArgNo);
         }
     }
 }
