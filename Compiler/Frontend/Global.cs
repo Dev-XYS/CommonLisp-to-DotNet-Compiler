@@ -17,6 +17,7 @@ namespace Compiler.Frontend
                 inited = true;
                 Core.Init();
                 SO.Init();
+                Macro.Init();
                 rax = env.AddUnnamedVariable();
                 nil = env.Find(Symbol.Find("NIL"));
             }

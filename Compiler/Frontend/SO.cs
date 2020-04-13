@@ -147,7 +147,7 @@ namespace Compiler.Frontend
         }
         public static void CompileSpecial(IType body, Environment e, Function p)
         {
-            if (p != Core.main)
+            if (e != Global.env)
                 throw new SyntaxError("SPECIAL: can only be declared in the outmost environment");
             var name = Util.RequireExactly(body, 1, "SPECIAL")[0];
             if (!(name is Symbol s)) throw new SyntaxError("SPECIAL: illegal name");
