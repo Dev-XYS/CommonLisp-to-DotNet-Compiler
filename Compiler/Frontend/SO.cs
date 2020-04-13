@@ -9,7 +9,7 @@ namespace Compiler.Frontend
     {
         public enum Type
         {
-            BLOCK, CATCH, EVAL_WHEN, FLET, FUNCTION, GO, IF, LABELS, LET, LET_STAR, LOAD_TIME_VALUE, LOCALLY, MACROLET, LAMBDA,
+            BLOCK, CATCH, EVAL_WHEN, FLET, FUNCTION, GO, IF, LABELS, LET, LET_STAR, LOAD_TIME_VALUE, LOCALLY, MACROLET, LAMBDA, SPECIAL,
             MULTIPLE_VALUE_CALL, MULTIPLE_VALUE_PROG1, PROGN, PROGY, QUOTE, RETURN_FROM, SETQ, SYMBOL_MACROLET, TAGBODY, THE, THROW, UNWIND_PROTECT
         };
         private static Dictionary<Symbol, Type> types;
@@ -23,10 +23,10 @@ namespace Compiler.Frontend
             }
             else throw new Exception(string.Format("Unknown special operator {0}", s));
         }
-        public static void CompileProgn(IType list, Environment e, IL.Function p)
+        public static void CompileProgn(IType list, Environment e, Function p)
         {
             if (list is null)
-                p.Add(new IL.MoveInstruction(Global.nil, Global.rax));
+                p.Store(Lisp.nil);
             while (list is Cons forms)
             {
                 var cur = forms.car;
@@ -34,7 +34,7 @@ namespace Compiler.Frontend
                 Core.CompileSingleExpr(cur, e, p);
             }
         }
-        public static void CompileIf(IType body, Environment e, IL.Function p)
+        public static void CompileIf(IType body, Environment e, Function p)
         {
             var param = Util.RequireExactly(body, 3, "IF");
             IType cond = param[0], good = param[1], bad = param[2];
@@ -48,20 +48,21 @@ namespace Compiler.Frontend
             Core.CompileSingleExpr(good, e, p);
             p.Add(lGood);
         }
-        public static void CompileQuote(IType body, Environment e, IL.Function p)
+        public static void CompileQuote(IType body, Environment e, Function p)
         {
             var quoted = Util.RequireExactly(body, 1, "QUOTE")[0];
             Core.CompileConstant(quoted, e, p);
         }
-        public static void CompileLet(IType body, Environment e, IL.Function p)
+        public static void CompileLet(IType body, Environment e, Function p)
         {
-            throw new NotImplementedException();
-            /*
             if (!(body is Cons b))
                 throw new SyntaxError("LET: insufficient argument");
             var bindings = b.car;
-            List<Symbol> names = new List<Symbol>();
-            List<IType> values = new List<IType>();
+            Environment cure = new Environment(e);
+            List<IL.IEntity> lvalues = new List<IL.IEntity>();
+            List<SpecialVariable> specials = new List<SpecialVariable>();
+            List<IL.IEntity> svalues = new List<IL.IEntity>();
+            Function fn = new Function(cure);
             while (bindings is Cons l)
             {
                 var cur = l.car;
@@ -72,55 +73,64 @@ namespace Compiler.Frontend
                     IType name = temp[0], value = temp[1];
                     if (!(name is Symbol s))
                         throw new SyntaxError("LET: illegal name");
+                    var sv = SpecialVariable.Find(s);
+                    var v = e.AddUnnamedVariable();
                     Core.CompileSingleExpr(value, e, p);
-                    p.Add(new IL.MoveInstruction(Global.rax, cure.AddVariable(s)));
+                    p.Load(v);
+                    if(sv is null)
+                    {
+                        fn.AddParam(s);
+                        lvalues.Add(v);
+                    }else
+                    {
+                        specials.Add(sv);
+                        svalues.Add(v);
+                    }
                 }
                 else if (cur is Symbol s)
                 {
-                    cure.AddVariable(s); //assume unassigned variable have nil
+                    var sv = SpecialVariable.Find(s);
+                    if(sv is null)
+                    {
+                        fn.AddParam(s);
+                        lvalues.Add(Global.nil);
+                    }else
+                    {
+                        specials.Add(sv);
+                        svalues.Add(Global.nil);
+                    }
                 }
                 else throw new SyntaxError("LET: illegal binding");
             }
-            CompileProgn(b.cdr, cure, p);*/
+            LocalVariable f = e.AddUnnamedVariable(), retp = e.AddUnnamedVariable();
+            CompileProgn(b.cdr, cure, fn);
+            fn.Return();
+            p.Store(fn);
+            p.Load(f);
+            for (int i = 0; i < specials.Count; ++i)
+                specials[i].Push(p, svalues[i]);
+            p.Call(f, lvalues.ToArray());
+            p.Load(retp);
+            foreach (var i in specials)
+                i.Pop(p);
+            p.Store(retp);
         }
-        public static void CompileLetStar(IType body, Environment e, IL.Function p)
+        public static void CompileLetStar(IType body, Environment e, Function p)
         {
-            var (t1, tbody) = Util.RequireAtLeast(body, 1, "LET*");
-            var bindings = t1[0];
-            Environment cure = new Environment(e, 0);
-            while (bindings is Cons c)
-            {
-                var cur = c.car;
-                bindings = c.cdr;
-                if (cur is Cons b)
-                {
-                    var temp = Util.RequireExactly(cur, 2, "LET*");
-                    IType name = temp[0], value = temp[1];
-                    if (!(name is Symbol s))
-                        throw new SyntaxError("LET*: illegal name");
-                    Core.CompileSingleExpr(value, cure, p);
-                    p.Add(new IL.MoveInstruction(Global.rax, cure.AddVariable(s)));
-                }
-                else if (cur is Symbol s)
-                {
-                    cure.AddVariable(s); // assume...
-                }
-                else throw new SyntaxError("LET*: illegal binding");
-            }
-            CompileProgn(tbody, cure, p);
+            //todo: impl using macro
         }
-        public static void CompileLambda(IType body, Environment e, IL.Function p)
+        public static void CompileLambda(IType body, Environment e, Function p)
         {
             var (t1, tbody) = Util.RequireAtLeast(body, 1, "LAMBDA");
-            Environment cure = new Environment(e, 0);
+            Environment cure = new Environment(e);
             Function f = new Function(cure);
             if (t1[0] is Cons c)
                 Util.ParseLambdaList(c, cure, f);
             CompileProgn(tbody, cure, f);
-            f.Add(new IL.ReturnInstruction(Global.rax));
-            p.Add(new IL.FunctionInstruction(f, Global.rax));
+            f.Return();
+            p.Store(f);
         }
-        public static void CompileSetq(IType body, Environment e, IL.Function p)
+        public static void CompileSetq(IType body, Environment e, Function p)
         {
             while (body is Cons c)
             {
@@ -131,14 +141,26 @@ namespace Compiler.Frontend
                 body = t2.cdr;
                 t1 = t2.car;
                 Core.CompileSingleExpr(t1, e, p);
-                p.Add(new IL.MoveInstruction(Global.rax, e.Find(s)));
+                p.Load(p.FindVar(s));
             }
-            p.Add(new IL.MoveInstruction(Global.nil, Global.rax));
+            p.Store(Lisp.nil);
         }
-        public static void Dispatch(Cons form, Environment e, IL.Function p)
+        public static void CompileSpecial(IType body, Environment e, Function p)
+        {
+            if (p != Core.main)
+                throw new SyntaxError("SPECIAL: can only be declared in the outmost environment");
+            var name = Util.RequireExactly(body, 1, "SPECIAL")[0];
+            if (!(name is Symbol s)) throw new SyntaxError("SPECIAL: illegal name");
+            if (SpecialVariable.Declare(s))
+                SpecialVariable.Find(s).Push(p, Global.nil);
+        }
+        public static void Dispatch(Cons form, Environment e, Function p)
         {
             switch (GetType((Symbol)form.car))
             {
+                case Type.SPECIAL:
+                    CompileSpecial(form.cdr, e, p);
+                    break;
                 case Type.SETQ:
                     CompileSetq(form.cdr, e, p);
                     break;
@@ -173,6 +195,7 @@ namespace Compiler.Frontend
             if (!inited)
             {
                 types = new Dictionary<Symbol, Type>(){
+                    {Symbol.FindOrCreate("SPECIAL"), Type.SPECIAL },
                     {Symbol.FindOrCreate("BLOCK"), Type.BLOCK },
                     {Symbol.FindOrCreate("LAMBDA"), Type.LAMBDA },
                     {Symbol.FindOrCreate("TAGBODY"), Type.TAGBODY },

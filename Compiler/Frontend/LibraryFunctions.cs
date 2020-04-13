@@ -9,7 +9,7 @@ namespace Compiler.Frontend
 {
     static class LibraryFunctions
     {
-        public static void AddAll(Environment e, IL.Function f)
+        public static void AddAll(Environment e, Function f)
         {
             void AddOne(string name, IType value)
             {
@@ -36,6 +36,11 @@ namespace Compiler.Frontend
             AddOne("READ", new Read());
             AddOne("WRITE", new Write());
             AddOne("WRITELN", new WriteLn());
+            AddOne("#SPECIAL-GET", new SpecialGet());
+            AddOne("#SPECIAL-SET", new SpecialSet());
+            AddOne("#SPECIAL-PUSH", new SpecialPush());
+            AddOne("#SPECIAL-POP", new SpecialPop());
+            AddOne("#SPECIAL-RESET", new SpecialReset());
         }
     }
 }

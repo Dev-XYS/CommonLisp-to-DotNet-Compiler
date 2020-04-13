@@ -9,34 +9,32 @@ namespace Compiler.Frontend
     static class Core
     {
         private static IL.Program prog = new IL.Program();
+        public static Function main;
         private static bool inited = false;
-        static void CompileFunctionCall(IL.Variable function, IType parameters, Environment e, IL.Function p)
+        static void CompileFunctionCall(LocalVariable function, IType parameters, Environment e, Function p)
         {
-            IL.CallInstruction callInstruction = new IL.CallInstruction(function, Global.rax);
+            var args = new List<LocalVariable>();
             while(parameters is Cons para)
             {
                 var cur = para.car;
+                LocalVariable v = e.AddUnnamedVariable();
                 if(cur is Cons c)
                 {
                     CompileSingleForm(c, e, p);
-                    IL.Variable variable = e.AddUnnamedVariable();
-                    p.Add(new IL.MoveInstruction(Global.rax, variable));
-                    callInstruction.Parameters.Add(variable);
                 }else if(cur is Symbol s)
                 {
-                    callInstruction.Parameters.Add(e.Find(s));
+                    CompileAtom(s, e, p);
                 }else
                 {
                     CompileConstant(cur, e, p);
-                    IL.Variable variable = e.AddUnnamedVariable();
-                    p.Add(new IL.MoveInstruction(Global.rax, variable));
-                    callInstruction.Parameters.Add(variable);
                 }
+                p.Load(v);
+                args.Add(v);
                 parameters = para.cdr;
             }
-            p.Add(callInstruction);
+            p.Call(function, args.ToArray());
         }
-        static void CompileSingleForm(Cons form, Environment e, IL.Function p)
+        static void CompileSingleForm(Cons form, Environment e, Function p)
         {
             var car = form.car;
             if (car is Symbol s)
@@ -44,35 +42,37 @@ namespace Compiler.Frontend
                 if (SO.IsSO(s))
                 {
                     SO.Dispatch(form, e, p);
+                    return;
                 }
                 else if (Macro.IsMacro(s))
                 {
                     CompileSingleForm(Macro.FullExpand(form), e, p);
+                    return;
                 }
                 else
                 {
-                    CompileFunctionCall(e.Find(s), form.cdr, e, p);
+                    CompileAtom(s, e, p);
                 }
             }
             else if (car is Cons c)
             {
                 CompileSingleForm(c, e, p);
-                IL.Variable func = Global.env.AddUnnamedVariable();
-                p.Add(new IL.MoveInstruction(Global.rax, func));
-                CompileFunctionCall(func, form.cdr, e, p);
             }else 
             throw new SyntaxError(string.Format("Object is not a function, macro or special operator: {0}", car));
+            LocalVariable v = e.AddUnnamedVariable();
+            p.Load(v);
+            CompileFunctionCall(v, form.cdr, e, p);
         }
-        static void CompileAtom(Symbol s, Environment e, IL.Function p)
+        static void CompileAtom(Symbol s, Environment e, Function p)
         {
-            //currently treat it as variable
-            p.Add(new IL.MoveInstruction(e.Find(s), Global.rax));
+            //currently treat it as variable//todo: Symbol macro
+            p.Store(p.FindVar(s));
         }
-        public static void CompileConstant(IType value, Environment e, IL.Function p)
+        public static void CompileConstant(IType value, Environment e, Function p)
         {
-            p.Add(new IL.MoveInstruction(new IL.ImmediateNumber(value), Global.rax));
+            p.Store(value);
         }
-        public static void CompileSingleExpr(IType expr, Environment e, IL.Function p)
+        public static void CompileSingleExpr(IType expr, Environment e, Function p)
         {
             if (expr is Cons form)
             {
@@ -90,9 +90,9 @@ namespace Compiler.Frontend
             if(!inited)
             {
                 inited = true;
-                prog.Main = new IL.ParametersFunction();
-                LibraryFunctions.AddAll(Global.env, prog.Main);
-                prog.Main.EnvList.Add(Global.env);
+                main = new Function(Global.env);
+                prog.Main = main;
+                LibraryFunctions.AddAll(Global.env, main);
                 Global.Init();
             }
         }
@@ -105,15 +105,15 @@ namespace Compiler.Frontend
                 try
                 {
                     expr = Reader.Read(Lisp.stdin);
-                    CompileSingleExpr(expr, Global.env, prog.Main);
+                    CompileSingleExpr(expr, Global.env, main);
                 }catch(Reader.EOFError)
                 {
                     break;
                 }
             }
-            prog.EnvList = IL.Environment.gel;
-            prog.FunctionList = IL.ParametersFunction.gfl;
-            prog.Main.Add(new IL.ReturnInstruction(Global.rax));
+            prog.EnvList = Environment.gel;
+            prog.FunctionList = Function.gfl;
+            main.Return();
             return prog;
         }
     }

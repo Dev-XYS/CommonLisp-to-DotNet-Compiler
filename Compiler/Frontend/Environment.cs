@@ -7,39 +7,42 @@ namespace Compiler.Frontend
 {
     class Environment : IL.Environment
     {
+        public static List<Environment> gel = new List<Environment>();
         public Dictionary<Symbol, int> pos;
         public Environment outer;
         public Environment() : base()
         {
             pos = new Dictionary<Symbol, int>();
             outer = this;
+            gel.Add(this);
         }
-        public Environment(Environment o, int _) : base()
+        public Environment(Environment o) : base()
         {
             pos = new Dictionary<Symbol, int>();
             outer = o;
+            gel.Add(this);
         }
-        public IL.Variable AddVariable(Symbol s)
+        public LocalVariable AddVariable(Symbol s)
         {
             if (pos.ContainsKey(s))
                 throw new SyntaxError(string.Format("Env: Redefined name {0}", s));
             pos.Add(s, VariableList.Count);
-            var ret = new IL.Variable(s.Name, this);
+            var ret = new LocalVariable(s.Name, this);
             VariableList.Add(ret);
             return ret;
         }
-        public IL.Variable AddUnnamedVariable()
+        public LocalVariable AddUnnamedVariable()
         {
-            var ret = new IL.Variable(this);
+            var ret = new LocalVariable(this);
             VariableList.Add(ret);
             return ret;
         }
-        public IL.Variable Find(Symbol s)
+        public LocalVariable Find(Symbol s)
         {
             int p;
             if (pos.TryGetValue(s, out p))
             {
-                return VariableList[p];
+                return VariableList[p] as LocalVariable;
             }
             else if (outer != this)
             {
