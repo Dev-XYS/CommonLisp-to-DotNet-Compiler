@@ -6,11 +6,13 @@ static class Program
 {
     static void Main(string[] args)
     {
-        RootEnv env = new RootEnv();
-        IType var1 = null;
-        IType var2 = null;
-        env.Cos = var1;
-        env.UserFunc = var2;
+        f(0);
+    }
+
+    static void f(int x)
+    {
+        if (x % 1000 == 0) Console.WriteLine(x);
+        f(x + 1);
     }
 }
 

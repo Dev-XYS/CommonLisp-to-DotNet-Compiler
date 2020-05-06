@@ -12,7 +12,7 @@ namespace Compiler.Assembler
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
             startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             startInfo.FileName = "ILAsm.Win.x64\\ilasm.exe";
-            startInfo.Arguments = "temp.il /DLL /QUIET";
+            startInfo.Arguments = filename + " /DLL /QUIET";
             process.StartInfo = startInfo;
             process.Start();
             process.WaitForExit();

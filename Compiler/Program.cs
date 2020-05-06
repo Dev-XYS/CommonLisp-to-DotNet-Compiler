@@ -17,10 +17,10 @@ namespace Compiler
                 program = Frontend.Core.CompileFromStdin();
             }
             var prog = new CIL.Program(program);
-            var sw = new System.IO.StreamWriter("temp.il");
+            var sw = new System.IO.StreamWriter("Program.il");
             prog.Emit(sw, CIL.EmissionType.Program);
             sw.Close();
-            Assembler.Assembler.Invoke("temp.il");
+            Assembler.Assembler.Invoke("Program.il");
         }
     }
 }
