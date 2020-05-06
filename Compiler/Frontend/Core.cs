@@ -1,6 +1,7 @@
 ﻿using Runtime;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -96,7 +97,7 @@ namespace Compiler.Frontend
                 Global.Init();
             }
         }
-        public static IL.Program CompileFromStdin()
+        private static IL.Program CompileFrom(IInputStream input)
         {
             Init();
             IType expr;
@@ -104,7 +105,7 @@ namespace Compiler.Frontend
             {
                 try
                 {
-                    expr = Reader.Read(Lisp.stdin);
+                    expr = Reader.Read(input);
                     CompileSingleExpr(expr, Global.env, main);
                 }catch(Reader.EOFError)
                 {
@@ -115,6 +116,15 @@ namespace Compiler.Frontend
             prog.FunctionList = Function.gfl;
             main.Return();
             return prog;
+        }
+        public static IL.Program CompileFromStdin()
+        {
+            return CompileFrom(Lisp.stdin);
+        }
+        public static IL.Program CompileFromFile(string path)
+        {
+            FileInput fin = new FileInput(path);
+            return CompileFrom(fin);
         }
     }
 }
