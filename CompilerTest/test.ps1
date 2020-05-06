@@ -4,7 +4,7 @@ $(If ($args.count -eq 0) { Get-ChildItem ".\programs" } Else { Get-Item (".\prog
 ForEach-Object {
 	Write-Host -NoNewline $_.Name.PadRight(32, " ")
 
-	sbcl.exe --script $_.FullName > .\answer.txt 2> $null
+	$m1 = Measure-Command { sbcl.exe --script $_.FullName > .\answer.txt 2> $null }
 	if ($LASTEXITCODE -ne 0) {
 		Write-Output "sbcl failed"
 		return
@@ -16,17 +16,27 @@ ForEach-Object {
 		return
 	}
 
-	dotnet.exe .\temp.dll > .\output.txt 2> $null
+	$m2 = Measure-Command { dotnet.exe .\temp.dll > .\output.txt 2> $null }
 	if ($LASTEXITCODE -ne 0) {
 		Write-Output "Runtime error"
 		return
 	}
 
-	if (Compare-Object (Get-Content answer.txt) (Get-Content output.txt)) {
+	$c1 = Get-Content answer.txt
+	$c2 = Get-Content output.txt
+	if ($c1 -eq $null -and $c2 -eq $null) {
+		Write-Output ("OK  " + $m1.TotalMilliseconds + " " + $m2.TotalMilliseconds)
+		return
+	}
+	if ($c1 -eq $null -or $c2 -eq $null) {
+		Write-Output "Diff"
+		return
+	}
+	if (Compare-Object $c1 $c2) {
 		Write-Output "Diff"
 	}
 	else {
-		Write-Output "OK"
+		Write-Output ("OK  " + $m1.TotalMilliseconds + " " + $m2.TotalMilliseconds)
 	}
 }
 
