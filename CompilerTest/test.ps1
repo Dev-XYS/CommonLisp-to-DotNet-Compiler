@@ -16,7 +16,7 @@ ForEach-Object {
 		return
 	}
 
-	$m2 = Measure-Command { dotnet.exe .\temp.dll > .\output.txt 2> $null }
+	$m2 = Measure-Command { .\Program.exe > .\output.txt 2> $null }
 	if ($LASTEXITCODE -ne 0) {
 		Write-Output "Runtime error"
 		return
