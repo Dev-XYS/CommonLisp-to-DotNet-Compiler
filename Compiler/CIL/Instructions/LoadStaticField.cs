@@ -10,11 +10,13 @@ namespace Compiler.CIL.Instructions
     /// </summary>
     class LoadStaticField : Instruction
     {
+        public string StaticClass { get; set; }
+
         public string Name { get; set; }
 
         public override void Emit()
         {
-            Emitter.Emit("ldsfld class [Runtime]Runtime.IType Constants::{0}", Name);
+            Emitter.Emit("ldsfld class [Runtime]Runtime.IType {0}::{1}", StaticClass, Name);
         }
     }
 }

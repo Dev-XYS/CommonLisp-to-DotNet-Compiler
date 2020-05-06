@@ -60,6 +60,13 @@ namespace Compiler.CIL
             }
         }
 
+        private void GenLoadUnresolvedObject(IL.UnresolvedObject obj)
+        {
+            // Currently, all unresolved objects are lisp library functions.
+            // Instantiate the function.
+            Gen(new I.Text { Content = string.Format("newobj instance void [Library]{0}::.ctor()", obj.Name) });
+        }
+
         private void GenLoadConst(Runtime.IType c)
         {
             // Every constant can be null.
@@ -71,7 +78,7 @@ namespace Compiler.CIL
             else if (c is Runtime.IDataType)
             {
                 Program.Const.Register(c as Runtime.IDataType);
-                Gen(new I.LoadStaticField { Name = "const" + c.GetHashCode() });
+                Gen(new I.LoadStaticField { StaticClass = "Constants", Name = "const" + c.GetHashCode() });
             }
             // The constant is a function.
             // -> Need a better way to determine if a constant is a function.
@@ -94,12 +101,19 @@ namespace Compiler.CIL
                 // This should not happen.
                 throw new NotImplementedException();
             }
-            else if (e is IL.Variable)
+            else if (e is IL.Variable var)
             {
-                GenLoadVariable(e as IL.Variable);
+                // The entity is a variable.
+                GenLoadVariable(var);
+            }
+            else if (e is IL.UnresolvedObject obj)
+            {
+                // The entity represents an unresolved name, i.e. a library object.
+                GenLoadUnresolvedObject(obj);
             }
             else
             {
+                // The entity is an immediate number.
                 IL.ImmediateNumber imm = e as IL.ImmediateNumber;
                 GenLoadConst(imm.Imm);
             }
@@ -122,7 +136,7 @@ namespace Compiler.CIL
 
         private void GenCall(IL.CallInstruction instr)
         {
-            GenLoadVariable(instr.Function);
+            GenLoadEntity(instr.Function);
             Gen(new I.LoadInt { Value = instr.Parameters.Count });
             Gen(new I.NewArray { Type = "[Runtime]Runtime.IType" });
             Gen(new I.Store { Loc = 1 });

@@ -6,11 +6,11 @@ namespace Compiler.IL
 {
     class CallInstruction : IInstruction
     {
-        public Variable Function { get; set; }
+        public IEntity Function { get; set; }
         public Variable Destination { get; set; }
         public List<IEntity> Parameters { get; }
 
-        public CallInstruction(Variable function, Variable destination)
+        public CallInstruction(IEntity function, Variable destination)
         {
             Function = function;
             Destination = destination;

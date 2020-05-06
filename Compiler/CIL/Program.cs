@@ -48,13 +48,13 @@ namespace Compiler.CIL
             Const.Generate();
         }
 
-        public void Emit(System.IO.TextWriter writer)
+        public void Emit(System.IO.TextWriter writer, EmissionType type)
         {
             Emitter.Writer = writer;
 
             EmitHeader();
 
-            EmitMain();
+            EmitMain(type);
 
             Const.Emit();
 
@@ -73,10 +73,21 @@ namespace Compiler.CIL
             Emitter.EmitRaw(global::Compiler.Properties.Resources.CILHeader);
         }
 
-        private void EmitMain()
+        private void EmitMain(EmissionType type)
         {
-            Emitter.Emit("");
-            Emitter.Emit(global::Compiler.Properties.Resources.CILMain, Main.Name);
+            if (type == EmissionType.Program)
+            {
+                Emitter.Emit("");
+                Emitter.Emit(global::Compiler.Properties.Resources.CILMain, Main.Name);
+            }
+            else if (type == EmissionType.Library)
+            {
+                // Do nothing.
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

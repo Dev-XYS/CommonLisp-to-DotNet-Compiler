@@ -6,9 +6,11 @@ static class Program
 {
     static void Main(string[] args)
     {
-        Runtime.Function.List list = new Runtime.Function.List();
-        IType l = list.Invoke(new IType[] { new TInteger(1), new TInteger(2) });
-        Console.WriteLine(l);
+        RootEnv env = new RootEnv();
+        IType var1 = null;
+        IType var2 = null;
+        env.Cos = var1;
+        env.UserFunc = var2;
     }
 }
 
@@ -97,4 +99,15 @@ class main0 : IType
         IType t = new TInteger(1);
         return null;
     }
+}
+
+class LibEnv
+{
+    public IType Pi;
+    public IType Cos;
+}
+
+class RootEnv : LibEnv
+{
+    public IType UserFunc;
 }

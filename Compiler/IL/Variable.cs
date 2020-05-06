@@ -36,4 +36,14 @@ namespace Compiler.IL
             return vid;
         }
     }
+
+    class UnresolvedObject : IEntity
+    {
+        public string Name { get; }
+
+        public UnresolvedObject(string name)
+        {
+            Name = name;
+        }
+    }
 }

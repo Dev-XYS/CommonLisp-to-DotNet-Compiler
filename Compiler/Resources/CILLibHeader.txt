@@ -4,9 +4,6 @@
 .assembly extern Runtime
 {
 }
-.assembly extern Library
-{
-}
 .assembly LispProgram
 {
 	.hash algorithm 0x00008004

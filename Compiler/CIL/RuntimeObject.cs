@@ -27,6 +27,7 @@ namespace Compiler.CIL
                         return "string";
                     }
                     // Assume other types are contained in the namespace `Runtime`.
+                    // unnecessary code?
                     else
                     {
                         return string.Format("class [Runtime]{0}", x.ParameterType.FullName);
@@ -39,7 +40,7 @@ namespace Compiler.CIL
         {
             get
             {
-                return string.Format("[Runtime]{0}", Type.FullName);
+                return string.Format("[{0}]{1}", Type.Assembly.GetName().Name, Type.FullName);
             }
         }
     }
