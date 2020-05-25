@@ -6,13 +6,19 @@ static class Program
 {
     static void Main(string[] args)
     {
-        f(0);
+        f(1000000);
     }
 
     static void f(int x)
     {
-        if (x % 1000 == 0) Console.WriteLine(x);
-        f(x + 1);
+        if (x % 100000 == 0)
+        {
+            Console.WriteLine(x);
+        }
+        if (x > 0)
+        {
+            f(x - 1);
+        }
     }
 }
 

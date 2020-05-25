@@ -5,9 +5,9 @@ ForEach-Object {
 	Write-Host -NoNewline $_.Name.PadRight(32, " ")
 
 	$m1 = Measure-Command { sbcl.exe --script $_.FullName > .\answer.txt 2> $null }
+	$sbclFailed = $false
 	if ($LASTEXITCODE -ne 0) {
-		Write-Output "sbcl failed"
-		return
+		$sbclFailed = $true
 	}
 
 	..\Compiler\bin\Debug\netcoreapp3.1\Compiler.exe $_.FullName > $null 2> $null
@@ -25,7 +25,7 @@ ForEach-Object {
 	$c1 = Get-Content answer.txt
 	$c2 = Get-Content output.txt
 	if ($c1 -eq $null -and $c2 -eq $null) {
-		Write-Output ("OK  " + $m1.TotalMilliseconds + " " + $m2.TotalMilliseconds)
+		Write-Output ("OK  " + $(If ($sbclFailed) { "--" } Else { $m1.TotalMilliseconds }) + " " + $m2.TotalMilliseconds)
 		return
 	}
 	if ($c1 -eq $null -or $c2 -eq $null) {
@@ -36,7 +36,7 @@ ForEach-Object {
 		Write-Output "Diff"
 	}
 	else {
-		Write-Output ("OK  " + $m1.TotalMilliseconds + " " + $m2.TotalMilliseconds)
+		Write-Output ("OK  " + $(If ($sbclFailed) { "--" } Else { $m1.TotalMilliseconds }) + " " + $m2.TotalMilliseconds)
 	}
 }
 
