@@ -45,20 +45,20 @@ namespace Compiler.Frontend
         }
         public void Store(Function f)
         {
-            f.Call(Global.env.FindOrExtern(Symbol.Find("#SPECIAL-GET")), new IL.ImmediateNumber(name));
+            f.Call(Global.env.FindOrExtern(Symbol.FindOrCreate("#SPECIAL-GET")), new IL.ImmediateNumber(name));
         }
 
         public void Load(Function f)
         {
-            f.Call(Global.env.FindOrExtern(Symbol.Find("#SPECIAL-SET")), new IL.ImmediateNumber(name), f.Env.rax);
+            f.Call(Global.env.FindOrExtern(Symbol.FindOrCreate("#SPECIAL-SET")), new IL.ImmediateNumber(name), f.Env.rax);
         }
         public void Push(Function f, IL.IEntity value)
         {
-            f.Call(Global.env.FindOrExtern(Symbol.Find("#SPECIAL-PUSH")), new IL.ImmediateNumber(name), value);
+            f.Call(Global.env.FindOrExtern(Symbol.FindOrCreate("#SPECIAL-PUSH")), new IL.ImmediateNumber(name), value);
         }
         public void Pop(Function f)
         {
-            f.Call(Global.env.FindOrExtern(Symbol.Find("#SPECIAL-POP")), new IL.ImmediateNumber(name)); 
+            f.Call(Global.env.FindOrExtern(Symbol.FindOrCreate("#SPECIAL-POP")), new IL.ImmediateNumber(name)); 
         }
     }
 }
