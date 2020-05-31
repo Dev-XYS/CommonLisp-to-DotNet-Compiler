@@ -4,7 +4,7 @@
 .assembly extern Runtime
 {
 }
-.assembly LispProgram
+.assembly Library
 {
 	.hash algorithm 0x00008004
 	.ver 1:0:0:0
