@@ -45,5 +45,10 @@ namespace Compiler.IL
         {
             Name = name;
         }
+
+        public override string ToString()
+        {
+            return string.Format("U({0})", Name);
+        }
     }
 }

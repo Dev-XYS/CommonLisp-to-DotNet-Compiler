@@ -19,13 +19,14 @@ namespace Compiler
             IL.Program program;
             if (args.Length == 1)
             {
-                if(args[0] == "-l")
+                if (args[0] == "-l")
                 {
                     CompileLibrary();
                     return;
                 }
                 program = Frontend.Core.CompileFromFile(args[0]);
-            }else 
+            }
+            else
             {
                 program = Frontend.Core.CompileFromStdin();
             }
