@@ -41,7 +41,7 @@ namespace Compiler.Frontend
             Core.CompileSingleExpr(cond, e, p);
             var lBadGood = new IL.Label("if:cond bad|good");
             var lGood = new IL.Label("if:cond bad good|");
-            p.Add(new IL.ConditionalJumpInstruction(lBadGood, Global.rax, true));
+            p.Add(new IL.ConditionalJumpInstruction(lBadGood, e.rax, true));
             Core.CompileSingleExpr(bad, e, p);
             p.Add(new IL.UnconditionalJumpInstruction(lGood));
             p.Add(lBadGood);
@@ -141,7 +141,7 @@ namespace Compiler.Frontend
                 body = t2.cdr;
                 t1 = t2.car;
                 Core.CompileSingleExpr(t1, e, p);
-                p.Load(p.FindVar(s));
+                p.Load(p.FindLeft(s));
             }
             p.Store(Lisp.nil);
         }

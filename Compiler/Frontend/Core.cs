@@ -67,7 +67,7 @@ namespace Compiler.Frontend
         static void CompileAtom(Symbol s, Environment e, Function p)
         {
             //currently treat it as variable//todo: Symbol macro
-            p.Store(p.FindVar(s));
+            p.Store(p.FindRight(s));
         }
         public static void CompileConstant(IType value, Environment e, Function p)
         {
@@ -93,7 +93,6 @@ namespace Compiler.Frontend
                 inited = true;
                 main = new Function(Global.env);
                 prog.Main = main;
-                LibraryFunctions.AddAll(Global.env, main);
                 Global.Init();
             }
         }
@@ -116,6 +115,12 @@ namespace Compiler.Frontend
             prog.FunctionList = Function.gfl;
             main.Return();
             return prog;
+        }
+        public static IL.Program CompileLibrary()
+        {
+            Init();
+            LibraryFunctions.AddAll(Global.env, main);
+            return CompileFrom(Lisp.stdin);
         }
         public static IL.Program CompileFromStdin()
         {
