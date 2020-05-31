@@ -14,6 +14,6 @@ namespace Compiler.Optimization
             ILVariable = var;
         }
 
-        static public Dictionary<IL.Variable, bool> IsLocal { get; } = new Dictionary<IL.Variable, bool>();
+        static public HashSet<IL.Variable> NonLocalVariables { get; } = new HashSet<IL.Variable>();
     }
 }

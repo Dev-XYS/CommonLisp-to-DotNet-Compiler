@@ -16,7 +16,7 @@ namespace Compiler.CIL
 
         public ConstantClass Const { get; }
 
-        public Program(IL.Program prog)
+        public Program(Optimization.Program prog)
         {
             EnvList = new List<Environment>();
             EnvMap = new Dictionary<IL.Environment, Environment>();
@@ -32,18 +32,18 @@ namespace Compiler.CIL
                 EnvMap[env] = e;
             }
 
-            foreach (IL.Function func in prog.FunctionList)
+            foreach (Optimization.Function func in prog.FunctionList)
             {
                 Function f = new Function(this, func);
                 FuncList.Add(f);
-                FuncMap[func] = f;
+                FuncMap[func.ILFunction] = f;
             }
             foreach (Function f in FuncList)
             {
                 f.Generate();
             }
 
-            Main = FuncMap[prog.Main];
+            Main = FuncMap[prog.Main.ILFunction];
 
             Const.Generate();
         }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Compiler.IL
 {
-    class Variable : IEntity
+    public class Variable : IEntity
     {
         private static int gvid;
         private int vid;

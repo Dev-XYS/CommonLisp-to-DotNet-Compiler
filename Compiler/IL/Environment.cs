@@ -7,7 +7,7 @@ namespace Compiler.IL
     /// <summary>
     /// 可用来表示一个范围内的全部或部分变量。
     /// </summary>
-    class Environment
+    public class Environment
     {
         private static int geid;
         private int eid;
@@ -30,6 +30,11 @@ namespace Compiler.IL
         public override int GetHashCode()
         {
             return eid;
+        }
+
+        public bool ContainsVariable(Variable var)
+        {
+            return VariableList.Contains(var);
         }
     }
 }

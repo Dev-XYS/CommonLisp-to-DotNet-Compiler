@@ -10,12 +10,12 @@ namespace Compiler.Optimization
 
         private IL.Function ILFunction { get; }
 
-        public ControlSequence(List<IL.IInstruction> instrList, IL.Function func)
+        public ControlSequence(List<IL.Instruction> instrList, IL.Function func)
         {
             Instructions = new List<Instruction>();
             ILFunction = func;
 
-            foreach (IL.IInstruction instr in instrList)
+            foreach (IL.Instruction instr in instrList)
             {
                 Instructions.Add(new Instruction(instr, func));
             }

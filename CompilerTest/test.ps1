@@ -4,11 +4,11 @@ $(If ($args.count -eq 0) { Get-ChildItem ".\programs" } Else { Get-Item (".\prog
 ForEach-Object {
 	Write-Host -NoNewline $_.Name.PadRight(32, " ")
 
-	$m1 = Measure-Command { sbcl.exe --script $_.FullName > .\answer.txt 2> $null }
-	$sbclFailed = $false
-	if ($LASTEXITCODE -ne 0) {
-		$sbclFailed = $true
-	}
+	# $m1 = Measure-Command { sbcl.exe --script $_.FullName > .\answer.txt 2> $null }
+	# $sbclFailed = $false
+	# if ($LASTEXITCODE -ne 0) {
+	# 	$sbclFailed = $true
+	# }
 
 	..\Compiler\bin\Debug\netcoreapp3.1\Compiler.exe $_.FullName > $null 2> $null
 	if ($LASTEXITCODE -ne 0) {

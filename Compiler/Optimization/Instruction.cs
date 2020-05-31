@@ -6,7 +6,7 @@ namespace Compiler.Optimization
 {
     class Instruction
     {
-        public IL.IInstruction ILInstruction { get; }
+        public IL.Instruction ILInstruction { get; }
 
         private IL.Function ILFunction { get; }
 
@@ -98,7 +98,7 @@ namespace Compiler.Optimization
             }
         }
 
-        public Instruction(IL.IInstruction instr, IL.Function func)
+        public Instruction(IL.Instruction instr, IL.Function func)
         {
             ILInstruction = instr;
             ILFunction = func;

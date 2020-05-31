@@ -11,10 +11,8 @@ static class Program
 
     static void f(int x)
     {
-        if (x % 100000 == 0)
-        {
-            Console.WriteLine(x);
-        }
+        int[] a = new int[1];
+        E0 e = new E0();
         if (x > 0)
         {
             f(x - 1);

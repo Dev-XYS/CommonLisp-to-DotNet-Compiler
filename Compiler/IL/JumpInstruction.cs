@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Compiler.IL
 {
-    abstract class JumpInstruction : IInstruction
+    abstract class JumpInstruction : Instruction
     {
         public Label Target { get; }
 
@@ -30,7 +30,7 @@ namespace Compiler.IL
     {
         public bool Condition { get; }
 
-        public Variable TestVariable { get; }
+        public Variable TestVariable { get; set; }
 
         public ConditionalJumpInstruction(Label target, Variable test, bool condition) : base(target)
         {
@@ -41,6 +41,14 @@ namespace Compiler.IL
         public override string ToString()
         {
             return string.Format("[JUMP] {0} if {1} {2}", Target.Name, TestVariable.ToString(), Condition);
+        }
+
+        public override List<Variable> UsedVariables
+        {
+            get
+            {
+                return new List<Variable>() { TestVariable };
+            }
         }
     }
 }

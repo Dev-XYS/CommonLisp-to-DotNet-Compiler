@@ -16,7 +16,7 @@ namespace Compiler.CIL
         }
 
         public Program Program { get; }
-        private IL.Function ILFunction { get; }
+        private Optimization.Function OptFunction { get; }
 
         public List<Instruction> CtorInstructionList { get; }
         public List<Instruction> InstructionList { get; }
@@ -27,11 +27,11 @@ namespace Compiler.CIL
         public int VarNo { get; set; }
         public Dictionary<IL.Variable, int> VarMap { get; }
 
-        public Function(Program prog, IL.Function func)
+        public Function(Program prog, Optimization.Function func)
         {
             Name = "func" + func.GetHashCode().ToString();
             Program = prog;
-            ILFunction = func;
+            OptFunction = func;
 
             CtorInstructionList = new List<Instruction>();
             InstructionList = new List<Instruction>();
@@ -50,7 +50,7 @@ namespace Compiler.CIL
         public void Generate()
         {
             GenCtor();
-            GenBody(ILFunction);
+            GenBody(OptFunction);
         }
 
         private void CtorGen(Instruction instr)
@@ -73,7 +73,7 @@ namespace Compiler.CIL
             CtorGen(new I.Return { });
         }
 
-        private void GenBody(IL.Function func)
+        private void GenBody(Optimization.Function func)
         {
             // store previous environment (for recursive call)
             Gen(new I.LoadArgument { ArgNo = 0 });
@@ -85,19 +85,31 @@ namespace Compiler.CIL
             Gen(new I.NewObject { Type = EnvList[0].Environment });
             Gen(new I.StoreField { Field = EnvList[0] });
 
-            // copy parameters to the environment
+            // copy arguments to the environment
             int no = 0;
             foreach (IL.Variable var in func.Parameters)
             {
-                Gen(new I.LoadArgument { ArgNo = 0 });
-                Gen(new I.LoadField { Field = EnvList[0] });
-                Gen(new I.LoadArgument { ArgNo = 1 });
-                Gen(new I.LoadInt { Value = no++ });
-                Gen(new I.LoadElement { });
-                Gen(new I.StoreField { Field = EnvList[0].Environment.VarMap[var] });
+                if (var.Env != null)
+                {
+                    // The variable is not optimized as local.
+                    Gen(new I.LoadArgument { ArgNo = 0 });
+                    Gen(new I.LoadField { Field = EnvList[0] });
+                    Gen(new I.LoadArgument { ArgNo = 1 });
+                    Gen(new I.LoadInt { Value = no++ });
+                    Gen(new I.LoadElement { });
+                    Gen(new I.StoreField { Field = EnvList[0].Environment.VarMap[var] });
+                }
+                else
+                {
+                    // The variable is purely local.
+                    Gen(new I.LoadArgument { ArgNo = 1 });
+                    Gen(new I.LoadInt { Value = no++ });
+                    Gen(new I.LoadElement { });
+                    Gen(new I.Store { Loc = (var as Optimization.LocalVariable).LocSlot });
+                }
             }
 
-            foreach (IL.IInstruction instr in func.InstructionList)
+            foreach (IL.Instruction instr in func.InstructionList)
             {
                 Gen(new I.Comment { Content = instr.ToString() });
                 GenInstruction(instr);
@@ -116,6 +128,16 @@ namespace Compiler.CIL
                 r += string.Format(", class {0} @{1}", EnvList[i].Type, EnvList[i].Name);
             }
             return r;
+        }
+
+        private string GetLocalsList()
+        {
+            string[] types = new string[OptFunction.LocCount];
+            for (int i = 0; i < OptFunction.LocCount; i++)
+            {
+                types[i] = "class [Runtime]Runtime.IType";
+            }
+            return string.Join(", ", types);
         }
 
         public void Emit()
@@ -137,8 +159,9 @@ namespace Compiler.CIL
             Emitter.EndBlock();
 
             Emitter.Emit(".method public hidebysig newslot virtual final instance class [Runtime]Runtime.IType Invoke(class [Runtime]Runtime.IType[] args) cil managed");
+
             Emitter.BeginBlock();
-            Emitter.Emit(".locals init (class [Runtime]Runtime.IType Temp, class [Runtime]Runtime.IType[] Args, class {0})", EnvList[0].Name);
+            Emitter.Emit(".locals init (class [Runtime]Runtime.IType Temp, class [Runtime]Runtime.IType[] Args, class {0}, {1})", EnvList[0].Name, GetLocalsList());
             foreach (Instruction instr in InstructionList)
             {
                 instr.Emit();

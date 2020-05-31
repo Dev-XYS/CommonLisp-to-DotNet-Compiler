@@ -8,11 +8,14 @@ namespace Compiler.Optimization
     {
         static private IL.Program Program;
 
-        static public IL.Program OptimizeILProgram(IL.Program program)
+        static private Program OptimizedProgram;
+
+        static public Program OptimizeILProgram(IL.Program program)
         {
             Program = program;
-            Program = PeepHole.Optimize(Program);
-            return Program;
+            OptimizedProgram = new Program(Program);
+            OptimizedProgram = LocalOptimization.Optimize(OptimizedProgram);
+            return OptimizedProgram;
         }
     }
 }

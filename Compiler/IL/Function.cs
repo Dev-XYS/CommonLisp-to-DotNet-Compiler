@@ -15,7 +15,9 @@ namespace Compiler.IL
 
         public List<Variable> Parameters { get; }
 
-        public List<IInstruction> InstructionList { get; }
+        public List<Instruction> InstructionList { get; }
+
+        public Environment LocalEnv { get => EnvList[0]; }
 
         public Function()
         {
@@ -24,9 +26,9 @@ namespace Compiler.IL
 
             EnvList = new List<Environment>();
             Parameters = new List<Variable>();
-            InstructionList = new List<IInstruction>();
+            InstructionList = new List<Instruction>();
         }
-        public void Add(IInstruction i)
+        public void Add(Instruction i)
         {
             InstructionList.Add(i);
         }

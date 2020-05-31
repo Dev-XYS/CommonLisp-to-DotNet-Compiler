@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Compiler.IL
 {
-    class MoveInstruction : IInstruction
+    class MoveInstruction : Instruction
     {
         public IEntity Source { get; set; }
         public Variable Destination { get; set; }
@@ -18,6 +18,29 @@ namespace Compiler.IL
         public override string ToString()
         {
             return string.Format("[MOVE] {0} -> {1}", Source.ToString(), Destination.ToString());
+        }
+
+        public override Variable DefinedVariable
+        {
+            get
+            {
+                return Destination;
+            }
+        }
+
+        public override List<Variable> UsedVariables
+        {
+            get
+            {
+                if (Source is Variable v)
+                {
+                    return new List<Variable>() { v };
+                }
+                else
+                {
+                    return base.UsedVariables;
+                }
+            }
         }
     }
 }

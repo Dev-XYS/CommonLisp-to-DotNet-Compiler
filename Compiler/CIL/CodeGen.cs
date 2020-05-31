@@ -8,7 +8,7 @@ namespace Compiler.CIL
 
     partial class Function
     {
-        public void GenInstruction(IL.IInstruction instr)
+        public void GenInstruction(IL.Instruction instr)
         {
             if (instr is IL.CallInstruction)
             {
@@ -49,6 +49,11 @@ namespace Compiler.CIL
             InstructionList.Add(instr);
         }
 
+        private void GenLoadLoc(Optimization.LocalVariable loc)
+        {
+            Gen(new I.Load { Loc = loc.LocSlot });
+        }
+
         private void GenLoadVariable(IL.Variable var)
         {
             if (var.Env != null)
@@ -57,6 +62,10 @@ namespace Compiler.CIL
                 Gen(new I.LoadArgument { ArgNo = 0 });
                 Gen(new I.LoadField { Field = EnvMap[var.Env] });
                 Gen(new I.LoadField { Field = EnvMap[var.Env].Environment.VarMap[var] });
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -101,6 +110,11 @@ namespace Compiler.CIL
                 // This should not happen.
                 throw new NotImplementedException();
             }
+            else if (e is Optimization.LocalVariable loc)
+            {
+                // The entity is a (purely) local variable (used for optimization).
+                GenLoadLoc(loc);
+            }
             else if (e is IL.Variable var)
             {
                 // The entity is a variable.
@@ -127,6 +141,11 @@ namespace Compiler.CIL
                 Gen(new I.LoadField { Field = EnvMap[var.Env] });
                 Gen(new I.Load { Loc = 0 });
                 Gen(new I.StoreField { Field = EnvMap[var.Env].Environment.VarMap[var] });
+            }
+            else if (var is Optimization.LocalVariable loc)
+            {
+                Gen(new I.Load { Loc = 0 });
+                Gen(new I.Store { Loc = loc.LocSlot });
             }
             else
             {

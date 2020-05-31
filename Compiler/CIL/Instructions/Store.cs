@@ -10,7 +10,7 @@ namespace Compiler.CIL.Instructions
 
         public override void Emit()
         {
-            Emitter.Emit("stloc.{0}", Loc);
+            Emitter.Emit("stloc {0}", Loc);
         }
     }
 }

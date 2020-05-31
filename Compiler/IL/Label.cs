@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Compiler.IL
 {
-    class Label : IInstruction
+    class Label : Instruction
     {
         private static int glid;
         private int lid;

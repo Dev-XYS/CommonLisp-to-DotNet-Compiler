@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Compiler.IL
 {
-    class FunctionInstruction : IInstruction
+    class FunctionInstruction : Instruction
     {
         public Function Function { get; set; }
 
@@ -19,6 +19,14 @@ namespace Compiler.IL
         public override string ToString()
         {
             return string.Format("[FUNC] {0} -> {1}", Function.Name, Destination.ToString());
+        }
+
+        public override Variable DefinedVariable
+        {
+            get
+            {
+                return Destination;
+            }
         }
     }
 }
