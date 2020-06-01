@@ -137,7 +137,7 @@ namespace Compiler.CIL
             {
                 types[i] = "class [Runtime]Runtime.IType";
             }
-            return string.Join(", ", types);
+            return (OptFunction.LocCount > 0 ? ", " : "") + string.Join(", ", types);
         }
 
         public void Emit()
@@ -161,7 +161,7 @@ namespace Compiler.CIL
             Emitter.Emit(".method public hidebysig newslot virtual final instance class [Runtime]Runtime.IType Invoke(class [Runtime]Runtime.IType[] args) cil managed");
 
             Emitter.BeginBlock();
-            Emitter.Emit(".locals init (class [Runtime]Runtime.IType Temp, class [Runtime]Runtime.IType[] Args, class {0}, {1})", EnvList[0].Name, GetLocalsList());
+            Emitter.Emit(".locals init (class [Runtime]Runtime.IType Temp, class [Runtime]Runtime.IType[] Args, class {0}{1})", EnvList[0].Name, GetLocalsList());
             foreach (Instruction instr in InstructionList)
             {
                 instr.Emit();
