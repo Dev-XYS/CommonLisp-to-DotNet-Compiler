@@ -10,7 +10,8 @@ namespace Compiler.Frontend
         public enum Type
         {
             BLOCK, CATCH, EVAL_WHEN, FLET, FUNCTION, GO, IF, LABELS, LET, LET_STAR, LOAD_TIME_VALUE, LOCALLY, MACROLET, LAMBDA, SPECIAL,
-            MULTIPLE_VALUE_CALL, MULTIPLE_VALUE_PROG1, PROGN, PROGY, QUOTE, RETURN_FROM, SETQ, SYMBOL_MACROLET, TAGBODY, THE, THROW, UNWIND_PROTECT
+            MULTIPLE_VALUE_CALL, MULTIPLE_VALUE_PROG1, PROGN, PROGY, QUOTE, RETURN_FROM, SETQ, SYMBOL_MACROLET, TAGBODY, THE, THROW, UNWIND_PROTECT,
+            SLOOP
         };
         private static Dictionary<Symbol, Type> types;
         private static bool inited = false;
@@ -154,6 +155,19 @@ namespace Compiler.Frontend
             if (SpecialVariable.Declare(s))
                 SpecialVariable.Find(s).Push(p, Global.nil);
         }
+        public static void CompileSLoop(IType body, Environment e, Function p)
+        {
+            var (pa,b) = Util.RequireAtLeast(body, 1, "SLOOP");
+            IType cond = pa[0];
+            var lBefore = new IL.Label("sloop:|cond body");
+            var lAfter = new IL.Label("sloop: cond body|");
+            p.Add(lBefore);
+            Core.CompileSingleExpr(cond, e, p);
+            p.Add(new IL.ConditionalJumpInstruction(lAfter, e.rax, false));
+            CompileProgn(b, e, p);
+            p.Add(new IL.UnconditionalJumpInstruction(lBefore));
+            p.Add(lAfter);
+        }
         public static void Dispatch(Cons form, Environment e, Function p)
         {
             switch (GetType((Symbol)form.car))
@@ -181,6 +195,9 @@ namespace Compiler.Frontend
                     break;
                 case Type.LAMBDA:
                     CompileLambda(form.cdr, e, p);
+                    break;
+                case Type.SLOOP:
+                    CompileSLoop(form.cdr, e, p);
                     break;
                 default:
                     throw new NotImplementedException(string.Format("Not Implemented Special Operator {0}", (Symbol)form.car));
@@ -221,7 +238,8 @@ namespace Compiler.Frontend
                     {Symbol.FindOrCreate("SETQ"), Type.SETQ },
                     {Symbol.FindOrCreate("THE"), Type.THE },
                     {Symbol.FindOrCreate("THROW"), Type.THROW },
-                    {Symbol.FindOrCreate("UNWIND-PROTECT"), Type.UNWIND_PROTECT } };
+                    {Symbol.FindOrCreate("UNWIND-PROTECT"), Type.UNWIND_PROTECT },
+                    {Symbol.FindOrCreate("SLOOP"), Type.SLOOP } };
             }
             inited = true;
         }
