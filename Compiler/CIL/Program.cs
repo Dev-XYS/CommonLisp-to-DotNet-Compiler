@@ -52,7 +52,7 @@ namespace Compiler.CIL
         {
             Emitter.Writer = writer;
 
-            EmitHeader();
+            EmitHeader(type);
 
             EmitMain(type);
 
@@ -68,9 +68,20 @@ namespace Compiler.CIL
             }
         }
 
-        private void EmitHeader()
+        private void EmitHeader(EmissionType type)
         {
-            Emitter.EmitRaw(global::Compiler.Properties.Resources.CILHeader);
+            if (type == EmissionType.Program)
+            {
+                Emitter.EmitRaw(global::Compiler.Properties.Resources.CILHeader);
+            }
+            else if (type == EmissionType.Library)
+            {
+                Emitter.EmitRaw(global::Compiler.Properties.Resources.CILLibHeader);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private void EmitMain(EmissionType type)

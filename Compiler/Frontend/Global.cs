@@ -8,7 +8,7 @@ namespace Compiler.Frontend
     static class Global
     {
         public static Environment env = new Environment();
-        public static IL.Variable rax, nil;
+        public static IL.IEntity nil;
         private static bool inited = false;
         public static void Init()
         { 
@@ -18,8 +18,7 @@ namespace Compiler.Frontend
                 Core.Init();
                 SO.Init();
                 Macro.Init();
-                rax = env.AddUnnamedVariable();
-                nil = env.Find(Symbol.Find("NIL"));
+                nil = env.FindOrExtern(Symbol.FindOrCreate("NIL"));
             }
         }
     }

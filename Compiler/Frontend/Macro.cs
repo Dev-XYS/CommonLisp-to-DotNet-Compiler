@@ -26,34 +26,34 @@ namespace Compiler.Frontend
                 throw new SyntaxError("DEFUN: Invalid name");
             if (!(t1[1] is Cons || t1[1] is null))
                 throw new SyntaxError("DEFUN: Invalid parameter list");
-            return new Cons(Symbol.Find("PROGN"), new Cons(
-                new Cons(Symbol.Find("SPECIAL"), new Cons(name, Lisp.nil)), new Cons(
-                    new Cons(Symbol.Find("SETQ"), new Cons(name, new Cons(new Cons(Symbol.Find("LAMBDA"), new Cons(t1[1], tbody)), Lisp.nil))), Lisp.nil)));
+            return new Cons(Symbol.FindOrCreate("PROGN"), new Cons(
+                new Cons(Symbol.FindOrCreate("SPECIAL"), new Cons(name, Lisp.nil)), new Cons(
+                    new Cons(Symbol.FindOrCreate("SETQ"), new Cons(name, new Cons(new Cons(Symbol.FindOrCreate("LAMBDA"), new Cons(t1[1], tbody)), Lisp.nil))), Lisp.nil)));
         }
         public static Cons DefparameterExpand(IType form)
         {
             var (t1, tbody) = Util.RequireAtLeast(form, 1, "DEFPARAMETER");
             if (!(t1[0] is Symbol name))
                 throw new SyntaxError("DEFPARAMETER: Invalid name");
-            Cons ret = new Cons(Symbol.Find("PROGN"), new Cons(
-                new Cons(Symbol.Find("SPECIAL"), new Cons(name, Lisp.nil)), Lisp.nil));
+            Cons ret = new Cons(Symbol.FindOrCreate("PROGN"), new Cons(
+                new Cons(Symbol.FindOrCreate("SPECIAL"), new Cons(name, Lisp.nil)), Lisp.nil));
             if(tbody is Cons c)
             {
-                (ret.cdr as Cons).cdr = new Cons(new Cons(Symbol.Find("SETQ"), new Cons(name, new Cons(c.car, Lisp.nil))), Lisp.nil);
+                (ret.cdr as Cons).cdr = new Cons(new Cons(Symbol.FindOrCreate("SETQ"), new Cons(name, new Cons(c.car, Lisp.nil))), Lisp.nil);
             }
             return ret;
         }
         public static IType AndExpand(IType form)
         {
             if (!(form is Cons c))
-                return Symbol.Find("T");
-            return new Cons(Symbol.Find("IF"), new Cons(c.car, new Cons(AndExpand(c.cdr), new Cons(Symbol.Find("NIL"), Lisp.nil))));
+                return Symbol.FindOrCreate("T");
+            return new Cons(Symbol.FindOrCreate("IF"), new Cons(c.car, new Cons(AndExpand(c.cdr), new Cons(Symbol.FindOrCreate("NIL"), Lisp.nil))));
         }
         public static IType OrExpand(IType form)
         {
             if (!(form is Cons c))
-                return Symbol.Find("NIL");
-            return new Cons(Symbol.Find("IF"), new Cons(c.car, new Cons(Symbol.Find("T"), new Cons(OrExpand(c.cdr), Lisp.nil))));
+                return Symbol.FindOrCreate("NIL");
+            return new Cons(Symbol.FindOrCreate("IF"), new Cons(c.car, new Cons(Symbol.FindOrCreate("T"), new Cons(OrExpand(c.cdr), Lisp.nil))));
         }
         public static IType FullExpand(Cons form)
         {

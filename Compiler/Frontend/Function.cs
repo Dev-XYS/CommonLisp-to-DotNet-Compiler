@@ -9,13 +9,13 @@ namespace Compiler.Frontend
     {
         public static List<Function> gfl = new List<Function>();
         private HashSet<Symbol> Params { get; }
-        private Environment Env { get; }
+        public Environment Env { get; }
         public Function(Environment e) : base()
         {
             Env = e;
             Params = new HashSet<Symbol>();
             EnvList.Add(e);
-            while(e != e.outer)
+            while(!(e.outer is null))
             {
                 e = e.outer;
                 EnvList.Add(e);
@@ -31,7 +31,15 @@ namespace Compiler.Frontend
         {
             return Params.Contains(s);
         }
-        public IVariable FindVar(Symbol s)
+        public object FindRight(Symbol s)
+        {
+            if (ContainsParam(s)) return Env.Find(s);
+            IVariable ret = SpecialVariable.Find(s);
+            if (ret is null)
+                return Env.FindOrExtern(s);
+            return ret;
+        }
+        public IVariable FindLeft(Symbol s)
         {
             if (ContainsParam(s)) return Env.Find(s);
             IVariable ret = SpecialVariable.Find(s);
@@ -46,22 +54,24 @@ namespace Compiler.Frontend
         public void Store(object o)
         {
             if (o is null)
-                Add(new IL.MoveInstruction(new IL.ImmediateNumber(null), Global.rax));
+                Add(new IL.MoveInstruction(new IL.ImmediateNumber(null), Env.rax));
             else if (o is IVariable v)
                 v.Store(this);
             else if (o is IType t)
-                Add(new IL.MoveInstruction(new IL.ImmediateNumber(t), Global.rax));
+                Add(new IL.MoveInstruction(new IL.ImmediateNumber(t), Env.rax));
             else if (o is Function f)
-                Add(new IL.FunctionInstruction(f, Global.rax));
+                Add(new IL.FunctionInstruction(f, Env.rax));
+            else if (o is IL.IEntity e)
+                Add(new IL.MoveInstruction(e, Env.rax));
             else throw new Exception("Store: Invalid call");
         }
         public void Return()
         {
-            Add(new IL.ReturnInstruction(Global.rax));
+            Add(new IL.ReturnInstruction(Env.rax));
         }
-        public void Call(LocalVariable f, params IL.IEntity[] args)
+        public void Call(IL.IEntity f, params IL.IEntity[] args)
         {
-            var ins = new IL.CallInstruction(f, Global.rax);
+            var ins = new IL.CallInstruction(f, Env.rax);
             ins.Parameters.AddRange(args);
             Add(ins);
         }

@@ -10,17 +10,13 @@ namespace Compiler.Frontend
         public static List<Environment> gel = new List<Environment>();
         public Dictionary<Symbol, int> pos;
         public Environment outer;
-        public Environment() : base()
-        {
-            pos = new Dictionary<Symbol, int>();
-            outer = this;
-            gel.Add(this);
-        }
-        public Environment(Environment o) : base()
+        public LocalVariable rax;
+        public Environment(Environment o = null) : base()
         {
             pos = new Dictionary<Symbol, int>();
             outer = o;
             gel.Add(this);
+            rax = AddUnnamedVariable();
         }
         public LocalVariable AddVariable(Symbol s)
         {
@@ -44,11 +40,21 @@ namespace Compiler.Frontend
             {
                 return VariableList[p] as LocalVariable;
             }
-            else if (outer != this)
+            else if (!(outer is null))
             {
                 return outer.Find(s);
             }
             else throw new SyntaxError(string.Format("{0} Not Found", s));
+        }
+        public IL.IEntity FindOrExtern(Symbol s)
+        {
+            try
+            {
+                return Find(s);
+            }catch(SyntaxError e)
+            {
+                return new IL.UnresolvedObject(s.Name);
+            }
         }
     }
 }
