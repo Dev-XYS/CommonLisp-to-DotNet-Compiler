@@ -4,28 +4,22 @@ $(If ($args.count -eq 0) { Get-ChildItem ".\programs" } Else { Get-Item (".\prog
 ForEach-Object {
 	Write-Host -NoNewline $_.Name.PadRight(32, " ")
 
-	# $m1 = Measure-Command { sbcl.exe --script $_.FullName > .\answer.txt 2> $null }
-	# $sbclFailed = $false
-	# if ($LASTEXITCODE -ne 0) {
-	# 	$sbclFailed = $true
-	# }
-
 	..\Compiler\bin\Debug\netcoreapp3.1\Compiler.exe $_.FullName > $null 2> $null
 	if ($LASTEXITCODE -ne 0) {
 		Write-Output "Compile error"
 		return
 	}
 
-	$m2 = Measure-Command { .\Program.exe > .\output.txt 2> $null }
+	$m = Measure-Command { .\Program.exe > .\output.txt 2> $null }
 	if ($LASTEXITCODE -ne 0) {
 		Write-Output "Runtime error"
 		return
 	}
 
-	$c1 = Get-Content answer.txt
+	$c1 = Get-Content $_.FullName.Replace(".lisp", ".txt").Replace("programs", "answers")
 	$c2 = Get-Content output.txt
 	if ($c1 -eq $null -and $c2 -eq $null) {
-		Write-Output ("OK  " + $(If ($sbclFailed) { "--" } Else { $m1.TotalMilliseconds }) + " " + $m2.TotalMilliseconds)
+		Write-Output ("OK  " + $m.TotalMilliseconds)
 		return
 	}
 	if ($c1 -eq $null -or $c2 -eq $null) {
@@ -36,7 +30,7 @@ ForEach-Object {
 		Write-Output "Diff"
 	}
 	else {
-		Write-Output ("OK  " + $(If ($sbclFailed) { "--" } Else { $m1.TotalMilliseconds }) + " " + $m2.TotalMilliseconds)
+		Write-Output ("OK  " + $m.TotalMilliseconds)
 	}
 }
 

@@ -8,7 +8,8 @@ namespace Compiler
         static void CompileLibrary()
         {
             var prog = Frontend.Core.CompileLibrary();
-            var cilprog = new CIL.Program(prog);
+            var optProg = Optimization.Core.OptimizeILProgram(prog);
+            var cilprog = new CIL.Program(optProg);
             var sw = new System.IO.StreamWriter("Library.il");
             cilprog.Emit(sw, CIL.EmissionType.Library);
             sw.Close();
