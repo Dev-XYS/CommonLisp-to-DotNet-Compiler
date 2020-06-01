@@ -99,6 +99,7 @@ namespace Compiler.Frontend
         private static IL.Program CompileFrom(IInputStream input)
         {
             Init();
+            LibraryFunctions.AddAll(Global.env, main);
             IType expr;
             while(true)
             {
@@ -115,12 +116,6 @@ namespace Compiler.Frontend
             prog.FunctionList = Function.gfl;
             main.Return();
             return prog;
-        }
-        public static IL.Program CompileLibrary()
-        {
-            Init();
-            LibraryFunctions.AddAll(Global.env, main);
-            return CompileFrom(Lisp.stdin);
         }
         public static IL.Program CompileFromStdin()
         {
