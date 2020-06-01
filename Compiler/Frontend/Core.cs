@@ -93,13 +93,13 @@ namespace Compiler.Frontend
                 inited = true;
                 main = new Function(Global.env);
                 prog.Main = main;
+                LibraryFunctions.AddAll(Global.env, main);
                 Global.Init();
             }
         }
         private static IL.Program CompileFrom(IInputStream input)
         {
             Init();
-            LibraryFunctions.AddAll(Global.env, main);
             IType expr;
             while(true)
             {
