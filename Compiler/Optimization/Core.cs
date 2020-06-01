@@ -10,7 +10,7 @@ namespace Compiler.Optimization
 
         static private Program OptimizedProgram;
 
-        static public Program OptimizeILProgram(IL.Program program)
+        static public Program Optimize(IL.Program program)
         {
             Program = program;
             OptimizedProgram = new Program(Program);
