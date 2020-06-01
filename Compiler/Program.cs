@@ -8,7 +8,7 @@ namespace Compiler
         static void CompileLibrary()
         {
             var prog = Frontend.Core.CompileLibrary();
-            var optProg = Optimization.Core.OptimizeILProgram(prog);
+            var optProg = Optimization.DummyOptimization.Optimize(prog);
             var cilprog = new CIL.Program(optProg);
             var sw = new System.IO.StreamWriter("Library.il");
             cilprog.Emit(sw, CIL.EmissionType.Library);
@@ -31,7 +31,7 @@ namespace Compiler
             {
                 program = Frontend.Core.CompileFromStdin();
             }
-            Optimization.Program OptimizedProgram = Optimization.Core.OptimizeILProgram(program);
+            Optimization.Program OptimizedProgram = Optimization.DummyOptimization.Optimize(program);
             var prog = new CIL.Program(OptimizedProgram);
             var sw = new System.IO.StreamWriter("Program.il");
             prog.Emit(sw, CIL.EmissionType.Program);
