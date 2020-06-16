@@ -19,6 +19,7 @@ namespace Compiler.Optimization
             {
                 Graph graph = new Graph(func);
                 graph.Print();
+                graph.PrintDAGs();
             }
             OptimizedProgram = LocalOptimization.Optimize(OptimizedProgram);
             return OptimizedProgram;

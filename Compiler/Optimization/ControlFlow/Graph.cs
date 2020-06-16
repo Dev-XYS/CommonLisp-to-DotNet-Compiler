@@ -119,5 +119,15 @@ namespace Compiler.Optimization.ControlFlow
                 Console.WriteLine();
             }
         }
+
+        public void PrintDAGs()
+        {
+            foreach (BasicBlock block in LookupByLeader.Values)
+            {
+                DAG graph = block.BuildDAG();
+                graph.Print();
+                Console.WriteLine();
+            }
+        }
     }
 }

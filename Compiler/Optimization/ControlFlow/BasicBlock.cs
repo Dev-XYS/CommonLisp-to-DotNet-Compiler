@@ -49,5 +49,50 @@ namespace Compiler.Optimization.ControlFlow
             }
             Console.WriteLine("<<<");
         }
+
+        public DAG BuildDAG()
+        {
+            DAG graph = new DAG();
+
+            // Latest definition of a variable.
+            Dictionary<IL.Variable, Node> LastDef = new Dictionary<IL.Variable, Node>();
+
+            Node previous = null;
+
+            foreach (IL.Instruction instr in InstructionList)
+            {
+                // Create a DAG node for the instruction.
+                Node node = new Node(instr);
+
+                foreach (IL.Variable var in instr.UsedVariables)
+                {
+                    // Add dependency.
+                    Node dependency = LastDef.GetValueOrDefault(var);
+                    if (dependency != null)
+                    {
+                        node.AddDependency(dependency);
+                    }
+                }
+
+                // Update defined variable.
+                IL.Variable def = instr.DefinedVariable;
+                if (def != null)
+                {
+                    LastDef[def] = node;
+                    Console.WriteLine("=> updated {0}", def);
+                }
+
+                // Every node depends on its previous node (to preserve order).
+                if (previous != null)
+                {
+                    node.AddDependency(previous);
+                }
+                previous = node;
+
+                graph.AddNode(node);
+            }
+
+            return graph;
+        }
     }
 }
