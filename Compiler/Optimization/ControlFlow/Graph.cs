@@ -33,19 +33,19 @@ namespace Compiler.Optimization.ControlFlow
                         IsLeader[i + 1] = true;
                     }
                 }
-                else if (instr is IL.CallInstruction)
-                {
-                    // The current instruction is a call instruction.
-                    // Call instructions are leaders.
-                    IsLeader[i] = true;
+                //else if (instr is IL.CallInstruction)
+                //{
+                //    // The current instruction is a call instruction.
+                //    // Call instructions are leaders.
+                //    IsLeader[i] = true;
 
-                    // The next instruction is also a leader.
-                    // Call takes up an entire block.
-                    if (i + 1 < func.InstructionList.Count)
-                    {
-                        IsLeader[i + 1] = true;
-                    }
-                }
+                //    // The next instruction is also a leader.
+                //    // Call takes up an entire block.
+                //    if (i + 1 < func.InstructionList.Count)
+                //    {
+                //        IsLeader[i + 1] = true;
+                //    }
+                //}
                 else if (instr is IL.Label)
                 {
                     IsLeader[i] = true;

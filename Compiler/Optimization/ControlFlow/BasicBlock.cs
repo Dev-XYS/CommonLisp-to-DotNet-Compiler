@@ -79,6 +79,12 @@ namespace Compiler.Optimization.ControlFlow
                 graph.AddNode(node);
             }
 
+            // Currently, assume that all variables are alive.
+            foreach (Node node in LastDef.Values)
+            {
+                node.Essential = true;
+            }
+
             return graph;
         }
 

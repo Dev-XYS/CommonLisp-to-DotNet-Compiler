@@ -21,15 +21,6 @@ namespace Compiler.Optimization.ControlFlow
 
         public void Optimize()
         {
-            // Currently, assume that all node of 0 degree is alive.
-            foreach (Node node in Nodes)
-            {
-                if (node.InDegree == 0)
-                {
-                    node.Essential = true;
-                }
-            }
-
             foreach (Node node in Nodes)
             {
                 // The node must be a "root". (i.e. `InDegree` = 0)
