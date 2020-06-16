@@ -32,8 +32,4 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Optimization\ControlFlow\" />
-  </ItemGroup>
-
 </Project>
