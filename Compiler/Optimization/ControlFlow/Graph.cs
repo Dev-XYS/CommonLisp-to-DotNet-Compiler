@@ -13,11 +13,6 @@ namespace Compiler.Optimization.ControlFlow
 
         public Graph(Function func)
         {
-            foreach (IL.Instruction instr in func.InstructionList)
-            {
-                Console.WriteLine(instr);
-            }
-            Console.WriteLine();
             LookupByLeader = new Dictionary<IL.Instruction, BasicBlock>();
 
             // Mark if an instruction is the leader of a basic block.
@@ -109,6 +104,23 @@ namespace Compiler.Optimization.ControlFlow
             {
                 block.AddSuccessor(LookupByLeader[uncondJump.Target]);
             }
+
+            // Build DAG.
+            block.Build();
+        }
+
+        public void Optimize()
+        {
+            // Optimize basic blocks.
+            OptimizeBasicBlocks();
+        }
+
+        private void OptimizeBasicBlocks()
+        {
+            foreach (BasicBlock block in LookupByLeader.Values)
+            {
+                block.Optimize();
+            }
         }
 
         public void Print()
@@ -124,8 +136,7 @@ namespace Compiler.Optimization.ControlFlow
         {
             foreach (BasicBlock block in LookupByLeader.Values)
             {
-                DAG graph = block.BuildDAG();
-                graph.Print();
+                block.PrintDAG();
                 Console.WriteLine();
             }
         }

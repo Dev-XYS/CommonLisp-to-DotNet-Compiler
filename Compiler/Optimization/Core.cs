@@ -15,12 +15,7 @@ namespace Compiler.Optimization
         {
             Program = program;
             OptimizedProgram = new Program(Program);
-            foreach (Function func in OptimizedProgram.FunctionList)
-            {
-                Graph graph = new Graph(func);
-                graph.Print();
-                graph.PrintDAGs();
-            }
+            OptimizedProgram = ControlFlow.Core.Optimize(OptimizedProgram);
             OptimizedProgram = LocalOptimization.Optimize(OptimizedProgram);
             return OptimizedProgram;
         }

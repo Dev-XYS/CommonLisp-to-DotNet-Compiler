@@ -11,6 +11,22 @@ namespace Compiler.Optimization.ControlFlow
 
         public HashSet<Node> Dependencies { get; }
 
+        public int OutDegree { get => Dependencies.Count; }
+
+        public int InDegree { get; private set; }
+
+        public bool Removed { get; set; }
+
+        public IL.IEntity Original { get => Instruction.DefinedVariable; }
+
+        public IL.IEntity Alternative { get; set; }
+
+        // Mark that if the node is alive at the end of the block.
+        public bool Essential { get; set; }
+
+        // Mark that if the node has been optimized.
+        public bool Optimized { get; set; }
+
         public Node(IL.Instruction instr)
         {
             Instruction = instr;
@@ -20,6 +36,7 @@ namespace Compiler.Optimization.ControlFlow
         public void AddDependency(Node node)
         {
             Dependencies.Add(node);
+            node.InDegree++;
         }
 
         public override string ToString()

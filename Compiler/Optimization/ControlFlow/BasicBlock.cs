@@ -14,15 +14,12 @@ namespace Compiler.Optimization.ControlFlow
 
         public IL.Instruction LeavingInstruction { get => InstructionList[InstructionList.Count - 1]; }
 
+        private DAG Graph { get; set; }
+
         public BasicBlock()
         {
             InstructionList = new List<IL.Instruction>();
             Successor = new List<BasicBlock>();
-        }
-
-        public BasicBlock(List<IL.Instruction> list)
-        {
-            InstructionList = list;
         }
 
         public void AddInstruction(IL.Instruction instr)
@@ -35,22 +32,12 @@ namespace Compiler.Optimization.ControlFlow
             Successor.Add(block);
         }
 
-        public void Print()
+        public void Build()
         {
-            Console.WriteLine("--- {0} ---", GetHashCode());
-            foreach (IL.Instruction instr in InstructionList)
-            {
-                Console.WriteLine(instr);
-            }
-            Console.WriteLine(">>>");
-            foreach (BasicBlock block in Successor)
-            {
-                Console.WriteLine(block.GetHashCode());
-            }
-            Console.WriteLine("<<<");
+            Graph = BuildDAG();
         }
 
-        public DAG BuildDAG()
+        private DAG BuildDAG()
         {
             DAG graph = new DAG();
 
@@ -93,6 +80,32 @@ namespace Compiler.Optimization.ControlFlow
             }
 
             return graph;
+        }
+
+        public void Optimize()
+        {
+            Graph.Optimize();
+        }
+
+        public void Print()
+        {
+            Console.WriteLine("--- basic block {0} ---", GetHashCode());
+            foreach (IL.Instruction instr in InstructionList)
+            {
+                Console.WriteLine(instr);
+            }
+            Console.WriteLine(">>> next block(s)");
+            foreach (BasicBlock block in Successor)
+            {
+                Console.WriteLine(block.GetHashCode());
+            }
+            Console.WriteLine("<<<");
+        }
+
+        public void PrintDAG()
+        {
+            Console.WriteLine("--- DAG of basic block {0} ---", GetHashCode());
+            Graph.Print();
         }
     }
 }
