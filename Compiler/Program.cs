@@ -31,7 +31,7 @@ namespace Compiler
             {
                 program = Frontend.Core.CompileFromStdin();
             }
-            Optimization.Program OptimizedProgram = Optimization.DummyOptimization.Optimize(program);
+            Optimization.Program OptimizedProgram = Optimization.Core.Optimize(program);
             var prog = new CIL.Program(OptimizedProgram);
             var sw = new System.IO.StreamWriter("Program.il");
             prog.Emit(sw, CIL.EmissionType.Program);

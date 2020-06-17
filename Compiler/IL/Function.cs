@@ -28,6 +28,12 @@ namespace Compiler.IL
             Parameters = new List<Variable>();
             InstructionList = new List<Instruction>();
         }
+
+        public Function(string name) : this()
+        {
+            Name = name;
+        }
+
         public void Add(Instruction i)
         {
             InstructionList.Add(i);

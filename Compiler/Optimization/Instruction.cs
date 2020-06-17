@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Compiler.IL;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,6 +12,8 @@ namespace Compiler.Optimization
         private IL.Function ILFunction { get; }
 
         public bool Necessary { get; set; }
+
+        public bool IsLeader { get; set; }
 
         public IL.Variable LocallyDefinedVariable
         {

@@ -29,7 +29,7 @@ namespace Compiler.CIL
 
         public Function(Program prog, Optimization.Function func)
         {
-            Name = "func" + func.GetHashCode().ToString();
+            Name = func.Name;
             Program = prog;
             OptFunction = func;
 

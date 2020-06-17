@@ -28,4 +28,4 @@
 			       ret)))
 	(msort-impl))
       l))
-(writeln (msort (read)))
+(writeln (msort '(4 2 5 1 3)))

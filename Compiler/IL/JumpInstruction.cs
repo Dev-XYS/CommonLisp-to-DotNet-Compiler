@@ -50,5 +50,13 @@ namespace Compiler.IL
                 return new List<Variable>() { TestVariable };
             }
         }
+
+        public override void ReplaceUsedValue(IEntity original, IEntity alternative)
+        {
+            if (TestVariable == original)
+            {
+                TestVariable = alternative as Variable;
+            }
+        }
     }
 }

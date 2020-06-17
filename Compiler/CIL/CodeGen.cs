@@ -63,6 +63,11 @@ namespace Compiler.CIL
                 Gen(new I.LoadField { Field = EnvMap[var.Env] });
                 Gen(new I.LoadField { Field = EnvMap[var.Env].Environment.VarMap[var] });
             }
+            else if (var is Optimization.LocalVariable loc)
+            {
+                // The entity is a (purely) local variable (used for optimization).
+                GenLoadLoc(loc);
+            }
             else
             {
                 throw new NotImplementedException();
@@ -110,14 +115,10 @@ namespace Compiler.CIL
                 // This should not happen.
                 throw new NotImplementedException();
             }
-            else if (e is Optimization.LocalVariable loc)
-            {
-                // The entity is a (purely) local variable (used for optimization).
-                GenLoadLoc(loc);
-            }
             else if (e is IL.Variable var)
             {
                 // The entity is a variable.
+                // (This includes IL.Variable and Optimization.Variable.)
                 GenLoadVariable(var);
             }
             else if (e is IL.UnresolvedObject obj)
@@ -153,8 +154,46 @@ namespace Compiler.CIL
             }
         }
 
+        private void GenPreStore(IL.Variable var)
+        {
+            if (var.Env != null)
+            {
+                // IL.Variable
+                Gen(new I.LoadArgument { ArgNo = 0 });
+                Gen(new I.LoadField { Field = EnvMap[var.Env] });
+            }
+            else if (var is Optimization.LocalVariable)
+            {
+                // Optimization.LocalVariable
+                // Do nothing.
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private void GenPostStore(IL.Variable var)
+        {
+            if (var.Env != null)
+            {
+                // IL.Variable
+                Gen(new I.StoreField { Field = EnvMap[var.Env].Environment.VarMap[var] });
+            }
+            else if (var is Optimization.LocalVariable loc)
+            {
+                // Optimization.LocalVariable
+                Gen(new I.Store { Loc = loc.LocSlot });
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         private void GenCall(IL.CallInstruction instr)
         {
+            GenPreStore(instr.Destination);
             GenLoadEntity(instr.Function);
             Gen(new I.LoadInt { Value = instr.Parameters.Count });
             Gen(new I.NewArray { Type = "[Runtime]Runtime.IType" });
@@ -169,27 +208,26 @@ namespace Compiler.CIL
             }
             Gen(new I.Load { Loc = 1 });
             Gen(new I.CallVirtual { });
-            Gen(new I.Store { Loc = 0 });
-            GenStoreTemp(instr.Destination);
+            GenPostStore(instr.Destination);
         }
 
         private void GenFunction(IL.FunctionInstruction instr)
         {
+            GenPreStore(instr.Destination);
             foreach (EnvironmentMember env in EnvList)
             {
                 Gen(new I.LoadArgument { ArgNo = 0 });
                 Gen(new I.LoadField { Field = env });
             }
             Gen(new I.NewObject { Type = Program.FuncMap[instr.Function] });
-            Gen(new I.Store { Loc = 0 });
-            GenStoreTemp(instr.Destination);
+            GenPostStore(instr.Destination);
         }
 
         private void GenMove(IL.MoveInstruction instr)
         {
+            GenPreStore(instr.Destination);
             GenLoadEntity(instr.Source);
-            Gen(new I.Store { Loc = 0 });
-            GenStoreTemp(instr.Destination);
+            GenPostStore(instr.Destination);
         }
 
         private void GenReturn(IL.ReturnInstruction instr)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Compiler.Optimization.ControlFlow;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,10 +11,11 @@ namespace Compiler.Optimization
 
         static private Program OptimizedProgram;
 
-        static public Program OptimizeILProgram(IL.Program program)
+        static public Program Optimize(IL.Program program)
         {
             Program = program;
             OptimizedProgram = new Program(Program);
+            OptimizedProgram = ControlFlow.Core.Optimize(OptimizedProgram);
             OptimizedProgram = LocalOptimization.Optimize(OptimizedProgram);
             return OptimizedProgram;
         }

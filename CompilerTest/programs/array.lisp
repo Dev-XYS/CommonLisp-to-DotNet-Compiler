@@ -1,0 +1,5 @@
+(defparameter *a* (make-array '(100 100))
+(writeln (aref *a* 20 30))
+(writeln (aref *a* 99 99))
+(setf (aref *a* 20 30) 233 (aref *a* 99 99) 666)
+(writeln (* (aref a 20 30) (aref a 99 99)))
