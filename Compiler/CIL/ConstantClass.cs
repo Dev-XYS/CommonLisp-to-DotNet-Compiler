@@ -96,7 +96,7 @@ namespace Compiler.CIL
             }
 
             // Main function of the library (contains the root environment of the library).
-            Emitter.Emit(".field public static initonly class [Library]LibMain LibMain");
+            Emitter.Emit(".field public static initonly class [Library]global global");
 
             Emitter.Emit(".method private hidebysig specialname rtspecialname static void .cctor() cil managed");
             Emitter.BeginBlock();

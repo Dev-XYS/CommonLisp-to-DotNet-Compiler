@@ -78,9 +78,8 @@ namespace Compiler.CIL
         {
             // Currently, all unresolved objects are lisp library functions.
             // Get the function from the global environment of the library.
-            Gen(new I.Text { Content = "ldsfld class [Library]LibMain Constants::LibMain" });
-            Gen(new I.Text { Content = "ldfld class [Library]global LibMain::global" });
-            Gen(new I.Text { Content = string.Format("ldfld class [Runtime]Runtime.IType global::{0}", obj.Name) });
+            Gen(new I.Text { Content = "ldsfld class [Library]global Constants::global" });
+            Gen(new I.Text { Content = string.Format("ldfld class [Runtime]Runtime.IType [Library]global::{0}", obj.Name) });
         }
 
         private void GenLoadConst(Runtime.IType c)
@@ -235,9 +234,18 @@ namespace Compiler.CIL
         private void GenReturn(IL.ReturnInstruction instr)
         {
             GenLoadEntity(instr.Value);
-            Gen(new I.LoadArgument { ArgNo = 0 });
-            Gen(new I.Load { Loc = 2 });
-            Gen(new I.StoreField { Field = EnvList[0] });
+
+            // If the return instruction lies in the main function,
+            // we should not restore the global environment.
+            // (The global environment of the library is used in the program.)
+            // Otherwise, it is essential to restore the environment.
+            if (EnvList.Count > 1)
+            {
+                Gen(new I.LoadArgument { ArgNo = 0 });
+                Gen(new I.Load { Loc = 2 });
+                Gen(new I.StoreField { Field = EnvList[0] });
+            }
+
             Gen(new I.Return { });
         }
 

@@ -142,12 +142,12 @@ namespace Compiler.CIL
 
         public void Emit()
         {
-            Emitter.Emit(".class private auto ansi beforefieldinit {0} extends [System.Runtime]System.Object implements [Runtime]Runtime.IType", Name);
+            Emitter.Emit(".class public auto ansi beforefieldinit {0} extends [System.Runtime]System.Object implements [Runtime]Runtime.IType", Name);
             Emitter.BeginBlock();
 
             foreach (EnvironmentMember m in EnvList)
             {
-                Emitter.Emit(".field private class {0} {1}", m.Environment.Name, m.Name);
+                Emitter.Emit(".field public class {0} {1}", m.Environment.Name, m.Name);
             }
 
             Emitter.Emit(".method public hidebysig specialname rtspecialname instance void .ctor({0}) cil managed", GetCtorArgumentList());

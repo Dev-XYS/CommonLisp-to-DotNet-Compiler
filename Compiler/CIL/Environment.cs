@@ -28,7 +28,7 @@ namespace Compiler.CIL
 
         public void Emit()
         {
-            Emitter.Emit(".class private auto ansi beforefieldinit {0} extends [System.Runtime]System.Object", Name);
+            Emitter.Emit(".class public auto ansi beforefieldinit {0} extends [System.Runtime]System.Object", Name);
             Emitter.BeginBlock();
             foreach (ITypeMember m in VarMap.Values)
             {
