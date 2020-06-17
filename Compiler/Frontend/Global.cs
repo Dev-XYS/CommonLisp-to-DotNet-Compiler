@@ -19,6 +19,7 @@ namespace Compiler.Frontend
                 SO.Init();
                 Macro.Init();
                 nil = env.FindOrExtern(Symbol.FindOrCreate("NIL"));
+                env.Name = "global";
             }
         }
     }

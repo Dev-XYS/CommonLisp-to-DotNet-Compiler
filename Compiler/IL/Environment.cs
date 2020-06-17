@@ -12,7 +12,7 @@ namespace Compiler.IL
         private static int geid;
         private int eid;
 
-        public string Name { get; }
+        public string Name { get; set; }
 
         /// <summary>
         /// 变量列表
