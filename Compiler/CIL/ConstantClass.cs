@@ -88,10 +88,16 @@ namespace Compiler.CIL
         {
             Emitter.Emit(".class private abstract auto ansi sealed beforefieldinit Constants extends [System.Runtime]System.Object");
             Emitter.BeginBlock();
+
+            // Program constants.
             foreach (Runtime.IDataType data in Constants)
             {
                 Emitter.Emit(".field public static initonly class [Runtime]Runtime.IType const{0}", data.GetHashCode());
             }
+
+            // Main function of the library (contains the root environment of the library).
+            Emitter.Emit(".field public static initonly class [Library]LibMain LibMain");
+
             Emitter.Emit(".method private hidebysig specialname rtspecialname static void .cctor() cil managed");
             Emitter.BeginBlock();
             foreach (Instruction instr in CtorInstructionList)

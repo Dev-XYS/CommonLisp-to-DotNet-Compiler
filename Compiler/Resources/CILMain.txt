@@ -3,6 +3,13 @@
 	.method private hidebysig static void Main(string[] args) cil managed
 	{{
 		.entrypoint
+
+		newobj instance void [Library]LibMain::.ctor()
+		ldc.i4.0
+		newarr [Runtime]Runtime.IType
+		call instance class [Runtime]Runtime.IType [Library]LibMain::Invoke(class [Runtime]Runtime.IType[])
+		pop
+
 		newobj instance void {0}::.ctor()
 		ldc.i4.0
 		newarr [Runtime]Runtime.IType

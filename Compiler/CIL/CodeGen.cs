@@ -77,8 +77,10 @@ namespace Compiler.CIL
         private void GenLoadUnresolvedObject(IL.UnresolvedObject obj)
         {
             // Currently, all unresolved objects are lisp library functions.
-            // Instantiate the function.
-            Gen(new I.Text { Content = string.Format("newobj instance void [Library]{0}::.ctor()", obj.Name) });
+            // Get the function from the global environment of the library.
+            Gen(new I.Text { Content = "ldsfld class [Library]LibMain Constants::LibMain" });
+            Gen(new I.Text { Content = "ldfld class [Library]global LibMain::global" });
+            Gen(new I.Text { Content = string.Format("ldfld class [Runtime]Runtime.IType global::{0}", obj.Name) });
         }
 
         private void GenLoadConst(Runtime.IType c)
