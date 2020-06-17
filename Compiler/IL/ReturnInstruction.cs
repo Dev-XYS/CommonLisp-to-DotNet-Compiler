@@ -32,5 +32,13 @@ namespace Compiler.IL
                 }
             }
         }
+
+        public override void ReplaceUsedValue(IEntity original, IEntity alternative)
+        {
+            if (Value == original)
+            {
+                Value = alternative;
+            }
+        }
     }
 }

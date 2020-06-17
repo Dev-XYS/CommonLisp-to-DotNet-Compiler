@@ -9,5 +9,10 @@ namespace Compiler.IL
         public virtual Variable DefinedVariable { get => null; }
 
         public virtual List<Variable> UsedVariables { get => new List<Variable>(); }
+
+        public virtual void ReplaceUsedValue(IEntity original, IEntity alternative)
+        {
+            // This method is overwritten by inherited classes.
+        }
     }
 }

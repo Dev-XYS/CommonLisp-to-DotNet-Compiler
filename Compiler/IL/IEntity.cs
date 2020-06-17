@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Compiler.IL
 {
-    interface IEntity
+    public interface IEntity
     {
     }
 }

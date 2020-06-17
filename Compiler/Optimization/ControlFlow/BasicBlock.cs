@@ -6,7 +6,7 @@ namespace Compiler.Optimization.ControlFlow
 {
     class BasicBlock
     {
-        private List<IL.Instruction> InstructionList { get; }
+        public List<IL.Instruction> InstructionList { get; private set; }
 
         private List<BasicBlock> Successor { get; }
 
@@ -91,6 +91,7 @@ namespace Compiler.Optimization.ControlFlow
         public void Optimize()
         {
             Graph.Optimize();
+            InstructionList = Graph.RewriteInstructions();
         }
 
         public void Print()

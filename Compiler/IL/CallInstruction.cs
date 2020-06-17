@@ -54,5 +54,20 @@ namespace Compiler.IL
                 return r;
             }
         }
+
+        public override void ReplaceUsedValue(IEntity original, IEntity alternative)
+        {
+            if (Function == original)
+            {
+                Function = alternative;
+            }
+            for (int i = 0; i < Parameters.Count; i++)
+            {
+                if (Parameters[i] == original)
+                {
+                    Parameters[i] = alternative;
+                }
+            }
+        }
     }
 }

@@ -83,6 +83,51 @@ namespace Compiler.Optimization.ControlFlow
             }
         }
 
+        public List<IL.Instruction> RewriteInstructions()
+        {
+            List<IL.Instruction> list = new List<IL.Instruction>();
+
+            // Traverse the DAG by topological order.
+            // Rewrite all nodes which are not removed.
+            foreach (Node node in Nodes)
+            {
+                // The node must be a "root". (i.e. `InDegree` = 0)
+                // The node must have not been optimized.
+                if (node.InDegree == 0 && !node.Rewritten)
+                {
+                    Traverse(node, list);
+                }
+            }
+
+            return list;
+        }
+
+        private void Traverse(Node node, List<IL.Instruction> list)
+        {
+            // Skip rewrittten nodes.
+            if (node.Rewritten == true)
+            {
+                return;
+            }
+            node.Rewritten = true;
+
+            // Recursively traverse each child.
+            foreach (Node child in node.Dependencies)
+            {
+                Traverse(child, list);
+            }
+
+            // Rewrite the current instruction.
+            if (!node.Removed)
+            {
+                foreach (Node child in node.Dependencies)
+                {
+                    node.Instruction.ReplaceUsedValue(child.Original, child.Alternative);
+                }
+                list.Add(node.Instruction);
+            }
+        }
+
         public void Print()
         {
             foreach (Node node in Nodes)

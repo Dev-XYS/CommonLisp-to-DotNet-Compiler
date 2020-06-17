@@ -11,9 +11,13 @@ namespace Compiler.Optimization.ControlFlow
 
         private Dictionary<IL.Instruction, BasicBlock> LookupByLeader { get; }
 
+        // Preserve the original order.
+        private List<BasicBlock> BlockList { get; }
+
         public Graph(Function func)
         {
             LookupByLeader = new Dictionary<IL.Instruction, BasicBlock>();
+            BlockList = new List<BasicBlock>();
 
             // Mark if an instruction is the leader of a basic block.
             bool[] IsLeader = new bool[func.InstructionList.Count];
@@ -62,6 +66,9 @@ namespace Compiler.Optimization.ControlFlow
 
                     // Register in the dictionary.
                     LookupByLeader[func.InstructionList[i]] = current;
+
+                    // Add to the list (used to preserve original order).
+                    BlockList.Add(current);
                 }
 
                 current.AddInstruction(func.InstructionList[i]);
@@ -111,16 +118,26 @@ namespace Compiler.Optimization.ControlFlow
 
         public void Optimize()
         {
-            // Optimize basic blocks.
             OptimizeBasicBlocks();
         }
 
         private void OptimizeBasicBlocks()
         {
+            // Optimize all basic blocks one by one.
             foreach (BasicBlock block in LookupByLeader.Values)
             {
                 block.Optimize();
             }
+        }
+
+        public List<IL.Instruction> ReassembleInstructions()
+        {
+            List<IL.Instruction> list = new List<IL.Instruction>();
+            foreach (BasicBlock block in BlockList)
+            {
+                list.AddRange(block.InstructionList);
+            }
+            return list;
         }
 
         public void Print()

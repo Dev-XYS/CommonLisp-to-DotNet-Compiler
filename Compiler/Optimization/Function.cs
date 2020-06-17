@@ -14,7 +14,7 @@ namespace Compiler.Optimization
 
         public List<IL.Variable> Parameters { get; }
 
-        public List<IL.Instruction> InstructionList { get; }
+        public List<IL.Instruction> InstructionList { get; set; }
 
         public IL.Environment LocalEnv { get => EnvList[0]; }
 

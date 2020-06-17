@@ -18,6 +18,8 @@ namespace Compiler.Optimization.ControlFlow
                 graph.Optimize();
 
                 graph.PrintDAGs();
+
+                func.InstructionList = graph.ReassembleInstructions();
             }
             return program;
         }

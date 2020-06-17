@@ -27,6 +27,9 @@ namespace Compiler.Optimization.ControlFlow
         // Mark that if the node has been optimized.
         public bool Optimized { get; set; }
 
+        // Mark that if the node has been rewritten.
+        public bool Rewritten { get; set; }
+
         public Node(IL.Instruction instr)
         {
             Instruction = instr;
