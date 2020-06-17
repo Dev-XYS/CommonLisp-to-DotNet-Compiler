@@ -11,7 +11,7 @@ namespace Compiler.Frontend
         {
             BLOCK, CATCH, EVAL_WHEN, FLET, FUNCTION, GO, IF, LABELS, LET, LET_STAR, LOAD_TIME_VALUE, LOCALLY, MACROLET, LAMBDA, SPECIAL,
             MULTIPLE_VALUE_CALL, MULTIPLE_VALUE_PROG1, PROGN, PROGY, QUOTE, RETURN_FROM, SETQ, SYMBOL_MACROLET, TAGBODY, THE, THROW, UNWIND_PROTECT,
-            SLOOP
+            SLOOP, DEFLIBF
         };
         private static Dictionary<Symbol, Type> types;
         private static bool inited = false;
@@ -131,6 +131,22 @@ namespace Compiler.Frontend
             f.Return();
             p.Store(f);
         }
+        public static void CompileDeflibf(IType body, Environment e, Function p)
+        {
+            var (tl, tbody) = Util.RequireAtLeast(body, 2, "DEFLIBF");
+            if (e != Global.env) throw new SyntaxError("DEFLIBF: Must in outmost environment");
+            if (!(tl[0] is Symbol s)) throw new SyntaxError("DEFLIBF: illegal name");
+            Environment cure = new Environment(e);
+            Function f = new Function(cure);
+            f.Name = s.Name;
+            if (tl[1] is Cons c)
+                Util.ParseLambdaList(c, cure, f);
+            CompileProgn(tbody, cure, f);
+            f.Return();
+            p.Store(f);
+            var v = e.AddVariable(s);
+            v.Load(p);
+        }
         public static void CompileSetq(IType body, Environment e, Function p)
         {
             while (body is Cons c)
@@ -199,6 +215,9 @@ namespace Compiler.Frontend
                 case Type.SLOOP:
                     CompileSLoop(form.cdr, e, p);
                     break;
+                case Type.DEFLIBF:
+                    CompileDeflibf(form.cdr, e, p);
+                    break;
                 default:
                     throw new NotImplementedException(string.Format("Not Implemented Special Operator {0}", (Symbol)form.car));
             }
@@ -239,6 +258,7 @@ namespace Compiler.Frontend
                     {Symbol.FindOrCreate("THE"), Type.THE },
                     {Symbol.FindOrCreate("THROW"), Type.THROW },
                     {Symbol.FindOrCreate("UNWIND-PROTECT"), Type.UNWIND_PROTECT },
+                    {Symbol.FindOrCreate("DEFLIBF"), Type.DEFLIBF },
                     {Symbol.FindOrCreate("SLOOP"), Type.SLOOP } };
             }
             inited = true;
