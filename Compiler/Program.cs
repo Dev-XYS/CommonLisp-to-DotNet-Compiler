@@ -8,6 +8,7 @@ namespace Compiler
         static void CompileLibrary()
         {
             var prog = Frontend.Core.CompileFromStdin();
+            prog.Main.Name = "LibMain";
             var optProg = Optimization.DummyOptimization.Optimize(prog);
             var cilprog = new CIL.Program(optProg);
             var sw = new System.IO.StreamWriter("Library.il");
