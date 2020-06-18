@@ -9,10 +9,4 @@
     <ProjectReference Include="..\Runtime\Runtime.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Library">
-      <HintPath>..\Compiler\bin\Debug\netcoreapp3.1\Library.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

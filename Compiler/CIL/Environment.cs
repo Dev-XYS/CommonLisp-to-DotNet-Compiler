@@ -15,6 +15,9 @@ namespace Compiler.CIL
 
         public Dictionary<IL.Variable, ITypeMember> VarMap { get; }
 
+        public bool IsGlobal { get => Name == "global"; }
+        public string PrivateOrPublic { get => IsGlobal ? "public" : "private"; }
+
         public Environment(IL.Environment env)
         {
             Name = env.Name;
@@ -28,7 +31,7 @@ namespace Compiler.CIL
 
         public void Emit()
         {
-            Emitter.Emit(".class public auto ansi beforefieldinit {0} extends [System.Runtime]System.Object", Name);
+            Emitter.Emit(".class {0} auto ansi beforefieldinit {1} extends [System.Runtime]System.Object", PrivateOrPublic, Name);
             Emitter.BeginBlock();
             foreach (ITypeMember m in VarMap.Values)
             {

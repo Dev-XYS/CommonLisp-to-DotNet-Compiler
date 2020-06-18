@@ -12,7 +12,5 @@ static class Program
         {
             Console.WriteLine(tp.FullName);
         }
-        LibMain main = new LibMain();
-        
     }
 }

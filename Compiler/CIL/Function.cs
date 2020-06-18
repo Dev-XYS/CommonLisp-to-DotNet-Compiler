@@ -27,6 +27,9 @@ namespace Compiler.CIL
         public int VarNo { get; set; }
         public Dictionary<IL.Variable, int> VarMap { get; }
 
+        public bool IsLibMain { get => Name == "LibMain"; }
+        private string PrivateOrPublic { get => IsLibMain ? "public" : "private"; }
+
         public Function(Program prog, Optimization.Function func)
         {
             Name = func.Name;
@@ -142,12 +145,15 @@ namespace Compiler.CIL
 
         public void Emit()
         {
-            Emitter.Emit(".class public auto ansi beforefieldinit {0} extends [System.Runtime]System.Object implements [Runtime]Runtime.IType", Name);
+            // `LibMain` is public, others are private.
+            Emitter.Emit(".class {0} auto ansi beforefieldinit {1} extends [System.Runtime]System.Object implements [Runtime]Runtime.IType", PrivateOrPublic, Name);
+
             Emitter.BeginBlock();
 
             foreach (EnvironmentMember m in EnvList)
             {
-                Emitter.Emit(".field public class {0} {1}", m.Environment.Name, m.Name);
+                // Global environment member of `LibMain` is public, others are private.
+                Emitter.Emit(".field {0} class {1} {2}", m.PrivateOrPublic, m.Environment.Name, m.Name);
             }
 
             Emitter.Emit(".method public hidebysig specialname rtspecialname instance void .ctor({0}) cil managed", GetCtorArgumentList());

@@ -20,6 +20,10 @@ namespace Compiler.CIL
 
         public Function Function { get; }
 
+        public bool IsGlobal { get => Environment.IsGlobal; }
+        public bool IsLibGlobal { get => Function.IsLibMain && IsGlobal; }
+        public string PrivateOrPublic { get => IsLibGlobal ? "public" : "private"; }
+
         public EnvironmentMember(Function func, IL.Environment env)
         {
             // We use the same name as the environment.
