@@ -14,3 +14,8 @@ static class Program
         }
     }
 }
+
+class C
+{
+    internal int x;
+}

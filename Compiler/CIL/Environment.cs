@@ -35,7 +35,7 @@ namespace Compiler.CIL
             Emitter.BeginBlock();
             foreach (ITypeMember m in VarMap.Values)
             {
-                Emitter.Emit(".field public class [Runtime]Runtime.IType {0}", m.Name);
+                Emitter.Emit(".field {0} class [Runtime]Runtime.IType '{1}'", m.InternalOrPublic, m.Name);
             }
             Emitter.Emit(".method public hidebysig specialname rtspecialname instance void .ctor() cil managed\n\t{{\n\t\t.maxstack 8\n\t\tldarg.0\n\t\tcall instance void [System.Runtime]System.Object::.ctor()\n\t\tret\n\t}}");
             Emitter.EndBlock();

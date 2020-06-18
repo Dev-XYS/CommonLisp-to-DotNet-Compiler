@@ -124,11 +124,11 @@ namespace Compiler.CIL
             string r = "";
             if (EnvList.Count > 1)
             {
-                r = string.Format("class {0} @{1}", EnvList[1].Type, EnvList[1].Name);
+                r = string.Format("class {0} {1}", EnvList[1].Type, EnvList[1].Name);
             }
             for (int i = 2; i < EnvList.Count; i++)
             {
-                r += string.Format(", class {0} @{1}", EnvList[i].Type, EnvList[i].Name);
+                r += string.Format(", class {0} {1}", EnvList[i].Type, EnvList[i].Name);
             }
             return r;
         }

@@ -19,12 +19,12 @@ namespace Compiler.CIL
         public Environment Environment { get; }
 
         public bool IsTemp { get => Name.StartsWith("temp"); }
-        public string PrivateOrPublic { get => IsTemp ? "private" : "public"; }
+        public string InternalOrPublic { get => IsTemp ? "assembly" : "public"; }
 
         public ITypeMember(Environment env, IL.Variable var)
         {
             Environment = env;
-            Name = "'" + var.Name + "'";
+            Name = var.Name;
         }
     }
 }
