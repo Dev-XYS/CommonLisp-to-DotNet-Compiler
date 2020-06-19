@@ -12,7 +12,7 @@ namespace Compiler.Optimization.ControlFlow
             {
                 Graph graph = new Graph(func);
 
-                Console.WriteLine("\n--- graph of {0} ---\n", func.ILFunction.Name);
+                Console.WriteLine("\n--- graph of {0} (unoptimized) ---\n", func.ILFunction.Name);
                 graph.Print();
 
                 graph.Optimize();
@@ -20,6 +20,17 @@ namespace Compiler.Optimization.ControlFlow
                 graph.PrintDAGs();
 
                 func.InstructionList = graph.ReassembleInstructions();
+
+                Console.WriteLine("\n--- graph of {0} (optimized) ---\n", func.ILFunction.Name);
+                graph.Print();
+
+                LivenessAnalysis.Core.Analyze(graph);
+
+                Console.WriteLine("--- optimized instruction list of {0} ---\n", func.ILFunction.Name);
+                foreach (IL.Instruction instr in func.InstructionList)
+                {
+                    Console.WriteLine(instr);
+                }
             }
             return program;
         }

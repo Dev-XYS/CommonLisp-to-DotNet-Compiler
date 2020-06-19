@@ -8,13 +8,16 @@ namespace Compiler.Optimization.ControlFlow
     {
         public List<IL.Instruction> InstructionList { get; private set; }
 
-        private List<BasicBlock> Successor { get; }
+        public List<BasicBlock> Successor { get; }
 
         public IL.Instruction Leader { get => InstructionList[0]; }
 
         public IL.Instruction LeavingInstruction { get => InstructionList[InstructionList.Count - 1]; }
 
         private DAG Graph { get; set; }
+
+        // The following members are used for data flow analysis.
+        public LivenessAnalysis.Info LA_Info { get; set; }
 
         public BasicBlock()
         {
@@ -66,7 +69,6 @@ namespace Compiler.Optimization.ControlFlow
                 if (def != null)
                 {
                     LastDef[def] = node;
-                    Console.WriteLine("=> updated {0}", def);
                 }
 
                 // Every node depends on its previous node (to preserve order).

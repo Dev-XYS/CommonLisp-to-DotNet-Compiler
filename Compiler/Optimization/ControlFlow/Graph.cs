@@ -7,17 +7,27 @@ namespace Compiler.Optimization.ControlFlow
 {
     class Graph
     {
+        public Function Function { get; }
+
         private BasicBlock Entry { get; }
+
+        // Dummy exit block (used for data flow analysis).
+        public BasicBlock Exit { get; }
 
         private Dictionary<IL.Instruction, BasicBlock> LookupByLeader { get; }
 
         // Preserve the original order.
-        private List<BasicBlock> BlockList { get; }
+        // Note: `BlockList` does not contain `Exit`.
+        public List<BasicBlock> BlockList { get; }
 
         public Graph(Function func)
         {
+            Function = func;
+
             LookupByLeader = new Dictionary<IL.Instruction, BasicBlock>();
             BlockList = new List<BasicBlock>();
+
+            Exit = new BasicBlock();
 
             // Mark if an instruction is the leader of a basic block.
             bool[] IsLeader = new bool[func.InstructionList.Count];
@@ -110,6 +120,11 @@ namespace Compiler.Optimization.ControlFlow
             else if (instr is IL.UnconditionalJumpInstruction uncondJump)
             {
                 block.AddSuccessor(LookupByLeader[uncondJump.Target]);
+            }
+            else if (instr is IL.ReturnInstruction)
+            {
+                // The successor of a return instruction is the dummy exit block.
+                block.AddSuccessor(Exit);
             }
 
             // Build DAG.
