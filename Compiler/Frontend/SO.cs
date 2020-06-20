@@ -135,8 +135,8 @@ namespace Compiler.Frontend
         {
             var (tl, tr) = Util.RequireAtLeast(body, 1, "DEFUN");
             if (!(tl[0] is Symbol name)) throw new SyntaxError("DEFUN: illegal name");
-            CompileLambda(tr, e, p);
             var v = e.AddVariable(name);
+            CompileLambda(tr, e, p);
             v.Load(p);
         }
         public static void CompileDeflibf(IType body, Environment e, Function p)
