@@ -38,8 +38,10 @@ namespace Compiler.Optimization.ControlFlow
 
         public void AddDependency(Node node)
         {
-            Dependencies.Add(node);
-            node.InDegree++;
+            if (Dependencies.Add(node))
+            {
+                node.InDegree++;
+            }
         }
 
         public override string ToString()

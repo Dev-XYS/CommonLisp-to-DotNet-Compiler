@@ -30,7 +30,7 @@ namespace Compiler.IL
     {
         public bool Condition { get; }
 
-        public Variable TestVariable { get; set; }
+        public IEntity TestVariable { get; set; }
 
         public ConditionalJumpInstruction(Label target, Variable test, bool condition) : base(target)
         {
@@ -47,7 +47,14 @@ namespace Compiler.IL
         {
             get
             {
-                return new List<Variable>() { TestVariable };
+                if (TestVariable is Variable var)
+                {
+                    return new List<Variable>() { var };
+                }
+                else
+                {
+                    return new List<Variable>();
+                }
             }
         }
 
@@ -55,7 +62,7 @@ namespace Compiler.IL
         {
             if (TestVariable == original)
             {
-                TestVariable = alternative as Variable;
+                TestVariable = alternative;
             }
         }
     }

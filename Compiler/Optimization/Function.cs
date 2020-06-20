@@ -27,5 +27,15 @@ namespace Compiler.Optimization
             InstructionList = func.InstructionList;
             Loc = new Dictionary<IL.IEntity, LocalVariable>();
         }
+
+        public void Print()
+        {
+            Console.WriteLine("--- function: {0} ---", Name);
+            foreach (IL.Instruction instr in InstructionList)
+            {
+                Console.WriteLine(instr);
+            }
+            Console.WriteLine();
+        }
     }
 }

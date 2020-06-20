@@ -20,5 +20,13 @@ namespace Compiler.Optimization
             EnvList = program.EnvList;
             Main = new Function(program.Main);
         }
+
+        public void Print()
+        {
+            foreach (Function func in FunctionList)
+            {
+                func.Print();
+            }
+        }
     }
 }

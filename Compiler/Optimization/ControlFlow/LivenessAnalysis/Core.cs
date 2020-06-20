@@ -13,8 +13,6 @@ namespace Compiler.Optimization.ControlFlow.LivenessAnalysis
 
             // Run fixed point algorithm.
             FixedPoint(graph);
-
-            PrintLivenessInfo(graph);
         }
 
         private static void Initialize(Graph graph)

@@ -126,22 +126,27 @@ namespace Compiler.Optimization.ControlFlow
                 // The successor of a return instruction is the dummy exit block.
                 block.AddSuccessor(Exit);
             }
-
-            // Build DAG.
-            block.Build();
         }
 
-        public void Optimize()
+        public void ConservativeMark()
         {
-            OptimizeBasicBlocks();
+            foreach (BasicBlock block in BlockList)
+            {
+                block.ConservativeMark();
+            }
         }
 
-        private void OptimizeBasicBlocks()
+        public void OptimizeLocally()
+        {
+            OptimizeBasicBlocksLocally();
+        }
+
+        private void OptimizeBasicBlocksLocally()
         {
             // Optimize all basic blocks one by one.
             foreach (BasicBlock block in LookupByLeader.Values)
             {
-                block.Optimize();
+                block.OptimizeLocally();
             }
         }
 

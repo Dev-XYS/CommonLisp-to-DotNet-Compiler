@@ -261,7 +261,7 @@ namespace Compiler.CIL
 
         private void GenConditionalJump(IL.ConditionalJumpInstruction instr)
         {
-            GenLoadVariable(instr.TestVariable);
+            GenLoadEntity(instr.TestVariable);
             if (instr.Condition)
             {
                 Gen(new I.BranchTrue { Target = instr.Target });

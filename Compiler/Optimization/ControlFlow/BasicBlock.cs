@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Compiler.Optimization.ControlFlow
@@ -14,7 +15,9 @@ namespace Compiler.Optimization.ControlFlow
 
         public IL.Instruction LeavingInstruction { get => InstructionList[InstructionList.Count - 1]; }
 
-        private DAG Graph { get; set; }
+        public Dictionary<IL.Variable, Node> LastDef { get; set; }
+
+        private DAG DAG { get; set; }
 
         // The following members are used for data flow analysis.
         public LivenessAnalysis.Info LA_Info { get; set; }
@@ -37,7 +40,7 @@ namespace Compiler.Optimization.ControlFlow
 
         public void Build()
         {
-            Graph = BuildDAG();
+            DAG = BuildDAG();
         }
 
         private DAG BuildDAG()
@@ -45,7 +48,7 @@ namespace Compiler.Optimization.ControlFlow
             DAG graph = new DAG();
 
             // Latest definition of a variable.
-            Dictionary<IL.Variable, Node> LastDef = new Dictionary<IL.Variable, Node>();
+            LastDef = new Dictionary<IL.Variable, Node>();
 
             Node previous = null;
 
@@ -81,19 +84,61 @@ namespace Compiler.Optimization.ControlFlow
                 graph.AddNode(node);
             }
 
-            // Currently, assume that all variables are alive.
+            return graph;
+        }
+
+        public void ConservativeMark()
+        {
             foreach (Node node in LastDef.Values)
             {
                 node.Essential = true;
             }
-
-            return graph;
         }
 
-        public void Optimize()
+        public void GlobalMark()
         {
-            Graph.Optimize();
-            InstructionList = Graph.RewriteInstructions();
+            foreach (var pair in LastDef)
+            {
+                // Mark all alive variables as essential.
+                if (LA_Info.Out.Contains(pair.Key))
+                {
+                    pair.Value.Essential = true;
+                }
+                // Mark all closure variables as essential.
+                else if (Variable.NonLocalVariables.Contains(pair.Key))
+                {
+                    pair.Value.Essential = true;
+                }
+            }
+        }
+
+        // Optimize, assuming all variables are alive at the end of the block.
+        // (i.e. No global analysis.)
+        public void OptimizeLocally()
+        {
+            bool changed;
+
+            // Iterate, until unchanged.
+            do
+            {
+                // Build the DAG.
+                Build();
+
+                // Optimize the DAG.
+                if (LA_Info == null)
+                {
+                    // If `LA_Info` == null, there is no global information,
+                    // so we need to optimize conservatively.
+                    ConservativeMark();
+                }
+                else
+                {
+                    // `LA_Info` presents, make using global information.
+                    GlobalMark();
+                }
+                changed = DAG.Optimize();
+                InstructionList = DAG.RewriteInstructions();
+            } while (changed);
         }
 
         public void Print()
@@ -114,7 +159,7 @@ namespace Compiler.Optimization.ControlFlow
         public void PrintDAG()
         {
             Console.WriteLine("--- DAG of basic block {0} ---", GetHashCode());
-            Graph.Print();
+            DAG.Print();
         }
     }
 }

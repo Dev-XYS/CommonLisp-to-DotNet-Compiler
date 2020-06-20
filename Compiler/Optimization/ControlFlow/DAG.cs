@@ -19,68 +19,82 @@ namespace Compiler.Optimization.ControlFlow
             Nodes.Add(node);
         }
 
-        public void Optimize()
+        public bool Optimize()
         {
+            bool changed = false;
             foreach (Node node in Nodes)
             {
                 // The node must be a "root". (i.e. `InDegree` = 0)
                 // The node must have not been optimized.
                 if (node.InDegree == 0 && !node.Optimized)
                 {
-                    Optimize(node);
+                    changed |= Optimize(node);
                 }
             }
+            return changed;
         }
 
-        private void Optimize(Node node)
+        private bool Optimize(Node node)
         {
+            // Check if the node has been visited.
             if (node.Optimized)
             {
-                return;
+                return false;
             }
+
+            // Mark if changes are made.
+            bool changed = false;
 
             // Optimize recursively.
             foreach (Node next in node.Dependencies)
             {
-                Optimize(next);
+                changed |= Optimize(next);
             }
-
-            IL.Instruction instr = node.Instruction;
 
             // Even if the instruction is not optimized, `Alternative` should be set.
             node.Alternative = node.Original;
 
             // Essential nodes cannot be removed.
-            // (They are alive at the end of the basic block.)
-            if (!node.Essential)
+            // (They are alive at the end of the basic block, or are function calls, etc.)
+            if (node.Essential)
             {
-                // Only move instruction may be removed.
-                if (instr is IL.MoveInstruction move)
+                return changed;
+            }
+
+            // The current instruction.
+            IL.Instruction instr = node.Instruction;
+
+            // Only move instruction may be removed.
+            if (instr is IL.MoveInstruction move)
+            {
+                // If the instruction dependency forms a chain, it can be removed.
+                if (node.OutDegree == 1 && node.InDegree == 1)
                 {
-                    // If the instruction has only one or zero dependency, it can be removed.
-                    if (node.OutDegree == 1)
+                    node.Removed = true;
+
+                    changed = true;
+
+                    Node dependency = node.Dependencies.First();
+
+                    if (move.Source == dependency.Instruction.DefinedVariable)
                     {
-                        node.Removed = true;
-
-                        Node dependency = node.Dependencies.First();
-
-                        if (move.Source == dependency.Instruction.DefinedVariable)
-                        {
-                            // Pattern: b = a, c = b.
-                            node.Alternative = dependency.Alternative;
-                        }
-                        else
-                        {
-                            node.Alternative = move.Source;
-                        }
+                        // Pattern: b = a, c = b.
+                        node.Alternative = dependency.Alternative;
                     }
-                    else if (node.OutDegree == 0)
+                    else
                     {
-                        node.Removed = true;
+                        // Unnecessary code?
                         node.Alternative = move.Source;
                     }
                 }
+                else if (node.OutDegree == 0)
+                {
+                    node.Removed = true;
+                    node.Alternative = move.Source;
+                }
             }
+
+            return changed;
         }
 
         public List<IL.Instruction> RewriteInstructions()
@@ -104,7 +118,7 @@ namespace Compiler.Optimization.ControlFlow
 
         private void Traverse(Node node, List<IL.Instruction> list)
         {
-            // Skip rewrittten nodes.
+            // Skip rewritten nodes.
             if (node.Rewritten == true)
             {
                 return;

@@ -15,8 +15,12 @@ namespace Compiler.Optimization
         {
             Program = program;
             OptimizedProgram = new Program(Program);
-            OptimizedProgram = ControlFlow.Core.Optimize(OptimizedProgram);
             OptimizedProgram = LocalOptimization.Optimize(OptimizedProgram);
+            Console.WriteLine("\n--- before data flow analysis ---\n");
+            OptimizedProgram.Print();
+            OptimizedProgram = ControlFlow.Core.Optimize(OptimizedProgram);
+            Console.WriteLine("\n--- after data flow analysis ---\n");
+            OptimizedProgram.Print();
             return OptimizedProgram;
         }
     }

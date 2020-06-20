@@ -28,7 +28,7 @@ namespace Compiler.IL
 
         public override string ToString()
         {
-            return Env.Name + "::" + Name;
+            return string.Format("{0}::'{1}'", Env.Name, Name);
         }
 
         public override int GetHashCode()

@@ -12,25 +12,15 @@ namespace Compiler.Optimization.ControlFlow
             {
                 Graph graph = new Graph(func);
 
-                Console.WriteLine("\n--- graph of {0} (unoptimized) ---\n", func.ILFunction.Name);
-                graph.Print();
-
-                graph.Optimize();
-
-                graph.PrintDAGs();
+                graph.OptimizeLocally();
 
                 func.InstructionList = graph.ReassembleInstructions();
 
-                Console.WriteLine("\n--- graph of {0} (optimized) ---\n", func.ILFunction.Name);
-                graph.Print();
-
+                // Liveness analysis.
+                graph = new Graph(func);
                 LivenessAnalysis.Core.Analyze(graph);
-
-                Console.WriteLine("--- optimized instruction list of {0} ---\n", func.ILFunction.Name);
-                foreach (IL.Instruction instr in func.InstructionList)
-                {
-                    Console.WriteLine(instr);
-                }
+                graph.OptimizeLocally();
+                func.InstructionList = graph.ReassembleInstructions();
             }
             return program;
         }
