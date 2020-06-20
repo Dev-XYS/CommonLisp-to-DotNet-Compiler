@@ -138,6 +138,9 @@ namespace Compiler.Optimization.ControlFlow
                 }
                 changed = DAG.Optimize();
                 InstructionList = DAG.RewriteInstructions();
+
+                // Copy propogation.
+                CopyPropogation.Optimize(InstructionList);
             } while (changed);
         }
 
