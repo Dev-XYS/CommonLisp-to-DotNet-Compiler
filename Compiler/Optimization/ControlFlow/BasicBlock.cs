@@ -40,7 +40,11 @@ namespace Compiler.Optimization.ControlFlow
 
         public void Build()
         {
+            // Build DAG of the current basic block.
             DAG = BuildDAG();
+
+            // Mark all calls and leaving instructions as essential.
+            DAG.MarkEssential();
         }
 
         private DAG BuildDAG()
@@ -118,6 +122,8 @@ namespace Compiler.Optimization.ControlFlow
         {
             bool changed;
 
+            int bound = 0;
+
             // Iterate, until unchanged.
             do
             {
@@ -140,8 +146,8 @@ namespace Compiler.Optimization.ControlFlow
                 InstructionList = DAG.RewriteInstructions();
 
                 // Copy propogation.
-                CopyPropogation.Optimize(InstructionList);
-            } while (changed);
+                changed |= CopyPropogation.Optimize(InstructionList);
+            } while (changed && ++bound < 10);
         }
 
         public void Print()

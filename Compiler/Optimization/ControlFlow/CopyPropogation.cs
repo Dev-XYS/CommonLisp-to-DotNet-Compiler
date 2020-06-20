@@ -15,8 +15,10 @@ namespace Compiler.Optimization.ControlFlow
             }
         }
 
-        public static void Optimize(List<IL.Instruction> list)
+        public static bool Optimize(List<IL.Instruction> list)
         {
+            bool changed = false;
+
             // Store copies of variables.
             Dictionary<IL.Variable, IEntity> copiesMap = new Dictionary<IL.Variable, IEntity>();
 
@@ -34,6 +36,7 @@ namespace Compiler.Optimization.ControlFlow
 
                     // Copy of `var` exists, use the earliest.
                     instr.ReplaceUsedValue(var, copy);
+                    changed = true;
                 }
 
                 // Kill the copies of defined variable.
@@ -58,6 +61,8 @@ namespace Compiler.Optimization.ControlFlow
                     copiesMap.Remove(instr.DefinedVariable);
                 }
             }
+
+            return changed;
         }
     }
 }

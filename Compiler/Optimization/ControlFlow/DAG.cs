@@ -19,6 +19,19 @@ namespace Compiler.Optimization.ControlFlow
             Nodes.Add(node);
         }
 
+        // Mark all calls and leaving instructions as essential.
+        public void MarkEssential()
+        {
+            foreach (Node node in Nodes)
+            {
+                if (node.Instruction is IL.CallInstruction)
+                {
+                    node.Essential = true;
+                }
+            }
+            Nodes.Last().Essential = true;
+        }
+
         public bool Optimize()
         {
             bool changed = false;
@@ -105,13 +118,14 @@ namespace Compiler.Optimization.ControlFlow
             // Rewrite all nodes which are not removed.
             foreach (Node node in Nodes)
             {
-                // The node must be a "root". (i.e. `InDegree` = 0)
-                // The node must have not been optimized.
-                if (node.InDegree == 0 && !node.Rewritten)
+                // The node must have not been optimized and must be essential.
+                if (!node.Rewritten && node.Essential)
                 {
+                    Console.WriteLine(">> Rewrite: {0}", node.Instruction);
                     Traverse(node, list);
                 }
             }
+            Console.WriteLine();
 
             return list;
         }
