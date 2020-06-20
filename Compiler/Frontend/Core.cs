@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Compiler.Frontend
@@ -99,7 +100,6 @@ namespace Compiler.Frontend
         }
         private static IL.Program CompileFrom(IInputStream input)
         {
-            Init();
             IType expr;
             while(true)
             {
@@ -119,11 +119,30 @@ namespace Compiler.Frontend
         }
         public static IL.Program CompileFromStdin()
         {
-            return CompileFrom(Lisp.stdin);
+            var fn = Util.RandomString(10) + ".lisp";
+            StreamWriter sw = new StreamWriter(fn);
+            while(true)
+            {
+                var cur = Console.Read();
+                if (cur >= 0) sw.Write(cur);
+                else break;
+            }
+            sw.Close();
+            var ret = CompileFromFile(fn);
+            File.Delete(fn);
+            return ret;
+        }
+        public static string PreCompile(IInputStream input)
+        {
+            return "";
         }
         public static IL.Program CompileFromFile(string path)
         {
+            Init();
             FileInput fin = new FileInput(path);
+            var mid = PreCompile(fin);
+            Macro.Init(mid);
+            fin = new FileInput(path);
             return CompileFrom(fin);
         }
     }
