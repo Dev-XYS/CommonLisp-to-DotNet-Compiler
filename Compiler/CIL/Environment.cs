@@ -8,6 +8,8 @@ namespace Compiler.CIL
     {
         public override string Name { get; }
 
+        public override string AccessString { get => Name; }
+
         public override string CtorArgumentList
         {
             get => "";

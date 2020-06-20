@@ -147,6 +147,13 @@ namespace Compiler.Optimization.ControlFlow
 
                 // Copy propogation.
                 changed |= CopyPropogation.Optimize(InstructionList);
+
+                // Dead code elimination.
+                // (Only do this after data flow analysis is finished.)
+                if (LA_Info != null)
+                {
+                    changed |= DeadCodeElimination.Optimize(InstructionList, new HashSet<IL.Variable>(LA_Info.Out));
+                }
             } while (changed && ++bound < 10);
         }
 

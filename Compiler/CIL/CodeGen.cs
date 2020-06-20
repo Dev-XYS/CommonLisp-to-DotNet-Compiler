@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Compiler.IL;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -37,6 +38,10 @@ namespace Compiler.CIL
             else if (instr is IL.ConditionalJumpInstruction)
             {
                 GenConditionalJump(instr as IL.ConditionalJumpInstruction);
+            }
+            else if (instr is Optimization.TailCallInstruction)
+            {
+                GenTailCall(instr as Optimization.TailCallInstruction);
             }
             else
             {
@@ -270,6 +275,19 @@ namespace Compiler.CIL
             {
                 Gen(new I.BranchNull { Target = instr.Target });
             }
+        }
+
+        private void GenTailCall(Optimization.TailCallInstruction instr)
+        {
+            int no = 0;
+            foreach (IEntity e in instr.Arguments)
+            {
+                Gen(new I.LoadArgument { ArgNo = 1 });
+                Gen(new I.LoadInt { Value = no++ });
+                GenLoadEntity(e);
+                Gen(new I.StoreElement { });
+            }
+            Gen(new I.Branch { Target = StartLabel });
         }
     }
 }

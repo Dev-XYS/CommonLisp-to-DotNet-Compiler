@@ -9,6 +9,16 @@ namespace Compiler.CIL
     {
         public Type Type { get; set; }
 
+        public override string Name
+        {
+            get
+            {
+                return string.Format("[{0}]{1}", Type.Assembly.GetName().Name, Type.FullName);
+            }
+        }
+
+        public override string AccessString { get => Name; }
+
         public override string CtorArgumentList
         {
             get
@@ -33,14 +43,6 @@ namespace Compiler.CIL
                         return string.Format("class [Runtime]{0}", x.ParameterType.FullName);
                     }
                 }));
-            }
-        }
-
-        public override string Name
-        {
-            get
-            {
-                return string.Format("[{0}]{1}", Type.Assembly.GetName().Name, Type.FullName);
             }
         }
     }

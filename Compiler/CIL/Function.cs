@@ -10,6 +10,8 @@ namespace Compiler.CIL
     {
         public override string Name { get; }
 
+        public override string AccessString { get => string.Format("'{0}'", Name); }
+
         public override string CtorArgumentList
         {
             get => GetCtorArgumentList();
@@ -29,6 +31,8 @@ namespace Compiler.CIL
 
         public bool IsLibMain { get => Name == "LibMain"; }
         private string PrivateOrPublic { get => IsLibMain ? "public" : "private"; }
+
+        private IL.Label StartLabel { get; set; }
 
         public Function(Program prog, Optimization.Function func)
         {
@@ -78,17 +82,21 @@ namespace Compiler.CIL
 
         private void GenBody(Optimization.Function func)
         {
-            // store previous environment (for recursive call)
+            // Store previous environment (for recursive call).
             Gen(new I.LoadArgument { ArgNo = 0 });
             Gen(new I.LoadField { Field = EnvList[0] });
             Gen(new I.Store { Loc = 2 });
 
-            // create current environment
+            // The start label (for tail recursions).
+            // The label cannot be at the very beginning.
+            Gen(new I.Label { ILLabel = StartLabel = new IL.Label("start") });
+
+            // Create current environment.
             Gen(new I.LoadArgument { ArgNo = 0 });
             Gen(new I.NewObject { Type = EnvList[0].Environment });
             Gen(new I.StoreField { Field = EnvList[0] });
 
-            // copy arguments to the environment
+            // Copy arguments to the environment.
             int no = 0;
             foreach (IL.Variable var in func.Parameters)
             {
@@ -146,7 +154,7 @@ namespace Compiler.CIL
         public void Emit()
         {
             // `LibMain` is public, others are private.
-            Emitter.Emit(".class {0} auto ansi beforefieldinit {1} extends [System.Runtime]System.Object implements [Runtime]Runtime.IType", PrivateOrPublic, Name);
+            Emitter.Emit(".class {0} auto ansi beforefieldinit '{1}' extends [System.Runtime]System.Object implements [Runtime]Runtime.IType", PrivateOrPublic, Name);
 
             Emitter.BeginBlock();
 
