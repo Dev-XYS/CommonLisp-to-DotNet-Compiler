@@ -29,5 +29,9 @@ namespace Runtime
                 throw new RuntimeException("filein error: consecutive unread");
             readed = false;
         }
+        public void Close()
+        {
+            reader.Close();
+        }
     }
 }

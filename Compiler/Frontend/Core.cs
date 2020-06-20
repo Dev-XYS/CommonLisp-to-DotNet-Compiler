@@ -124,7 +124,7 @@ namespace Compiler.Frontend
             while(true)
             {
                 var cur = Console.Read();
-                if (cur >= 0) sw.Write(cur);
+                if (cur >= 0) sw.Write((char)cur);
                 else break;
             }
             sw.Close();
@@ -141,9 +141,12 @@ namespace Compiler.Frontend
             Init();
             FileInput fin = new FileInput(path);
             var mid = PreCompile(fin);
+            fin.Close();
             Macro.Init(mid);
             fin = new FileInput(path);
-            return CompileFrom(fin);
+            var ret = CompileFrom(fin);
+            fin.Close();
+            return ret;
         }
     }
 }
