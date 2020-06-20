@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Runtime;
 
@@ -52,6 +53,17 @@ namespace Compiler.Frontend
                     throw new SyntaxError("Illegal parameter list");
                 f.AddParam(s);
             }
+        }
+        public static string RandomString(int length)
+        {
+            var r = new Random();
+            var ret = new char[length];
+            for(int i = 0; i < length; ++i)
+            {
+                int cur = r.Next(62);
+                ret[i] = (char)(cur < 26 ? 'a' + cur : cur < 52 ? 'A' + cur - 26 : '0' + cur - 52);
+            }
+            return string.Join("", ret);
         }
     }
 }

@@ -16,6 +16,10 @@ namespace Compiler
             sw.Close();
             Assembler.Assembler.Invoke("Library.il");
         }
+        static void PreCompile()
+        {
+            return;
+        }
         static void Main(string[] args)
         {
             IL.Program program;
@@ -24,6 +28,11 @@ namespace Compiler
                 if (args[0] == "-l")
                 {
                     CompileLibrary();
+                    return;
+                }
+                if (args[0] == "-p")
+                {
+                    PreCompile();
                     return;
                 }
                 program = Frontend.Core.CompileFromFile(args[0]);

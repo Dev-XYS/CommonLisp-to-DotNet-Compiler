@@ -11,7 +11,7 @@ namespace Compiler.Frontend
         {
             BLOCK, CATCH, EVAL_WHEN, FLET, FUNCTION, GO, IF, LABELS, LET, LET_STAR, LOAD_TIME_VALUE, LOCALLY, MACROLET, LAMBDA, SPECIAL,
             MULTIPLE_VALUE_CALL, MULTIPLE_VALUE_PROG1, PROGN, PROGY, QUOTE, RETURN_FROM, SETQ, SYMBOL_MACROLET, TAGBODY, THE, THROW, UNWIND_PROTECT,
-            SLOOP, DEFLIBF
+            SLOOP, DEFLIBF, DEFUN
         };
         private static Dictionary<Symbol, Type> types;
         private static bool inited = false;
@@ -131,6 +131,14 @@ namespace Compiler.Frontend
             f.Return();
             p.Store(f);
         }
+        public static void CompileDefun(IType body, Environment e, Function p)
+        {
+            var (tl, tr) = Util.RequireAtLeast(body, 1, "DEFUN");
+            if (!(tl[0] is Symbol name)) throw new SyntaxError("DEFUN: illegal name");
+            CompileLambda(tr, e, p);
+            var v = e.AddVariable(name);
+            v.Load(p);
+        }
         public static void CompileDeflibf(IType body, Environment e, Function p)
         {
             var (tl, tbody) = Util.RequireAtLeast(body, 2, "DEFLIBF");
@@ -197,6 +205,9 @@ namespace Compiler.Frontend
                 case Type.PROGN:
                     CompileProgn(form.cdr, e, p);
                     break;
+                case Type.DEFUN:
+                    CompileDefun(form.cdr, e, p);
+                    break;
                 case Type.IF:
                     CompileIf(form.cdr, e, p);
                     break;
@@ -259,6 +270,7 @@ namespace Compiler.Frontend
                     {Symbol.FindOrCreate("THROW"), Type.THROW },
                     {Symbol.FindOrCreate("UNWIND-PROTECT"), Type.UNWIND_PROTECT },
                     {Symbol.FindOrCreate("DEFLIBF"), Type.DEFLIBF },
+                    {Symbol.FindOrCreate("DEFUN"), Type.DEFUN },
                     {Symbol.FindOrCreate("SLOOP"), Type.SLOOP } };
             }
             inited = true;
