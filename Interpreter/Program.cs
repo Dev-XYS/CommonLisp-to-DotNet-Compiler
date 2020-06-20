@@ -16,5 +16,9 @@ namespace Interpreter
         {
             var t = 33;
         }
+
+        public static void Main()
+        {
+        }
     }
 }
