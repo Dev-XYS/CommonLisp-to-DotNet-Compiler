@@ -25,21 +25,29 @@ namespace Compiler
                 return;
             }
 
-            if (CompileMode == Mode.Program)
+            try
             {
-                CompileProgram();
+                if (CompileMode == Mode.Program)
+                {
+                    CompileProgram();
+                }
+                else if (CompileMode == Mode.Library)
+                {
+                    CompileLibrary();
+                }
+                else if (CompileMode == Mode.Interpreter)
+                {
+                    Frontend.Core.Interpret();
+                }
+                else
+                {
+                    Frontend.Core.Interpret(true);
+                }
             }
-            else if (CompileMode == Mode.Library)
+            catch (Exception e)
             {
-                CompileLibrary();
-            }
-            else if (CompileMode == Mode.Interpreter)
-            {
-                Frontend.Core.Interpret();
-            }
-            else
-            {
-                Frontend.Core.Interpret(true);
+                Console.WriteLine(e.Message);
+                return;
             }
         }
 
