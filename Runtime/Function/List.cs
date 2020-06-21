@@ -99,4 +99,35 @@ namespace Runtime.Function
             return ret;
         }
     }
+    public class Null : IType
+    {
+        public IType Invoke(IType[] args)
+        {
+            if (args.Length != 1)
+                throw new RuntimeException("NULL: Exactly 1 argument required");
+            if (args[0] is null)
+                return Lisp.t;
+            return Lisp.nil;
+        }
+    }
+    public class Consp: IType
+    {
+        public IType Invoke(IType[] args)
+        {
+            if (args.Length != 1)
+                throw new RuntimeException("CONSP: Exactly 1 argument required");
+            if (args[0] is Cons)
+                return Lisp.t;
+            return Lisp.nil;
+        }
+    }
+    public class CoNs: IType
+    {
+        public IType Invoke(IType[] args)
+        {
+            if (args.Length != 2)
+                throw new RuntimeException("CONS: Exactly 2 arguments required");
+            return new Cons(args[0], args[1]);
+        }
+    }
 }

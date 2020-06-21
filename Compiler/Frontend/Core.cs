@@ -49,7 +49,7 @@ namespace Compiler.Frontend
                 }
                 else if (Macro.IsMacro(s))
                 {
-                    CompileSingleExpr(Macro.FullExpand(form), e, p);
+                    CompileSingleExpr(Macro.Expand(form), e, p);
                     return;
                 }
                 else
