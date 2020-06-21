@@ -177,13 +177,13 @@ namespace Runtime
                     ReadComment(input);
                     throw new NothingReadError();
                 case '\'':
-                    return ReadWith(Symbol.Find("QUOTE"), input);
+                    return ReadWith(Symbol.FindOrCreate("QUOTE"), input);
                 case '`':
-                    return ReadWith(Symbol.Find("QUASIQUOTE"), input);
+                    return ReadWith(Symbol.FindOrCreate("QUASIQUOTE"), input);
                 case '\"':
                     return ReadString(input);
                 case ',':
-                    return ReadWith(Symbol.Find("UNQUOTE"), input); //todo: support ,@
+                    return ReadWith(Symbol.FindOrCreate("UNQUOTE"), input); //todo: support ,@
                 case '(':
                     return ReadList(input);
                 case ')':

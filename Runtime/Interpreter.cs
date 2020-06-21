@@ -18,7 +18,6 @@ namespace Runtime
             {
                 return input;
             }
-            var func = c.car;
             if (c.car is Symbol s)
             {
                 if (s.Name == "DEFUN")
@@ -100,7 +99,7 @@ namespace Runtime
         }
         static IType Quote(IType input, Environment e)
         {
-            return input;
+            return (input as Cons).car;
         }
         static IType If(IType input, Environment e)
         {
