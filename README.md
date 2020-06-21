@@ -14,7 +14,7 @@ Windows 平台下的 Visual Studio，需要安装 .NET Core 开发工具 3.1 版
 
 `Compiler.exe` 提供几个参数：
 
-- `-l` ：编译为库，此时编译出的文件为 `Library.dll`。
+- `-l [FILE]` ：将 `FILE` 作为输入编译为库，此时编译出的文件为 `Library.dll`。
 - `-i` ：运行解释器。
 - `-ii` ：运行 REPL。
 - `[FILE]` ：将 `FILE` 作为输入编译。
