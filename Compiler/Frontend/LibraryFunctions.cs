@@ -35,6 +35,9 @@ namespace Compiler.Frontend
             AddOne("CDR", new Cdr());
             AddOne("LDIFF", new Ldiff());
             AddOne("NCONC", new Nconc());
+            AddOne("NULL", new Null());
+            AddOne("CONSP", new Consp());
+            AddOne("CONS", new CoNs());
             AddOne("READ", new Read());
             AddOne("WRITE", new Write());
             AddOne("WRITELN", new WriteLn());

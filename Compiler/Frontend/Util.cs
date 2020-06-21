@@ -51,7 +51,7 @@ namespace Compiler.Frontend
             {
                 if (!(i is Symbol s))
                     throw new SyntaxError("Illegal parameter list");
-                f.AddParam(s);
+                if(!s.Name.StartsWith("&")) f.AddParam(s);
             }
         }
         public static string RandomString(int length)

@@ -11,7 +11,7 @@ namespace Compiler.Frontend
         {
             BLOCK, CATCH, EVAL_WHEN, FLET, FUNCTION, GO, IF, LABELS, LET, LET_STAR, LOAD_TIME_VALUE, LOCALLY, MACROLET, LAMBDA, SPECIAL,
             MULTIPLE_VALUE_CALL, MULTIPLE_VALUE_PROG1, PROGN, PROGY, QUOTE, RETURN_FROM, SETQ, SYMBOL_MACROLET, TAGBODY, THE, THROW, UNWIND_PROTECT,
-            SLOOP, DEFUN
+            SLOOP, DEFUN, DEFMACRO
         };
         private static Dictionary<Symbol, Type> types;
         private static bool inited = false;
@@ -120,6 +120,15 @@ namespace Compiler.Frontend
         {
             //todo: impl using macro
         }
+        public static void CompileDefmacro(IType body, Environment e, Function p)
+        {
+            if (e != Global.env)
+                throw new SyntaxError("DEFMACRO: must be in the outmost environment");
+            var (tl, tr) = Util.RequireAtLeast(body, 1, "DEFMACRO");
+            if (!(tl[0] is Symbol name))
+                throw new SyntaxError("DEFMACRO: invalid name");
+            Macro.Register(name, Interpreter.Defmacro(tr));
+        }
         private static Function LambdaFunc(IType body, Environment e, Function p)
         {
             var (t1, tbody) = Util.RequireAtLeast(body, 1, "LAMBDA");
@@ -218,6 +227,9 @@ namespace Compiler.Frontend
                 case Type.SLOOP:
                     CompileSLoop(form.cdr, e, p);
                     break;
+                case Type.DEFMACRO:
+                    CompileDefmacro(form.cdr, e, p);
+                    break;
                 default:
                     throw new NotImplementedException(string.Format("Not Implemented Special Operator {0}", (Symbol)form.car));
             }
@@ -257,6 +269,7 @@ namespace Compiler.Frontend
                     {Symbol.FindOrCreate("SETQ"), Type.SETQ },
                     {Symbol.FindOrCreate("THE"), Type.THE },
                     {Symbol.FindOrCreate("THROW"), Type.THROW },
+                    {Symbol.FindOrCreate("DEFMACRO"), Type.DEFMACRO },
                     {Symbol.FindOrCreate("UNWIND-PROTECT"), Type.UNWIND_PROTECT },
                     {Symbol.FindOrCreate("DEFUN"), Type.DEFUN },
                     {Symbol.FindOrCreate("SLOOP"), Type.SLOOP } };

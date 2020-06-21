@@ -94,12 +94,31 @@ namespace Runtime
                 IType[] names = Util.ListToArray(tl[0]);
                 if (names.Length != args.Length) throw new RuntimeException("arguments mismatch!");
                 for (int i = 0; i < names.Length; ++i)
-                    if (names[i] is Symbol name)
+                    if (names[i] is Symbol name && !name.Name.StartsWith("&"))
                         cur.d[name] = args[i];
                     else throw new RuntimeException("{0} is not a valid name", names[i]);
                 return Progn(tbody, cur);
             };
             return new DynamicFunction(ret);
+        }
+        public static Func<IType, IType> Defmacro(IType input)
+        {
+            var (tl, tr) = Util.RequireAtLeast(input, 1, "DEFMACRO");
+            IType[] nms = Util.ListToArray(tl[0]);
+            Symbol name = null;
+            for(int i = 0; i < nms.Length; ++i)
+                if(nms[i] is Symbol n && !n.Name.StartsWith("&"))
+                {
+                    if (name != null) throw new RuntimeException("DEFMACRO: Exactly 1 parameter required.");
+                    name = n;
+                }
+            Func<IType, IType> ret = (IType arg) =>
+            {
+                Environment cur = new Environment(Lisp.global);
+                cur.d[name] = arg;
+                return Progn(tr, cur);
+            };
+            return ret;
         }
         static IType Quote(IType input, Environment e)
         {

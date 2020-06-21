@@ -28,7 +28,7 @@ namespace Runtime
                 }
                 cur = cur.outer;
             } while (cur != null);
-            return null;
+            throw new RuntimeException("[Interpreter] {0} not found!", s);
         }
         public void Set(Symbol s, IType v)
         {
@@ -42,6 +42,7 @@ namespace Runtime
                 }
                 cur = cur.outer;
             } while (cur != null);
+            throw new RuntimeException("[Interpreter] {0} not found!", s);
         }
         public static Environment MakeGlobalEnvironment()
         {
@@ -70,6 +71,9 @@ namespace Runtime
             AddOne("CDR", new Cdr());
             AddOne("LDIFF", new Ldiff());
             AddOne("NCONC", new Nconc());
+            AddOne("NULL", new Null());
+            AddOne("CONS", new CoNs());
+            AddOne("CONSP", new Consp());
             AddOne("READ", new DummyFunction());
             AddOne("WRITE", new DummyFunction());
             AddOne("WRITELN", new DummyFunction());
