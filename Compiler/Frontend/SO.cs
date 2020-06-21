@@ -196,6 +196,8 @@ namespace Compiler.Frontend
                     CompileProgn(form.cdr, e, p);
                     break;
                 case Type.DEFUN:
+                    if (e == Global.env)
+                        Interpreter.Eval(form, Lisp.global);
                     CompileDefun(form.cdr, e, p);
                     break;
                 case Type.IF:
