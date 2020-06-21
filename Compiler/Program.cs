@@ -3,60 +3,132 @@ using System;
 
 namespace Compiler
 {
-    class Program
+    static class Program
     {
-        static void CompileLibrary()
+        private enum Mode
         {
-            var prog = Frontend.Core.CompileFromStdin();
-            prog.Main.Name = "LibMain";
-            var optProg = Optimization.DummyOptimization.Optimize(prog);
-            var cilprog = new CIL.Program(optProg);
-            var sw = new System.IO.StreamWriter("Library.il");
-            cilprog.Emit(sw, CIL.EmissionType.Library);
-            sw.Close();
-            Assembler.Assembler.Invoke("Library.il");
+            Program,
+            Library,
+            Interpreter,
+            REPL
         }
-        static void PreCompile()
+
+        private static Mode CompileMode { get; set; }
+        private static string Input { get; set; }
+
+        public static void Main(string[] args)
         {
-            return;
-        }
-        static void Main(string[] args)
-        {
-            IL.Program program;
-            if (args.Length == 1)
+            if (!ParseArgs(args))
             {
-                if (args[0] == "-l")
-                {
-                    CompileLibrary();
-                    return;
-                }
-                if (args[0] == "-p")
-                {
-                    PreCompile();
-                    return;
-                }
-                if(args[0] == "-i")
-                {
-                    Frontend.Core.Interpret();
-                    return;
-                }
-                if(args[0] == "-ii")
-                {
-                    Frontend.Core.Interpret(true);
-                    return;
-                }
-                program = Frontend.Core.CompileFromFile(args[0]);
+                Console.WriteLine("unknown option");
+                Console.WriteLine("usage: Compiler.exe [file|-l [file]|-i|-ii]");
+                return;
+            }
+
+            if (CompileMode == Mode.Program)
+            {
+                CompileProgram();
+            }
+            else if (CompileMode == Mode.Library)
+            {
+                CompileLibrary();
+            }
+            else if (CompileMode == Mode.Interpreter)
+            {
+                Frontend.Core.Interpret();
             }
             else
             {
-                program = Frontend.Core.CompileFromStdin();
+                Frontend.Core.Interpret(true);
             }
-            Optimization.Program OptimizedProgram = Optimization.Core.Optimize(program);
-            var prog = new CIL.Program(OptimizedProgram);
+        }
+
+        private static bool ParseArgs(string[] args)
+        {
+            foreach (string arg in args)
+            {
+                Mode mode = Mode.Program;
+
+                if (arg == "-l")
+                {
+                    mode = Mode.Library;
+                }
+                else if (arg == "-i")
+                {
+                    mode = Mode.Interpreter;
+                }
+                else if (arg == "-ii")
+                {
+                    mode = Mode.REPL;
+                }
+                else
+                {
+                    if (Input == null)
+                    {
+                        Input = arg;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (CompileMode == Mode.Program)
+                {
+                    CompileMode = mode;
+                }
+            }
+
+            if (CompileMode != Mode.Program && CompileMode != Mode.Library && Input != null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static void CompileProgram()
+        {
+            IL.Program prog;
+            if (Input == null)
+            {
+                prog = Frontend.Core.CompileFromStdin();
+            }
+            else
+            {
+                prog = Frontend.Core.CompileFromFile(Input);
+            }
+            Optimization.Program optProg = Optimization.Core.Optimize(prog);
+            var cilProg = new CIL.Program(optProg);
             var sw = new System.IO.StreamWriter("Program.il");
-            prog.Emit(sw, CIL.EmissionType.Program);
+            cilProg.Emit(sw, CIL.EmissionType.Program);
             sw.Close();
             Assembler.Assembler.Invoke("Program.il");
+        }
+
+        private static void CompileLibrary()
+        {
+            IL.Program prog;
+            if (Input == null)
+            {
+                prog = Frontend.Core.CompileFromStdin();
+            }
+            else
+            {
+                prog = Frontend.Core.CompileFromFile(Input);
+            }
+            prog.Main.Name = "LibMain";
+            var optProg = Optimization.DummyOptimization.Optimize(prog);
+            var cilProg = new CIL.Program(optProg);
+            var sw = new System.IO.StreamWriter("Library.il");
+            cilProg.Emit(sw, CIL.EmissionType.Library);
+            sw.Close();
+            Assembler.Assembler.Invoke("Library.il");
+        }
+
+        private static void PreCompile()
+        {
+            return;
         }
     }
 }
