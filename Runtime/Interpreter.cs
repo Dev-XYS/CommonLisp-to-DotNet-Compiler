@@ -10,6 +10,10 @@ namespace Runtime
     {
         public static IType Eval(IType input, Environment e)
         {
+            if(input is Symbol ss)
+            {
+                return e.Find(ss);
+            }
             if(!(input is Cons c))
             {
                 return input;

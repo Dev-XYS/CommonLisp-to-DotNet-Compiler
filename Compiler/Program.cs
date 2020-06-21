@@ -40,6 +40,11 @@ namespace Compiler
                     Frontend.Core.Interpret();
                     return;
                 }
+                if(args[0] == "-ii")
+                {
+                    Frontend.Core.Interpret(true);
+                    return;
+                }
                 program = Frontend.Core.CompileFromFile(args[0]);
             }
             else

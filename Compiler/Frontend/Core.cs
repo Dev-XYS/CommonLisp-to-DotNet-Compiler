@@ -117,7 +117,7 @@ namespace Compiler.Frontend
             main.Return();
             return prog;
         }
-        public static void Interpret()
+        public static void Interpret(bool repl = false)
         {
             IType expr;
             while(true)
@@ -125,7 +125,11 @@ namespace Compiler.Frontend
                 try
                 {
                     expr = Reader.Read(Lisp.stdin);
-                    Console.WriteLine(string.Format("$ret: {0}", Runtime.Interpreter.Eval(expr, Lisp.global)));
+                    var ret = Runtime.Interpreter.Eval(expr, Lisp.global);
+                    if(repl)
+                    {
+                        Console.WriteLine(string.Format("$ret: {0}", ret is null ? ret.ToString() : "NIL"));
+                    }
                 }catch(Reader.EOFError)
                 {
                     break;
