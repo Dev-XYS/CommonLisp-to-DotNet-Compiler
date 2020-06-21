@@ -6,11 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Backend\Main.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Backend\Main.cs" />
+    <Compile Remove="Backend\**" />
+    <EmbeddedResource Remove="Backend\**" />
+    <None Remove="Backend\**" />
   </ItemGroup>
 
   <ItemGroup>
