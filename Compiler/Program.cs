@@ -35,6 +35,16 @@ namespace Compiler
                     PreCompile();
                     return;
                 }
+                if(args[0] == "-i")
+                {
+                    Frontend.Core.Interpret();
+                    return;
+                }
+                if(args[0] == "-ii")
+                {
+                    Frontend.Core.Interpret(true);
+                    return;
+                }
                 program = Frontend.Core.CompileFromFile(args[0]);
             }
             else

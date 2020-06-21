@@ -117,6 +117,25 @@ namespace Compiler.Frontend
             main.Return();
             return prog;
         }
+        public static void Interpret(bool repl = false)
+        {
+            IType expr;
+            while(true)
+            {
+                try
+                {
+                    expr = Reader.Read(Lisp.stdin);
+                    var ret = Runtime.Interpreter.Eval(expr, Lisp.global);
+                    if(repl)
+                    {
+                        Console.WriteLine(string.Format("$ret: {0}", ret is null ? ret.ToString() : "NIL"));
+                    }
+                }catch(Reader.EOFError)
+                {
+                    break;
+                }
+            }
+        }
         public static IL.Program CompileFromStdin()
         {
             var fn = Util.RandomString(10) + ".lisp";
