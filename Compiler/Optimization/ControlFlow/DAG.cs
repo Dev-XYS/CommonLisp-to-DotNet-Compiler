@@ -121,11 +121,9 @@ namespace Compiler.Optimization.ControlFlow
                 // The node must have not been optimized and must be essential.
                 if (!node.Rewritten && node.Essential)
                 {
-                    Console.WriteLine(">> Rewrite: {0}", node.Instruction);
                     Traverse(node, list);
                 }
             }
-            Console.WriteLine();
 
             return list;
         }

@@ -16,7 +16,10 @@ namespace Compiler.Assembler
             process.StartInfo = startInfo;
             process.Start();
             process.WaitForExit();
-            Console.WriteLine("Assembler returns {0}.", process.ExitCode);
+            if (process.ExitCode != 0)
+            {
+                Console.WriteLine("ilasm returns {0}.", process.ExitCode);
+            }
         }
     }
 }

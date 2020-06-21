@@ -57,12 +57,6 @@ namespace Compiler.Optimization
                     }
                 }
             }
-            Console.WriteLine("\nClosure variables:");
-            foreach (IL.Variable var in Variable.NonLocalVariables)
-            {
-                Console.WriteLine(var);
-            }
-            Console.WriteLine();
 
             // Allocate a local variable number for each local variable.
             foreach (Function func in Program.FunctionList)
