@@ -55,15 +55,21 @@ namespace Runtime
             AddOne("CDR", new Cdr());
             AddOne("LDIFF", new Ldiff());
             AddOne("NCONC", new Nconc());
-            AddOne("READ", new Read());
-            AddOne("WRITE", new Write());
-            AddOne("WRITELN", new WriteLn());
+            AddOne("READ", new DummyFunction());
+            AddOne("WRITE", new DummyFunction());
+            AddOne("WRITELN", new DummyFunction());
             AddOne("#SPECIAL-GET", new DummyFunction());
             AddOne("#SPECIAL-SET", new DummyFunction());
             AddOne("#SPECIAL-PUSH", new DummyFunction());
             AddOne("#SPECIAL-POP", new DummyFunction());
             AddOne("#SPECIAL-RESET", new DummyFunction());
             return ret;
+        }
+        public void EnableIO()
+        {
+            d[Symbol.FindOrCreate("READ")] = new Read();
+            d[Symbol.FindOrCreate("WRITE")] = new Write();
+            d[Symbol.FindOrCreate("WRITELN")] = new WriteLn();
         }
     }
 }

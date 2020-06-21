@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using static Runtime.Interpreter;
 
 namespace Compiler.Frontend
 {
@@ -100,12 +101,14 @@ namespace Compiler.Frontend
         }
         private static IL.Program CompileFrom(IInputStream input)
         {
+            Init();
             IType expr;
             while(true)
             {
                 try
                 {
                     expr = Reader.Read(input);
+                    Eval(expr, Lisp.global);
                     CompileSingleExpr(expr, Global.env, main);
                 }catch(Reader.EOFError)
                 {
@@ -120,15 +123,16 @@ namespace Compiler.Frontend
         public static void Interpret(bool repl = false)
         {
             IType expr;
+            Lisp.global.EnableIO();
             while(true)
             {
                 try
                 {
                     expr = Reader.Read(Lisp.stdin);
-                    var ret = Runtime.Interpreter.Eval(expr, Lisp.global);
+                    var ret = Eval(expr, Lisp.global);
                     if(repl)
                     {
-                        Console.WriteLine(string.Format("$ret: {0}", ret is null ? ret.ToString() : "NIL"));
+                        Console.WriteLine(string.Format("$ret: {0}", ret is null ? "NIL" : ret.ToString()));
                     }
                 }catch(Reader.EOFError)
                 {
@@ -138,34 +142,12 @@ namespace Compiler.Frontend
         }
         public static IL.Program CompileFromStdin()
         {
-            var fn = Util.RandomString(10) + ".lisp";
-            StreamWriter sw = new StreamWriter(fn);
-            while(true)
-            {
-                var cur = Console.Read();
-                if (cur >= 0) sw.Write((char)cur);
-                else break;
-            }
-            sw.Close();
-            var ret = CompileFromFile(fn);
-            File.Delete(fn);
-            return ret;
-        }
-        public static string PreCompile(IInputStream input)
-        {
-            return "";
+            return CompileFrom(Lisp.stdin);
         }
         public static IL.Program CompileFromFile(string path)
         {
-            Init();
             FileInput fin = new FileInput(path);
-            var mid = PreCompile(fin);
-            fin.Close();
-            Macro.Init(mid);
-            fin = new FileInput(path);
-            var ret = CompileFrom(fin);
-            fin.Close();
-            return ret;
+            return CompileFrom(fin);
         }
     }
 }
