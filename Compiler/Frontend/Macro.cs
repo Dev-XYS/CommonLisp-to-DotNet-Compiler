@@ -8,7 +8,7 @@ namespace Compiler.Frontend
     static class Macro
     {
         private static Dictionary<Symbol, Func<IType, IType>> gml = new Dictionary<Symbol, Func<IType, IType>>();
-        public static void Init(string ppath)
+        public static void Init()
         {
             gml.Add(Symbol.FindOrCreate("DEFPARAMETER"), (IType form)=>
             {

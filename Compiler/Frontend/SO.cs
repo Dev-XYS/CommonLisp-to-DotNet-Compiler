@@ -116,10 +116,6 @@ namespace Compiler.Frontend
                 i.Pop(p);
             p.Store(retp);
         }
-        public static void CompileLetStar(IType body, Environment e, Function p)
-        {
-            //todo: impl using macro
-        }
         public static void CompileDefmacro(IType body, Environment e, Function p)
         {
             if (e != Global.env)
@@ -144,6 +140,11 @@ namespace Compiler.Frontend
         {
             var f = LambdaFunc(body, e, p);
             p.Store(f);
+        }
+        public static void CompileFunction(IType body, Environment e, Function p)
+        {
+            var t = Util.RequireExactly(body, 1, "FUNCTION");
+            p.Store(t);
         }
         public static void CompileDefun(IType body, Environment e, Function p)
         {
@@ -218,8 +219,8 @@ namespace Compiler.Frontend
                 case Type.LET:
                     CompileLet(form.cdr, e, p);
                     break;
-                case Type.LET_STAR:
-                    CompileLetStar(form.cdr, e, p);
+                case Type.FUNCTION:
+                    CompileFunction(form.cdr, e, p);
                     break;
                 case Type.LAMBDA:
                     CompileLambda(form.cdr, e, p);

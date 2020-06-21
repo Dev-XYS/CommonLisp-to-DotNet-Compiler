@@ -51,7 +51,7 @@ namespace Compiler.Frontend
             try
             {
                 return Find(s);
-            }catch(SyntaxError e)
+            }catch(SyntaxError)
             {
                 return new IL.UnresolvedObject(s.Name);
             }

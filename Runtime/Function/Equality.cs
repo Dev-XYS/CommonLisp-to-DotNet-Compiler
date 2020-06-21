@@ -22,7 +22,6 @@ namespace Runtime.Function
             {
                 return x.GetType() == y.GetType() && x.Equal(y) ? Lisp.t : Lisp.nil;
             }
-            //if(args[0] is TChar x && args[1] is TChar y) //todo
             return Lisp.nil;
         }
     }
