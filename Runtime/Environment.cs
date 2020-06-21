@@ -23,10 +23,25 @@ namespace Runtime
             do
             {
                 if (cur.d.TryGetValue(s, out ret))
+                {
                     return ret;
+                }
                 cur = cur.outer;
             } while (cur != null);
             return null;
+        }
+        public void Set(Symbol s, IType v)
+        {
+            Environment cur = this;
+            do
+            {
+                if (cur.d.ContainsKey(s))
+                {
+                    cur.d[s] = v;
+                    return;
+                }
+                cur = cur.outer;
+            } while (cur != null);
         }
         public static Environment MakeGlobalEnvironment()
         {

@@ -137,7 +137,7 @@ namespace Runtime
                 {
                     if (c.cdr is Cons d)
                     {
-                        e.d[s] = Eval(d.car, e);
+                        e.Set(s, Eval(d.car, e));
                         Setq(d.cdr, e);
                     }
                 }
