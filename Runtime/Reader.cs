@@ -20,7 +20,6 @@ namespace Runtime
         }
         private class EndOfListError : ReaderError
         {
-           // public EndOfListError(string? message) : base(message) { }
 #nullable disable
         }
         private class NothingReadError : ReaderError
@@ -81,7 +80,7 @@ namespace Runtime
             }
             return new TString(string.Join("", ret));
         }
-        private static IType ReadList(IInputStream input) // todo: support ( car . cdr ) notation
+        private static IType ReadList(IInputStream input)
         {
             Cons ret = new Cons();
             Cons cur = ret;
@@ -163,10 +162,10 @@ namespace Runtime
             if (m.Success)
             {
                 if (m.Groups["type"].Success)
-                    return new TFloat(Convert.ToDouble(m.Groups["base"].Value + "E" + m.Groups["exponent"].Value)); //todo: support other precision
+                    return new TFloat(Convert.ToDouble(m.Groups["base"].Value + "E" + m.Groups["exponent"].Value));
                 return new TFloat(Convert.ToDouble(output));
             }
-            return Symbol.FindOrCreate(output); //todo: support rational
+            return Symbol.FindOrCreate(output); 
         }
 #nullable enable
         private static IType? ReadMacro(IInputStream input, char macrochar)
@@ -183,15 +182,15 @@ namespace Runtime
                 case '\"':
                     return ReadString(input);
                 case ',':
-                    return ReadWith(Symbol.FindOrCreate("UNQUOTE"), input); //todo: support ,@
+                    return ReadWith(Symbol.FindOrCreate("UNQUOTE"), input); 
                 case '(':
                     return ReadList(input);
                 case ')':
                     throw new EndOfListError();
                 case '#':
-                    return Lisp.nil;//ReadSharp(input); todo
+                    return Lisp.nil;
                 default:
-                    throw new ReaderError(string.Format("Unrecognized Macro Character {0}", macrochar)); //feature: add user-implemented reader macros
+                    throw new ReaderError(string.Format("Unrecognized Macro Character {0}", macrochar)); 
             }
         }
 #nullable disable

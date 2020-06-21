@@ -68,7 +68,6 @@ namespace Compiler.Frontend
         }
         static void CompileAtom(Symbol s, Environment e, Function p)
         {
-            //currently treat it as variable//todo: Symbol macro
             p.Store(p.FindRight(s));
         }
         public static void CompileConstant(IType value, Environment e, Function p)

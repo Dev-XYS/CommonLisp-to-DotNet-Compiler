@@ -45,7 +45,6 @@ namespace Compiler.Frontend
         }
         public static void ParseLambdaList(Cons llist, Environment env, Function f)
         {
-            //currently only support fixnum parameters, todo: add &rest &optional ... support
             var list = ListToArray(llist);
             foreach(var i in list)
             {
