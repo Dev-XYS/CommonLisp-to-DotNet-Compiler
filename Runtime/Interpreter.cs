@@ -40,6 +40,10 @@ namespace Runtime
                     return Progn(c.cdr, e);
                 return Funcall(Eval(s, e), c.cdr, e);
             }
+            if (c.car is Cons cc)
+            {
+                return Funcall(Eval(cc, e), c.cdr, e);
+            }
             else return null;
         }
         static IType Defun(IType input, Environment e)

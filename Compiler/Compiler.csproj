@@ -6,7 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Interpreter\Interpreter.csproj" />
+    <Compile Remove="Backend\Main.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Backend\Main.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Runtime\Runtime.csproj" />
   </ItemGroup>
 

@@ -108,7 +108,6 @@ namespace Compiler.Frontend
                 try
                 {
                     expr = Reader.Read(input);
-                    Eval(expr, Lisp.global);
                     CompileSingleExpr(expr, Global.env, main);
                 }catch(Reader.EOFError)
                 {
