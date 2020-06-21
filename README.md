@@ -31,3 +31,4 @@ Windows 平台下的 Visual Studio，需要安装 .NET Core 开发工具 3.1 版
         - `ControlFlow` ：数据流分析
     - `Resources` ：CIL导言
 - 项目 `Runtime` ：运行时
+- `CompilerTest` ：测试用例及脚本
